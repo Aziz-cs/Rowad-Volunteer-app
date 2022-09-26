@@ -18,7 +18,7 @@ class NewsPage extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              _buildOpportunityHeadbar(),
+              _buildOpportunityHeadbar(context),
               SizedBox(height: 10.h),
               _buildOppertunityDetails(),
             ],
@@ -116,7 +116,7 @@ class NewsPage extends StatelessWidget {
     );
   }
 
-  Stack _buildOpportunityHeadbar() {
+  Stack _buildOpportunityHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
         Container(
@@ -151,7 +151,7 @@ class NewsPage extends StatelessWidget {
         ),
         Positioned(
           child: GestureDetector(
-            onTap: () => Get.back(),
+            onTap: () => Navigator.pop(context),
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Row(
@@ -164,7 +164,6 @@ class NewsPage extends StatelessWidget {
                   Text(
                     'رجوع',
                     style: TextStyle(
-                      color: Colors.white,
                       fontSize: 13.sp,
                       height: 0.8,
                     ),
@@ -188,7 +187,6 @@ class NewsPage extends StatelessWidget {
                     Text(
                       'التطوع لمدارس إفريقيا',
                       style: TextStyle(
-                        color: Colors.white,
                         height: 1,
                         fontSize: 18.sp,
                       ),

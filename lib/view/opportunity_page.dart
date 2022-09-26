@@ -6,8 +6,8 @@ import 'package:get/get.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
-class VolunteerOppPage extends StatelessWidget {
-  const VolunteerOppPage({Key? key}) : super(key: key);
+class OpportunityPage extends StatelessWidget {
+  const OpportunityPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class VolunteerOppPage extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: [
-              _buildOpportunityHeadbar(),
+              _buildOpportunityHeadbar(context),
               _buildOpportunityInfo(),
               Divider(color: Colors.grey.shade800),
               _buildOppertunityDetails(),
@@ -162,7 +162,7 @@ class VolunteerOppPage extends StatelessWidget {
     );
   }
 
-  Stack _buildOpportunityHeadbar() {
+  Stack _buildOpportunityHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
         Container(
@@ -197,7 +197,7 @@ class VolunteerOppPage extends StatelessWidget {
         ),
         Positioned(
           child: GestureDetector(
-            onTap: () => Get.back(),
+            onTap: () => Navigator.pop(context),
             child: Padding(
               padding: const EdgeInsets.all(14),
               child: Row(

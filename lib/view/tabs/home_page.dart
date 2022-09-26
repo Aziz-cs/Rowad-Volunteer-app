@@ -1,13 +1,16 @@
 import 'package:app/constants.dart';
 import 'package:app/view/news_page.dart';
-import 'package:app/view/volunteer_opp_page.dart';
+import 'package:app/view/notification_page.dart';
+import 'package:app/view/tabs/opportunities_page.dart';
+import 'package:app/view/widgets/opportunity_item.dart';
 import 'package:app/view/widgets/textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import 'widgets/simple_btn.dart';
+import '../widgets/simple_btn.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -31,13 +34,13 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     children: [
                       SizedBox(height: 50.h),
-                      _buildProfileRow(),
+                      _buildProfileRow(context),
                       SizedBox(height: 13.h),
                       _buildSearchRow(),
                     ],
                   ),
                 ),
-                _buildNewsSection(),
+                _buildNewsSection(context),
                 _buildOpportunitiesSection(),
               ],
             ),
@@ -87,7 +90,7 @@ class HomePage extends StatelessWidget {
             crossAxisSpacing: 8,
             children: List.generate(
               4,
-              (index) => _buildVolunteerOpportunity(),
+              (index) => OpportunityItem(),
             ),
           ),
         ],
@@ -95,7 +98,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildNewsSection() {
+  Widget _buildNewsSection(BuildContext context) {
     const Color background = kGreenColor;
     const Color fill = Colors.white;
     final List<Color> gradient = [
@@ -195,7 +198,6 @@ class HomePage extends StatelessWidget {
                                 Text(
                                   'التبرع لمدارس إفريقيا',
                                   style: TextStyle(
-                                    color: Colors.white,
                                     height: 1,
                                     fontSize: 18.sp,
                                   ),
@@ -225,7 +227,16 @@ class HomePage extends StatelessWidget {
                       left: 10.w,
                       child: SimpleButton(
                           label: 'إقرأ المزيد',
-                          onPress: () => Get.to(() => const NewsPage())),
+                          onPress: () {
+                            pushNewScreen(
+                              context,
+                              screen: const NewsPage(),
+                              withNavBar:
+                                  true, // OPTIONAL VALUE. True by default.
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          }),
                     ),
                   ],
                 ),
@@ -234,105 +245,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildVolunteerOpportunity() {
-    return InkWell(
-      splashColor: Colors.green,
-      onTap: () {
-        Get.to(() => const VolunteerOppPage());
-      },
-      child: Container(
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/images/opportunity_kids.jpeg',
-                fit: BoxFit.fill,
-              ),
-              SizedBox(height: 5.h),
-              Text(
-                'مراقب مجتمعي',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 2.h),
-              Text(
-                'أمانة منطقة جازان',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: Colors.grey.shade600,
-                ),
-              ),
-              SizedBox(height: 7.h),
-              Row(
-                children: [
-                  const Icon(
-                    CupertinoIcons.calendar_today,
-                    size: 20,
-                    color: Colors.green,
-                  ),
-                  SizedBox(width: 5.w),
-                  Flexible(
-                    child: Text(
-                      '١ مارس إلى ١٠ مارس',
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey.shade600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 13.h),
-              Wrap(
-                direction: Axis.horizontal,
-                children: [
-                  _buildIconTitleRow(
-                    title: '١٠ أيــام',
-                    iconData: CupertinoIcons.time_solid,
-                  ),
-                  SizedBox(width: 7.w),
-                  _buildIconTitleRow(
-                    title: 'جازان',
-                    iconData: CupertinoIcons.location_fill,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Row _buildIconTitleRow({required String title, required IconData iconData}) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          iconData,
-          size: 24,
-          color: Colors.green,
-        ),
-        SizedBox(width: 3.w),
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: Colors.grey.shade600,
-          ),
-        ),
-      ],
     );
   }
 
@@ -368,7 +280,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Row _buildProfileRow() {
+  Row _buildProfileRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -411,7 +323,14 @@ class HomePage extends StatelessWidget {
           ],
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            pushNewScreen(
+              context,
+              screen: const NotificationPage(),
+              withNavBar: true, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            );
+          },
           icon: const Icon(
             CupertinoIcons.bell,
             size: 26,
