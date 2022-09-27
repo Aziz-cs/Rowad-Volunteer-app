@@ -1,4 +1,4 @@
-import 'package:app/view/navigator_page.dart';
+import 'package:app/widgets/navigator_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,49 +20,47 @@ const String title = 'جمعية رواد التطوعية';
 const String subtitle =
     'هي جمعية غير ربحية معنية بالعمل التطوعي وهدفها الربط بين المتطوعين والجهات التطوعية التى لديها مشاريع وترغب فى متطوعين';
 
-class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+class SplashPage extends StatelessWidget {
+  SplashPage({Key? key}) : super(key: key);
 
-  @override
-  State<SplashPage> createState() => _SplashPageState();
-}
-
-class _SplashPageState extends State<SplashPage> {
-  int currentPage = 1;
+  final currentPage = 0.obs;
   final _pageViewController = PageController(initialPage: 0, keepPage: false);
 
   @override
   Widget build(BuildContext context) {
+    print('current page: $currentPage');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        body: PageView(
-          controller: _pageViewController,
-          onPageChanged: ((currentPageView) {
-            setState(() {
-              currentPage = currentPageView + 1;
-            });
-          }),
-          children: [
-            _buildSplashScreen(
-              splashIndex: 1,
-              currentPage: currentPage,
-              title: title,
-              subtitle: subtitle,
-            ),
-            _buildSplashScreen(
-              splashIndex: 2,
-              currentPage: currentPage,
-              title: title,
-              subtitle: subtitle,
-            ),
-            _buildSplashScreen(
-              splashIndex: 3,
-              currentPage: currentPage,
-              title: title,
-              subtitle: subtitle,
-            ),
-          ],
+        body: Obx(
+          () => PageView(
+            controller: _pageViewController,
+            onPageChanged: ((currentPageView) {
+              print('current page changed: $currentPageView');
+
+              currentPage.value = currentPageView;
+            }),
+            children: [
+              _buildSplashScreen(
+                splashIndex: 0,
+                currentPage: currentPage.value,
+                title: title,
+                subtitle: subtitle,
+              ),
+              _buildSplashScreen(
+                splashIndex: 1,
+                currentPage: currentPage.value,
+                title: title,
+                subtitle: subtitle,
+              ),
+              _buildSplashScreen(
+                splashIndex: 2,
+                currentPage: currentPage.value,
+                title: title,
+                subtitle: subtitle,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -136,8 +134,8 @@ class _SplashPageState extends State<SplashPage> {
         child: GestureDetector(
           onTap: () {
             print('pressed $currentPage');
-            if (currentPage < 3) {
-              _pageViewController.animateToPage(currentPage,
+            if (currentPage < 2) {
+              _pageViewController.animateToPage(currentPage + 1,
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.ease);
             } else {
@@ -147,7 +145,7 @@ class _SplashPageState extends State<SplashPage> {
           child: Row(
             children: [
               Text(
-                currentPage == 3 ? 'البدء' : 'التالي',
+                currentPage == 2 ? 'البدء' : 'التالي',
                 style: TextStyle(
                   fontSize: 15.sp,
                   height: 0.8,
@@ -167,10 +165,27 @@ class _SplashPageState extends State<SplashPage> {
         bottom: 63.h,
         child: Row(
           children: [
+            _buildDot(isSelected: currentPage == 0),
             _buildDot(isSelected: currentPage == 1),
             _buildDot(isSelected: currentPage == 2),
-            _buildDot(isSelected: currentPage == 3),
           ],
+        ),
+      ),
+      Positioned(
+        top: 80.h,
+        left: 2.h,
+        child: GestureDetector(
+          onTap: () => Get.offAll(() => NavigatorPage()),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Text(
+              'تخطي',
+              style: TextStyle(
+                fontSize: 17.sp,
+                // fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
         ),
       )
     ]);

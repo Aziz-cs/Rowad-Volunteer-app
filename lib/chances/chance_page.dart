@@ -1,13 +1,14 @@
-import 'package:app/view/widgets/simple_btn.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../widgets/simple_btn.dart';
+
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
-class OpportunityPage extends StatelessWidget {
-  const OpportunityPage({Key? key}) : super(key: key);
+class ChancePage extends StatelessWidget {
+  const ChancePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +40,7 @@ class OpportunityPage extends StatelessWidget {
             'نبذة عن الفرصة التطوعية',
             style: TextStyle(
               fontSize: 15.5.sp,
+              color: Colors.black54,
             ),
           ),
           SizedBox(height: 5.h),

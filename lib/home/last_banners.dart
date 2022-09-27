@@ -1,14 +1,14 @@
-import 'package:app/view/news_page.dart';
+import 'package:app/news/news_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
-import '../../constants.dart';
+import '../utils/constants.dart';
 import '../widgets/simple_btn.dart';
 
 const Color background = kGreenColor;
-const Color fill = Colors.white;
+const Color fill = Color(0xFFF3F3F3);
 final List<Color> gradient = [
   background,
   background,
@@ -19,23 +19,18 @@ const double fillPercent = 35; // fills 56.23% for container from bottom
 const double fillStop = (100 - fillPercent) / 100;
 final List<double> stops = [0.0, fillStop, fillStop, 1.0];
 
-class LastNews extends StatefulWidget {
-  const LastNews({Key? key}) : super(key: key);
+class LastBanners extends StatelessWidget {
+  LastBanners({Key? key}) : super(key: key);
 
-  @override
-  State<LastNews> createState() => _LastNewsState();
-}
-
-class _LastNewsState extends State<LastNews> {
   final _lastNewsController = PageController(initialPage: 0, keepPage: false);
+  int bannerIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => const NewsPage()),
+      onTap: () => Get.to(() => const NewsDetailsPage()),
       child: Container(
         height: 200.h,
-        // color: const Color(0xFF48B777),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: gradient,
@@ -48,11 +43,14 @@ class _LastNewsState extends State<LastNews> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           child: PageView(
-            onPageChanged: (currentPage) {},
+            onPageChanged: (bannerIndexAfterChange) {
+              print('bannerIndexAfterChange $bannerIndexAfterChange');
+              bannerIndex = bannerIndexAfterChange;
+            },
             controller: _lastNewsController,
             allowImplicitScrolling: true,
             children: List.generate(
-              2,
+              4,
               (index) => ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Stack(
@@ -82,25 +80,52 @@ class _LastNewsState extends State<LastNews> {
                     ),
                     Positioned(
                       top: 77.h,
-                      left: 0,
+                      left: 5.w,
                       child: IconButton(
-                        onPressed: () => print('go to next news'),
+                        onPressed: () {
+                          print('bannerIndex: $bannerIndex');
+                          if (bannerIndex < 3) {
+                            bannerIndex++;
+                            _lastNewsController.animateToPage(bannerIndex,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          } else {
+                            _lastNewsController.animateToPage(bannerIndex + 1,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          }
+                        },
                         icon: const Icon(
                           Icons.arrow_circle_left_rounded,
                           color: Colors.white,
-                          size: 30,
+                          size: 40,
                         ),
                       ),
                     ),
                     Positioned(
                       top: 77.h,
-                      right: 0,
+                      right: 5.w,
                       child: IconButton(
-                        onPressed: () => print('go to previous news'),
+                        onPressed: () {
+                          print('bannerIndex: $bannerIndex');
+                          // if (bannerIndex < 1) {
+                          if (bannerIndex > 0) {
+                            bannerIndex--;
+                            _lastNewsController.animateToPage(bannerIndex,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          } else {
+                            _lastNewsController.animateToPage(bannerIndex - 1,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
+                          }
+
+                          // }
+                        },
                         icon: const Icon(
                           Icons.arrow_circle_right_rounded,
                           color: Colors.white,
-                          size: 30,
+                          size: 40,
                         ),
                       ),
                     ),
@@ -150,7 +175,7 @@ class _LastNewsState extends State<LastNews> {
                           onPress: () {
                             pushNewScreen(
                               context,
-                              screen: const NewsPage(),
+                              screen: const NewsDetailsPage(),
                               withNavBar:
                                   true, // OPTIONAL VALUE. True by default.
                               pageTransitionAnimation:

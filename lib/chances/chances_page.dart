@@ -1,11 +1,10 @@
-import 'package:app/view/widgets/opportunity_item.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../constants.dart';
+import '../utils/constants.dart';
+import '../home/item_chance.dart';
 
-class OpportunitiesPage extends StatelessWidget {
-  const OpportunitiesPage({Key? key}) : super(key: key);
+class ChancesPage extends StatelessWidget {
+  const ChancesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,25 +28,6 @@ class OpportunitiesPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Spacer(),
-                    // GestureDetector(
-                    //   onTap: () => Navigator.pop(context),
-                    //   child: Row(
-                    //     children: [
-                    //       const Icon(
-                    //         Icons.arrow_back_ios,
-                    //         color: Colors.white,
-                    //         size: 13,
-                    //       ),
-                    //       Text(
-                    //         'رجوع',
-                    //         style: TextStyle(
-                    //           fontSize: 13.sp,
-                    //           height: 0.8,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -93,7 +73,7 @@ class OpportunitiesPage extends StatelessWidget {
                 crossAxisSpacing: 8,
                 children: List.generate(
                   8,
-                  (index) => OpportunityItem(),
+                  (index) => ChanceItem(),
                 ),
               ),
             ),

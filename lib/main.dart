@@ -1,13 +1,10 @@
-import 'package:app/view/tabs/home_page.dart';
-import 'package:app/view/navigator_page.dart';
-import 'package:app/view/splash_page.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:app/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'model/news.dart';
+import 'news/news.dart';
 import 'utils/sharedprefs.dart';
 
 List<News> allNews = [];
@@ -61,7 +58,7 @@ class MyApp extends StatelessWidget {
               displayColor: Colors.white,
             ),
           ),
-          home: const SplashPage(),
+          home: SplashPage(),
         );
       },
     );

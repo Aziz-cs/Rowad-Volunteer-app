@@ -1,13 +1,10 @@
-import 'package:app/view/widgets/simple_btn.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
-class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+class NewsDetailsPage extends StatelessWidget {
+  const NewsDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +37,7 @@ class NewsPage extends StatelessWidget {
                 'التبرع لمدارس إفريقيا',
                 style: TextStyle(
                   fontSize: 22.sp,
+                  color: Colors.black54,
                 ),
               ),
               SizedBox(height: 5.h),
@@ -78,6 +76,7 @@ class NewsPage extends StatelessWidget {
                 'التبرع لمدارس إفريقيا',
                 style: TextStyle(
                   fontSize: 22.sp,
+                  color: Colors.black54,
                 ),
               ),
               SizedBox(height: 5.h),
