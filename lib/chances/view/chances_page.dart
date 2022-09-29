@@ -1,11 +1,10 @@
-import 'package:app/home/item_news.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../utils/constants.dart';
-import '../home/item_chance.dart';
+import '../../utils/constants.dart';
+import 'widgets/item_chance.dart';
 
-class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+class ChancesPage extends StatelessWidget {
+  const ChancesPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +15,7 @@ class NewsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'المركز الإعلامي',
+              'جميع الفرص التطوعية',
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w500,
@@ -52,21 +51,20 @@ class NewsPage extends StatelessWidget {
         children: [
           SizedBox(height: 10.h),
           Expanded(
-            child: SingleChildScrollView(
-              child: GridView.count(
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                childAspectRatio: 0.8,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                children: List.generate(
-                  8,
-                  (index) => NewsItem(),
-                ),
+            child: GridView.count(
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              crossAxisCount: 2,
+              childAspectRatio: 0.9,
+              mainAxisSpacing: 8,
+              crossAxisSpacing: 8,
+              children: List.generate(
+                8,
+                (index) => ChanceItem(),
               ),
             ),
           ),
+          SizedBox(height: 20.h),
         ],
       ),
     );

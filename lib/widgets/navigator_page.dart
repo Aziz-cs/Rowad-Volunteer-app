@@ -1,12 +1,12 @@
-import 'package:app/chances/chances_page.dart';
-import 'package:app/news/news_page.dart';
-import 'package:app/others/others_page.dart';
-import 'package:app/utils/constants.dart';
+import '../chances/view/chances_page.dart';
+import '../others/others_page.dart';
+import '../utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import '../home/home_page.dart';
+import '../home/view/home_page.dart';
+import '../news/view/news_page.dart';
 
 class NavigatorPage extends StatelessWidget {
   NavigatorPage({Key? key}) : super(key: key);

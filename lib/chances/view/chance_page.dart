@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../widgets/simple_btn.dart';
+import '../../widgets/simple_btn.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 

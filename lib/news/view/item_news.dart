@@ -1,11 +1,12 @@
-import 'package:app/chances/chance_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-class ChanceItem extends StatelessWidget {
-  const ChanceItem({
+import 'news_details_page.dart';
+
+class NewsItem extends StatelessWidget {
+  const NewsItem({
     Key? key,
   }) : super(key: key);
 
@@ -14,7 +15,7 @@ class ChanceItem extends StatelessWidget {
     return InkWell(
       onTap: () => PersistentNavBarNavigator.pushNewScreen(
         context,
-        screen: const ChancePage(),
+        screen: const NewsDetailsPage(),
         withNavBar: true, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
@@ -28,11 +29,11 @@ class ChanceItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  'assets/images/opportunity_kids.jpeg',
+                  'assets/images/news_0.jpeg',
                 ),
                 SizedBox(height: 1.h),
                 Text(
-                  'مراقب مجتمعي',
+                  'التبرع لمدارس إفريقيا',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -40,10 +41,12 @@ class ChanceItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'أمانة منطقة جازان',
+                  'حملة التبرع لمدارس إفريقيا وشمال إفريقيا',
+                  maxLines: 1,
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: Colors.grey.shade600,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -57,7 +60,7 @@ class ChanceItem extends StatelessWidget {
                     SizedBox(width: 5.w),
                     Flexible(
                       child: Text(
-                        '١ مارس إلى ١٠ مارس',
+                        '22-9-2010',
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: Colors.grey.shade600,
@@ -67,20 +70,6 @@ class ChanceItem extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 3.h),
-                Wrap(
-                  direction: Axis.horizontal,
-                  children: [
-                    _buildIconTitleRow(
-                      title: '١٠ أيــام',
-                      iconData: CupertinoIcons.time_solid,
-                    ),
-                    SizedBox(width: 7.w),
-                    _buildIconTitleRow(
-                      title: 'جازان',
-                      iconData: CupertinoIcons.location_fill,
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -88,25 +77,4 @@ class ChanceItem extends StatelessWidget {
       ),
     );
   }
-}
-
-Row _buildIconTitleRow({required String title, required IconData iconData}) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(
-        iconData,
-        size: 24,
-        color: Colors.green,
-      ),
-      SizedBox(width: 3.w),
-      Text(
-        title,
-        style: TextStyle(
-          fontSize: 14.sp,
-          color: Colors.grey.shade600,
-        ),
-      ),
-    ],
-  );
 }

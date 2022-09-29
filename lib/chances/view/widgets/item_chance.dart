@@ -1,12 +1,11 @@
-import 'package:app/chances/chance_page.dart';
-import 'package:app/news/news_details_page.dart';
+import '../chance_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-class NewsItem extends StatelessWidget {
-  const NewsItem({
+class ChanceItem extends StatelessWidget {
+  const ChanceItem({
     Key? key,
   }) : super(key: key);
 
@@ -15,7 +14,7 @@ class NewsItem extends StatelessWidget {
     return InkWell(
       onTap: () => PersistentNavBarNavigator.pushNewScreen(
         context,
-        screen: const NewsDetailsPage(),
+        screen: const ChancePage(),
         withNavBar: true, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
@@ -29,11 +28,11 @@ class NewsItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Image.asset(
-                  'assets/images/news_0.jpeg',
+                  'assets/images/opportunity_kids.jpeg',
                 ),
                 SizedBox(height: 1.h),
                 Text(
-                  'التبرع لمدارس إفريقيا',
+                  'مراقب مجتمعي',
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -41,12 +40,10 @@ class NewsItem extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'حملة التبرع لمدارس إفريقيا وشمال إفريقيا',
-                  maxLines: 1,
+                  'أمانة منطقة جازان',
                   style: TextStyle(
                     fontSize: 13.sp,
                     color: Colors.grey.shade600,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -60,7 +57,7 @@ class NewsItem extends StatelessWidget {
                     SizedBox(width: 5.w),
                     Flexible(
                       child: Text(
-                        '22-9-2010',
+                        '١ مارس إلى ١٠ مارس',
                         style: TextStyle(
                           fontSize: 13.sp,
                           color: Colors.grey.shade600,
@@ -70,6 +67,20 @@ class NewsItem extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 3.h),
+                Wrap(
+                  direction: Axis.horizontal,
+                  children: [
+                    _buildIconTitleRow(
+                      title: '١٠ أيــام',
+                      iconData: CupertinoIcons.time_solid,
+                    ),
+                    SizedBox(width: 7.w),
+                    _buildIconTitleRow(
+                      title: 'جازان',
+                      iconData: CupertinoIcons.location_fill,
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -77,4 +88,25 @@ class NewsItem extends StatelessWidget {
       ),
     );
   }
+}
+
+Row _buildIconTitleRow({required String title, required IconData iconData}) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(
+        iconData,
+        size: 24,
+        color: Colors.green,
+      ),
+      SizedBox(width: 3.w),
+      Text(
+        title,
+        style: TextStyle(
+          fontSize: 14.sp,
+          color: Colors.grey.shade600,
+        ),
+      ),
+    ],
+  );
 }

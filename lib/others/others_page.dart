@@ -1,5 +1,5 @@
-import 'package:app/admin/add_chance_page.dart';
-import 'package:app/admin/add_news_page.dart';
+import '../chances/view/add_chance_page.dart';
+import '../news/view/add_news_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,7 +42,7 @@ class OthersPage extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.newspaper),
             title: const Text('إضافة خبر'),
-            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
+            subtitle: const Text('إضافة خبر جديد للمركز الإعلامي'),
             trailing: const Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 15,
@@ -61,14 +61,14 @@ class OthersPage extends StatelessWidget {
           ListTile(
             leading: const Icon(CupertinoIcons.news_solid),
             title: const Text('إضافة فرصة'),
-            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
+            subtitle: const Text('إضافة فرصة تطوعية جديدة'),
             trailing: const Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 15,
             ),
             onTap: () => PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: const AddChance(),
+              screen: AddChance(),
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),

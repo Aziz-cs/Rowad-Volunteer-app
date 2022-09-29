@@ -1,11 +1,11 @@
-import 'package:app/news/news_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import '../utils/constants.dart';
-import '../widgets/simple_btn.dart';
+import '../../news/view/news_details_page.dart';
+import '../../utils/constants.dart';
+import '../../widgets/simple_btn.dart';
 
 const Color background = kGreenColor;
 const Color fill = Color(0xFFF3F3F3);

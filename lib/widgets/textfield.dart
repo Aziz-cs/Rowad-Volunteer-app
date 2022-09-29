@@ -15,6 +15,7 @@ class MyTextField extends StatelessWidget {
     this.isLTRdirection = false,
     this.inputAction = TextInputAction.done,
     this.labelText = '',
+    this.isLabelCentered = false,
   }) : super(key: key);
 
   final String label;
@@ -23,6 +24,7 @@ class MyTextField extends StatelessWidget {
   final Widget preIcon;
   final Widget suffixIcon;
   final bool isObsecure;
+  final bool isLabelCentered;
   final TextInputType inputType;
   final bool isLTRdirection;
   final int maxLines;
@@ -33,6 +35,7 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(top: 3.h, bottom: 7.h),
       child: TextFormField(
+        textAlign: isLabelCentered ? TextAlign.center : TextAlign.right,
         controller: controller,
         // textDirection: TextDirection.rtl,
         cursorColor: Colors.black,

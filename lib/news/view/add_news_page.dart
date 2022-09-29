@@ -1,7 +1,9 @@
-import 'package:app/utils/constants.dart';
-import 'package:app/widgets/dropdown_menu.dart';
-import 'package:app/widgets/simple_btn.dart';
-import 'package:app/widgets/textfield.dart';
+import 'dart:io';
+
+import '../../utils/constants.dart';
+import '../../widgets/dropdown_menu.dart';
+import '../../widgets/simple_btn.dart';
+import '../../widgets/textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,7 @@ class AddNews extends StatelessWidget {
   final _shortDescController = TextEditingController();
   final _newsController = TextEditingController();
   final newsCategory = '- أختر -'.obs;
+  // late final XFile? pickedImage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,10 +90,15 @@ class AddNews extends StatelessWidget {
                 onPress: () async {
                   final ImagePicker _picker = ImagePicker();
 
-                  final XFile? image =
+                  final XFile? pickedImage =
                       await _picker.pickImage(source: ImageSource.gallery);
                 },
               ),
+              // Container(
+              //   child: pickedImage != null
+              //       ? Image.file(File(pickedImage!.path), height: 100)
+              //       : Text("Pick up the  image"),
+              // ),
             ],
           ),
         ));

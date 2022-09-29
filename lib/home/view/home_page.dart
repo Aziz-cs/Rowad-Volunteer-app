@@ -1,12 +1,12 @@
-import 'package:app/home/item_news.dart';
+import '../../news/view/item_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import 'last_banners.dart';
-import 'item_chance.dart';
-import '../notifications/notification_page.dart';
+import '../../banners/view/last_banners.dart';
+import '../../chances/view/widgets/item_chance.dart';
+import '../../notifications/notification_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
