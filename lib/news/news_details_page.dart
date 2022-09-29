@@ -164,6 +164,7 @@ class NewsDetailsPage extends StatelessWidget {
                     'رجوع',
                     style: TextStyle(
                       fontSize: 13.sp,
+                      color: Colors.white,
                       height: 0.8,
                     ),
                   ),
@@ -188,6 +189,7 @@ class NewsDetailsPage extends StatelessWidget {
                       style: TextStyle(
                         height: 1,
                         fontSize: 18.sp,
+                        color: Colors.white,
                       ),
                     ),
                     SizedBox(height: 10.h),

@@ -1,6 +1,7 @@
 import 'package:app/splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
@@ -50,13 +51,10 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             fontFamily: 'Din',
-            textTheme: const TextTheme(
-              bodyText1: TextStyle(),
-              bodyText2: TextStyle(),
-            ).apply(
-              bodyColor: Colors.white,
-              displayColor: Colors.white,
-            ),
+            appBarTheme: Theme.of(context).appBarTheme.copyWith(
+                  systemOverlayStyle: SystemUiOverlayStyle.light,
+                ),
+            // platform: TargetPlatform.android,
           ),
           home: SplashPage(),
         );

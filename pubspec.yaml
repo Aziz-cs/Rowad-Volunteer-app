@@ -1,6 +1,6 @@
 name: app
 description: A new Flutter project.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
 
@@ -18,9 +18,10 @@ dependencies:
   firebase_auth: ^3.8.0
   cloud_firestore: ^3.4.7
 
+  image_picker: ^0.8.5+3
   shared_preferences: ^2.0.15
-  cupertino_icons: ^1.0.2  
-  persistent_bottom_nav_bar: ^4.0.2
+  cupertino_icons: ^1.0.2
+  persistent_bottom_nav_bar: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -31,7 +32,7 @@ flutter:
   uses-material-design: true
 
   assets:
-   - assets/images/
+    - assets/images/
 
   fonts:
     - family: Din
@@ -39,4 +40,3 @@ flutter:
         - asset: assets/fonts/DINNextLTArabic-Regular.ttf
         - asset: assets/fonts/DINNextLTArabic-Medium.ttf
           weight: 700
-   

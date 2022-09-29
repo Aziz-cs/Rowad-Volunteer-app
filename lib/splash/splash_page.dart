@@ -111,6 +111,7 @@ class SplashPage extends StatelessWidget {
           title,
           style: TextStyle(
             fontSize: 25.sp,
+            color: Colors.white,
           ),
         ),
       ),
@@ -149,6 +150,7 @@ class SplashPage extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 15.sp,
                   height: 0.8,
+                  color: Colors.white,
                 ),
               ),
               SizedBox(width: 4.w),
@@ -182,7 +184,7 @@ class SplashPage extends StatelessWidget {
               'تخطي',
               style: TextStyle(
                 fontSize: 17.sp,
-                // fontWeight: FontWeight.w500,
+                color: Colors.white,
               ),
             ),
           ),

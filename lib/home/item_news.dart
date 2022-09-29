@@ -3,7 +3,7 @@ import 'package:app/news/news_details_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class NewsItem extends StatelessWidget {
   const NewsItem({
@@ -13,7 +13,7 @@ class NewsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => pushNewScreen(
+      onTap: () => PersistentNavBarNavigator.pushNewScreen(
         context,
         screen: const NewsDetailsPage(),
         withNavBar: true, // OPTIONAL VALUE. True by default.

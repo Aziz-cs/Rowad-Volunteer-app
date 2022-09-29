@@ -42,6 +42,7 @@ class NotificationPage extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 13.sp,
                           height: 0.8,
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -56,12 +57,14 @@ class NotificationPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.w500,
+                        color: Colors.white,
                       ),
                     ),
                     Text(
                       'حذف جميع الإشعارات',
                       style: TextStyle(
                         fontSize: 14.sp,
+                        color: Colors.white,
                       ),
                     ),
                   ],

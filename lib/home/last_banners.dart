@@ -2,7 +2,7 @@ import 'package:app/news/news_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../utils/constants.dart';
 import '../widgets/simple_btn.dart';
@@ -28,7 +28,7 @@ class LastBanners extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Get.to(() => const NewsDetailsPage()),
+      onTap: () => print('Banner clicked'),
       child: Container(
         height: 200.h,
         decoration: BoxDecoration(
@@ -145,6 +145,7 @@ class LastBanners extends StatelessWidget {
                                   style: TextStyle(
                                     height: 1,
                                     fontSize: 18.sp,
+                                    color: Colors.white,
                                   ),
                                 ),
                                 SizedBox(height: 5.h),
@@ -173,7 +174,7 @@ class LastBanners extends StatelessWidget {
                       child: SimpleButton(
                           label: 'إقرأ المزيد',
                           onPress: () {
-                            pushNewScreen(
+                            PersistentNavBarNavigator.pushNewScreen(
                               context,
                               screen: const NewsDetailsPage(),
                               withNavBar:

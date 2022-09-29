@@ -1,10 +1,10 @@
 import 'package:app/chances/chances_page.dart';
-import 'package:app/utils/constants.dart';
-import 'package:app/profile/profile_page.dart';
 import 'package:app/news/news_page.dart';
+import 'package:app/others/others_page.dart';
+import 'package:app/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../home/home_page.dart';
 
@@ -59,7 +59,7 @@ List<Widget> _buildScreens() {
     HomePage(),
     ChancesPage(),
     NewsPage(),
-    ProfilePage(),
+    OthersPage(),
   ];
 }
 
@@ -84,8 +84,8 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
       inactiveColorPrimary: Colors.white54,
     ),
     PersistentBottomNavBarItem(
-      icon: const Icon(CupertinoIcons.person_fill),
-      title: ("حسابي"),
+      icon: const Icon(CupertinoIcons.circle_grid_3x3_fill),
+      title: ("أخرى"),
       activeColorPrimary: Colors.white,
       inactiveColorPrimary: Colors.white54,
     ),

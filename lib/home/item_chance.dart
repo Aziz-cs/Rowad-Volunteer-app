@@ -2,7 +2,7 @@ import 'package:app/chances/chance_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class ChanceItem extends StatelessWidget {
   const ChanceItem({
@@ -12,7 +12,7 @@ class ChanceItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => pushNewScreen(
+      onTap: () => PersistentNavBarNavigator.pushNewScreen(
         context,
         screen: const ChancePage(),
         withNavBar: true, // OPTIONAL VALUE. True by default.

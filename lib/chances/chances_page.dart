@@ -9,59 +9,47 @@ class ChancesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Column(
-            children: [
-              Container(
-                height: 100.h,
-                padding: const EdgeInsets.all(14),
-                decoration: const BoxDecoration(
-                  color: kGreenColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20),
+      appBar: AppBar(
+        backgroundColor: kGreenColor,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'جميع الفرص التطوعية',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  'ترتيب حسب',
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    height: 1,
                   ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Spacer(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'جميع الفرص التطوعية',
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(
-                              'ترتيب حسب',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                height: 1,
-                              ),
-                            ),
-                            SizedBox(width: 3.w),
-                            const Icon(
-                              Icons.filter_list,
-                              color: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                SizedBox(width: 3.w),
+                const Icon(
+                  Icons.filter_list,
+                  color: Colors.white,
                 ),
-              ),
-            ],
+              ],
+            ),
+          ],
+        ),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
           ),
+        ),
+      ),
+      body: Column(
+        children: [
+          SizedBox(height: 10.h),
           Expanded(
             child: SingleChildScrollView(
               child: GridView.count(

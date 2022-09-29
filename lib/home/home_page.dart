@@ -2,7 +2,7 @@ import 'package:app/home/item_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import 'last_banners.dart';
 import 'item_chance.dart';
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
         ),
         IconButton(
           onPressed: () {
-            pushNewScreen(
+            PersistentNavBarNavigator.pushNewScreen(
               context,
               screen: const NotificationPage(),
               withNavBar: true, // OPTIONAL VALUE. True by default.

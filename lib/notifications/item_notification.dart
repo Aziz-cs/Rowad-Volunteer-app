@@ -30,6 +30,7 @@ class NotificationItem extends StatelessWidget {
                   'تم إضافة عمل تطوعي لفريق بناء المستقبل يرجى التقدم بالإنضمام قبل يوم الخميس 22-9-2022',
                   style: TextStyle(
                     fontSize: 14.sp,
+                    color: Colors.white,
                   ),
                 ),
               ),
