@@ -30,7 +30,7 @@ class LastBanners extends StatelessWidget {
     return GestureDetector(
       onTap: () => print('Banner clicked'),
       child: Container(
-        height: 200.h,
+        height: 180.h,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: gradient,
@@ -79,8 +79,8 @@ class LastBanners extends StatelessWidget {
                           )),
                     ),
                     Positioned(
-                      top: 77.h,
-                      left: 5.w,
+                      top: 70.h,
+                      left: 1.w,
                       child: IconButton(
                         onPressed: () {
                           print('bannerIndex: $bannerIndex');
@@ -103,7 +103,7 @@ class LastBanners extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      top: 77.h,
+                      top: 70.h,
                       right: 5.w,
                       child: IconButton(
                         onPressed: () {
@@ -130,7 +130,7 @@ class LastBanners extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      bottom: 19.h,
+                      bottom: 10.h,
                       right: 4.w,
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
@@ -169,19 +169,19 @@ class LastBanners extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      bottom: 16.h,
-                      left: 10.w,
+                      bottom: 5.h,
+                      left: 8.w,
                       child: SimpleButton(
                           label: 'إقرأ المزيد',
                           onPress: () {
-                            PersistentNavBarNavigator.pushNewScreen(
-                              context,
-                              screen: const NewsDetailsPage(),
-                              withNavBar:
-                                  true, // OPTIONAL VALUE. True by default.
-                              pageTransitionAnimation:
-                                  PageTransitionAnimation.cupertino,
-                            );
+                            // PersistentNavBarNavigator.pushNewScreen(
+                            //   context,
+                            //   screen: NewsDetailsPage(news: ,),
+                            //   withNavBar:
+                            //       true, // OPTIONAL VALUE. True by default.
+                            //   pageTransitionAnimation:
+                            //       PageTransitionAnimation.cupertino,
+                            // );
                           }),
                     ),
                   ],

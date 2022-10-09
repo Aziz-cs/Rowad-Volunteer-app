@@ -40,6 +40,8 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Din',
             appBarTheme: Theme.of(context).appBarTheme.copyWith(
                   systemOverlayStyle: SystemUiOverlayStyle.light,
+                  backgroundColor: kGreenColor,
+                  centerTitle: true,
                 ),
             // platform: TargetPlatform.android,
           ),

@@ -17,11 +17,15 @@ dependencies:
   firebase_messaging: ^13.0.1
   firebase_auth: ^3.8.0
   cloud_firestore: ^3.4.7
-
+  firebase_storage: ^10.3.10
+  
   image_picker: ^0.8.5+3
   shared_preferences: ^2.0.15
   cupertino_icons: ^1.0.2
   persistent_bottom_nav_bar: ^5.0.2
+  fluttertoast: ^8.0.9
+  cached_network_image: ^3.2.1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

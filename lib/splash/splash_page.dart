@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../widgets/navigator_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('current page: $currentPage');
+    FirebaseAuth.instance.signInAnonymously();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -145,12 +148,23 @@ class SplashPage extends StatelessWidget {
           },
           child: Row(
             children: [
-              Text(
-                currentPage == 2 ? 'البدء' : 'التالي',
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  height: 0.8,
-                  color: Colors.white,
+              TextButton(
+                onPressed: () {
+                  if (currentPage < 2) {
+                    _pageViewController.animateToPage(currentPage + 1,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.ease);
+                  } else {
+                    Get.offAll(() => NavigatorPage());
+                  }
+                },
+                child: Text(
+                  currentPage == 2 ? 'البدء' : 'التالي',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    height: 0.8,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               SizedBox(width: 4.w),
@@ -176,10 +190,10 @@ class SplashPage extends StatelessWidget {
       Positioned(
         top: 80.h,
         left: 2.h,
-        child: GestureDetector(
-          onTap: () => Get.offAll(() => NavigatorPage()),
-          child: Container(
-            padding: const EdgeInsets.all(20),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: TextButton(
+            onPressed: () => Get.offAll(() => NavigatorPage()),
             child: Text(
               'تخطي',
               style: TextStyle(

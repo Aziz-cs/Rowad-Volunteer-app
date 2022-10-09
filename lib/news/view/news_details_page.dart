@@ -1,17 +1,27 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../utils/constants.dart';
+import '../../widgets/back_btn.dart';
+import '../../widgets/circular_loading.dart';
+import '../model/news.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
 class NewsDetailsPage extends StatelessWidget {
-  const NewsDetailsPage({Key? key}) : super(key: key);
-
+  NewsDetailsPage({
+    Key? key,
+    required this.news,
+  }) : super(key: key);
+  News news;
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFF3F3F3),
+        appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
           child: Column(
             children: [
@@ -34,80 +44,13 @@ class NewsDetailsPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'التبرع لمدارس إفريقيا',
+                news.description,
                 style: TextStyle(
-                  fontSize: 22.sp,
-                  color: Colors.black54,
+                  fontSize: 18.sp,
+                  color: Colors.grey.shade700,
                 ),
-              ),
-              SizedBox(height: 5.h),
-              Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                  ),
-                ],
               ),
               SizedBox(height: 20.h),
-              Text(
-                'التبرع لمدارس إفريقيا',
-                style: TextStyle(
-                  fontSize: 22.sp,
-                  color: Colors.black54,
-                ),
-              ),
-              SizedBox(height: 5.h),
-              Row(
-                children: [
-                  Flexible(
-                    child: Text(
-                      opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails +
-                          opportunityDetails,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey.shade700,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -118,18 +61,16 @@ class NewsDetailsPage extends StatelessWidget {
   Stack _buildOpportunityHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(
-                'assets/images/news_0.jpeg',
-              ),
-            ),
-          ),
+        CachedNetworkImage(
+          imageUrl: news.imageURL,
+          fit: BoxFit.fill,
           height: 210.h,
+          width: double.infinity,
+          placeholder: (context, url) => const CircularLoading(),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.error,
+            color: kGreenColor,
+          ),
         ),
         Container(
           height: 210.h,
@@ -149,64 +90,50 @@ class NewsDetailsPage extends StatelessWidget {
               )),
         ),
         Positioned(
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: 13,
-                  ),
-                  Text(
-                    'رجوع',
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: Colors.white,
-                      height: 0.8,
-                    ),
-                  ),
-                ],
-              ),
+          bottom: 2,
+          left: 2.w,
+          child: Text(
+            news.getFormatedDate(),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
         Positioned(
-          bottom: 16.h,
-          right: 15.w,
+          right: 5.w,
+          child: const BackBtn(),
+        ),
+        Positioned(
+          bottom: 30.h,
+          right: 5.w,
           child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'التطوع لمدارس إفريقيا',
-                      style: TextStyle(
-                        height: 1,
-                        fontSize: 18.sp,
-                        color: Colors.white,
-                      ),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: SizedBox(
+              width: 0.85.sw,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    news.title,
+                    style: TextStyle(
+                      height: 1,
+                      fontSize: 18.sp,
+                      color: Colors.white,
                     ),
-                    SizedBox(height: 10.h),
-                    SizedBox(
-                      width: 0.9.sw,
-                      child: Text(
-                        'حملة التبرع لمدارس إفريقيا وشمال إفريقيا برعاية جمعية وراد التـطوعي',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
-                          height: 1,
-                          fontSize: 13.sp,
-                        ),
-                      ),
+                  ),
+                  SizedBox(height: 5.h),
+                  Text(
+                    news.subTitle,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      height: 1,
+                      fontSize: 13.sp,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

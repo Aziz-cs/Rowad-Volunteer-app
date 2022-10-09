@@ -1,3 +1,7 @@
+import 'package:app/news/model/news.dart';
+import 'package:app/widgets/circular_loading.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'item_news.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,19 +55,47 @@ class NewsPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          Expanded(
-            child: GridView.count(
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              childAspectRatio: 0.8,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              children: List.generate(
-                8,
-                (index) => NewsItem(),
-              ),
-            ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('news')
+                .orderBy('timestamp')
+                .snapshots(),
+            builder: ((context, snapshot) {
+              List<NewsItem> newsItems = [];
+              print(snapshot.connectionState.toString());
+              if (snapshot.connectionState == ConnectionState.active) {
+                if (snapshot.hasError) {
+                  print('has error in loading news');
+                  return const Center(child: Text('هناك خطأ ما'));
+                }
+                var newsResult = snapshot.data!.docs;
+                newsResult.forEach(
+                  (newsElement) {
+                    News news = News.fromDB(
+                      newsElement.data() as Map<String, dynamic>,
+                      newsElement.id,
+                    );
+                    newsItems.add(NewsItem(news: news));
+                  },
+                );
+                return Expanded(
+                  child: GridView.count(
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.93,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    children: newsItems.reversed.toList(),
+                  ),
+                );
+              }
+              return Column(
+                children: const [
+                  Center(child: CircularLoading()),
+                ],
+              );
+            }),
           ),
           SizedBox(height: 20.h),
         ],

@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../news/model/news.dart';
 import '../../news/view/item_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +10,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../../banners/view/last_banners.dart';
 import '../../chances/view/widgets/item_chance.dart';
 import '../../notifications/notification_page.dart';
+import '../../widgets/circular_loading.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -19,28 +23,34 @@ class HomePage extends StatelessWidget {
         backgroundColor: const Color(0xFFF3F3F3),
         body: SafeArea(
           top: false,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  color: const Color(0xFF48B777),
-                  height: 0.16.sh,
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Column(
+            children: [
+              Container(
+                color: const Color(0xFF48B777),
+                height: 0.15.sh,
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                child: Column(
+                  children: [
+                    SizedBox(height: 50.h),
+                    _buildProfileRow(context),
+                    // SizedBox(height: 13.h),
+                    // _buildSearchRow(),
+                  ],
+                ),
+              ),
+              LastBanners(),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      SizedBox(height: 50.h),
-                      _buildProfileRow(context),
-                      // SizedBox(height: 13.h),
-                      // _buildSearchRow(),
+                      _buildLastChancesSection(),
+                      SizedBox(height: 10.h),
+                      _buildLastNewsSection(),
                     ],
                   ),
                 ),
-                LastBanners(),
-                _buildLastChancesSection(),
-                SizedBox(height: 10.h),
-                _buildLastNewsSection(),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -196,13 +206,40 @@ class HomePage extends StatelessWidget {
           ),
           SizedBox(height: 13.h),
           SizedBox(
-            height: 160.h,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                10,
-                (index) => NewsItem(),
-              ),
+            height: 220.h,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('news')
+                  .orderBy('timestamp', descending: false)
+                  .limitToLast(10)
+                  .snapshots(),
+              builder: ((context, snapshot) {
+                List<NewsItem> newsItems = [];
+
+                if (snapshot.connectionState == ConnectionState.active) {
+                  print(snapshot.connectionState.toString());
+                  var newsResult = snapshot.data!.docs;
+
+                  newsResult.forEach(
+                    (newsElement) {
+                      News news = News.fromDB(
+                        newsElement.data() as Map<String, dynamic>,
+                        newsElement.id,
+                      );
+                      newsItems.add(NewsItem(news: news));
+                    },
+                  );
+                  return ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: newsItems.reversed.toList(),
+                  );
+                }
+                return Column(
+                  children: const [
+                    Center(child: CircularLoading()),
+                  ],
+                );
+              }),
             ),
           ),
           SizedBox(height: 30.h),
