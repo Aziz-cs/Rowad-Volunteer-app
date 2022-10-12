@@ -24,6 +24,7 @@ class NewsDetailsPage extends StatelessWidget {
         appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildOpportunityHeadbar(context),
               SizedBox(height: 10.h),
@@ -41,7 +42,6 @@ class NewsDetailsPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.h),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 news.description,
@@ -66,7 +66,10 @@ class NewsDetailsPage extends StatelessWidget {
           fit: BoxFit.fill,
           height: 210.h,
           width: double.infinity,
-          placeholder: (context, url) => const CircularLoading(),
+          placeholder: (context, url) => Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Image.asset('assets/images/loading_spinner.gif'),
+          ),
           errorWidget: (context, url, error) => const Icon(
             Icons.error,
             color: kGreenColor,

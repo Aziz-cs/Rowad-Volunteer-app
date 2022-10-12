@@ -25,6 +25,7 @@ dependencies:
   persistent_bottom_nav_bar: ^5.0.2
   fluttertoast: ^8.0.9
   cached_network_image: ^3.2.1
+  flutter_datetime_picker: ^1.5.1
   intl: ^0.17.0
 
 dev_dependencies:

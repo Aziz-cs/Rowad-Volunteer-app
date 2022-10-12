@@ -55,7 +55,7 @@ class AddNews extends StatelessWidget {
                     controller: _titleController,
                     validator: (input) {
                       if (input!.isEmpty) {
-                        return kErrorEmpty;
+                        return kErrEmpty;
                       }
                     },
                   ),
@@ -67,7 +67,7 @@ class AddNews extends StatelessWidget {
                     controller: _shortDescController,
                     validator: (input) {
                       if (input!.isEmpty) {
-                        return kErrorEmpty;
+                        return kErrEmpty;
                       }
                     },
                   ),
@@ -82,7 +82,7 @@ class AddNews extends StatelessWidget {
                     maxLines: 7,
                     validator: (input) {
                       if (input!.isEmpty) {
-                        return kErrorEmpty;
+                        return kErrEmpty;
                       }
                     },
                   ),

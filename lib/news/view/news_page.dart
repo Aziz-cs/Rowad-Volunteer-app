@@ -2,7 +2,7 @@ import 'package:app/news/model/news.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'item_news.dart';
+import 'widgets/item_news.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -83,7 +83,7 @@ class NewsPage extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     crossAxisCount: 2,
-                    childAspectRatio: 0.93,
+                    childAspectRatio: 0.98,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
                     children: newsItems.reversed.toList(),

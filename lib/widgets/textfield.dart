@@ -16,6 +16,7 @@ class MyTextField extends StatelessWidget {
     this.inputAction = TextInputAction.done,
     this.labelText = '',
     this.isLabelCentered = false,
+    this.isReadOnly = false,
   }) : super(key: key);
 
   final String label;
@@ -30,14 +31,19 @@ class MyTextField extends StatelessWidget {
   final int maxLines;
   final TextInputAction inputAction;
   final String labelText;
+  final bool isReadOnly;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 3.h, bottom: 7.h),
       child: TextFormField(
-        textAlign: isLabelCentered ? TextAlign.center : TextAlign.right,
+        textAlign: isLabelCentered
+            ? TextAlign.center
+            : isLTRdirection
+                ? TextAlign.left
+                : TextAlign.right,
         controller: controller,
-        // textDirection: TextDirection.rtl,
+        readOnly: isReadOnly,
         cursorColor: Colors.black,
         maxLines: maxLines,
         keyboardType: inputType,
@@ -47,14 +53,13 @@ class MyTextField extends StatelessWidget {
         validator: validator,
         decoration: InputDecoration(
           // labelText: labelText,
-
           filled: true,
           hintText: label,
           hintStyle: TextStyle(color: Colors.grey.shade400),
           hintTextDirection: TextDirection.rtl,
           fillColor: Colors.white,
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(7.0),
+            borderRadius: BorderRadius.circular(10.0),
             borderSide: BorderSide(
               color: Colors.grey.shade400,
             ),
@@ -82,7 +87,7 @@ class MyTextField extends StatelessWidget {
           ),
           suffixIcon: suffixIcon,
           prefixIcon: preIcon,
-          contentPadding: const EdgeInsets.symmetric(vertical: 13),
+          contentPadding: const EdgeInsets.symmetric(vertical: 0),
         ),
         obscureText: isObsecure,
       ),

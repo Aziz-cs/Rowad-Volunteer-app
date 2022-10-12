@@ -1,3 +1,7 @@
+import 'package:app/utils/constants.dart';
+
+import '../../../widgets/online_img.dart';
+import '../../model/chance.dart';
 import '../chance_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,84 +9,141 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class ChanceItem extends StatelessWidget {
-  const ChanceItem({
+  ChanceItem({
     Key? key,
+    required this.chance,
   }) : super(key: key);
+
+  Chance chance;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => PersistentNavBarNavigator.pushNewScreen(
         context,
-        screen: const ChancePage(),
+        screen: ChancePage(chance: chance),
         withNavBar: true, // OPTIONAL VALUE. True by default.
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 2.w),
-        child: Container(
-          width: 140.w,
-          padding: EdgeInsets.symmetric(horizontal: 3.w),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Image.asset(
-                  'assets/images/opportunity_kids.jpeg',
+      child: Container(
+        width: 160.w,
+        margin: EdgeInsets.symmetric(horizontal: 3.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade300),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-                SizedBox(height: 1.h),
-                Text(
-                  'مراقب مجتمعي',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black54,
-                  ),
-                ),
-                Text(
-                  'أمانة منطقة جازان',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-                SizedBox(height: 2.h),
-                Row(
-                  children: [
-                    const Icon(
-                      CupertinoIcons.calendar_today,
-                      size: 20,
-                      color: Colors.green,
+                child: CachedOnlineIMG(imageURL: chance.imageURL),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding:
+                        EdgeInsets.only(left: 5.w, right: 5.w, bottom: 5.h),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: kGreenColor,
                     ),
-                    SizedBox(width: 5.w),
-                    Flexible(
-                      child: Text(
-                        '١ مارس إلى ١٠ مارس',
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          color: Colors.grey.shade600,
-                        ),
+                    child: Text(
+                      chance.title,
+                      maxLines: 2,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
-                ),
-                SizedBox(height: 3.h),
-                Wrap(
-                  direction: Axis.horizontal,
-                  children: [
-                    _buildIconTitleRow(
-                      title: '١٠ أيــام',
-                      iconData: CupertinoIcons.time_solid,
+                  ),
+                  if (chance.title.length < 25) SizedBox(height: 7.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          chance.organization,
+                          maxLines: 1,
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: 12.sp,
+                            color: kGreenColor,
+                          ),
+                        ),
+                        SizedBox(height: 5.h),
+                        Row(
+                          children: [
+                            Text(
+                              'من',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                height: 1,
+                              ),
+                            ),
+                            SizedBox(width: 3.w),
+                            const Icon(
+                              CupertinoIcons.calendar_today,
+                              size: 17,
+                              color: Colors.green,
+                            ),
+                            SizedBox(width: 3.w),
+                            Flexible(
+                              child: Text(
+                                chance.startDate,
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'إلى',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                height: 1,
+                              ),
+                            ),
+                            SizedBox(width: 3.w),
+                            Icon(
+                              CupertinoIcons.calendar_today,
+                              size: 17,
+                              color: Colors.red.shade800,
+                            ),
+                            SizedBox(width: 3.w),
+                            Flexible(
+                              child: Text(
+                                chance.endDate,
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: Colors.grey.shade600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (chance.title.length < 25) SizedBox(height: 7.h),
+                        SizedBox(height: 2.h),
+                        _buildIconTitleRow(
+                          title: chance.city,
+                          iconData: Icons.pin_drop,
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 7.w),
-                    _buildIconTitleRow(
-                      title: 'جازان',
-                      iconData: CupertinoIcons.location_fill,
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -96,14 +157,14 @@ Row _buildIconTitleRow({required String title, required IconData iconData}) {
     children: [
       Icon(
         iconData,
-        size: 24,
+        size: 17,
         color: Colors.green,
       ),
       SizedBox(width: 3.w),
       Text(
         title,
         style: TextStyle(
-          fontSize: 14.sp,
+          fontSize: 13.sp,
           color: Colors.grey.shade600,
         ),
       ),

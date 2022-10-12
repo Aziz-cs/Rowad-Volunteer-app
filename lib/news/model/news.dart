@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class News {
@@ -26,14 +25,14 @@ class News {
       subTitle: data['subTitle'] ?? '',
       description: data['description'] ?? '',
       imageURL: data['imageURL'] ?? '',
-      timestamp: data['timestamp'],
+      timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }
 
   String getFormatedDate() {
     var dateTime =
         DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
-    var formattedDate = DateFormat('HH:mm - MM/dd/yyyy').format(dateTime);
+    var formattedDate = DateFormat('MM/dd/yyyy').format(dateTime);
     return formattedDate;
   }
 }

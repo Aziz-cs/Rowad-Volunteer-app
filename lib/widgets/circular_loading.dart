@@ -1,3 +1,4 @@
+import 'package:app/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class CircularLoading extends StatelessWidget {
@@ -7,11 +8,11 @@ class CircularLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       width: 25,
       height: 25,
       child: CircularProgressIndicator(
-        color: Colors.red.shade800,
+        color: kGreenColor,
       ),
     );
   }

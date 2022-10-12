@@ -1,15 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../utils/constants.dart';
 import '../../widgets/simple_btn.dart';
+import '../model/chance.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
 class ChancePage extends StatelessWidget {
-  const ChancePage({Key? key}) : super(key: key);
+  ChancePage({
+    Key? key,
+    required this.chance,
+  }) : super(key: key);
 
+  Chance chance;
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -167,18 +174,19 @@ class ChancePage extends StatelessWidget {
   Stack _buildOpportunityHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: Colors.transparent,
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: AssetImage(
-                'assets/images/volunteer_help.png',
-              ),
-            ),
-          ),
+        CachedNetworkImage(
+          imageUrl: chance.imageURL,
+          fit: BoxFit.fill,
           height: 210.h,
+          width: double.infinity,
+          placeholder: (context, url) => Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Image.asset('assets/images/loading_spinner.gif'),
+          ),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.error,
+            color: kGreenColor,
+          ),
         ),
         Container(
           height: 210.h,
@@ -234,7 +242,7 @@ class ChancePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'التطوع لتوزيع الطعام بالمنازل',
+                      chance.title,
                       style: TextStyle(
                         color: Colors.white,
                         height: 1,
@@ -243,7 +251,7 @@ class ChancePage extends StatelessWidget {
                     ),
                     SizedBox(height: 10.h),
                     Text(
-                      'جمعية رواد للعمل التطوعي',
+                      chance.organization,
                       style: TextStyle(
                         color: Colors.white.withOpacity(0.9),
                         height: 1,

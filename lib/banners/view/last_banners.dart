@@ -30,7 +30,7 @@ class LastBanners extends StatelessWidget {
     return GestureDetector(
       onTap: () => print('Banner clicked'),
       child: Container(
-        height: 180.h,
+        height: 160.h,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: gradient,
@@ -79,7 +79,7 @@ class LastBanners extends StatelessWidget {
                           )),
                     ),
                     Positioned(
-                      top: 70.h,
+                      top: 55.h,
                       left: 1.w,
                       child: IconButton(
                         onPressed: () {
@@ -98,13 +98,13 @@ class LastBanners extends StatelessWidget {
                         icon: const Icon(
                           Icons.arrow_circle_left_rounded,
                           color: Colors.white,
-                          size: 40,
+                          size: 30,
                         ),
                       ),
                     ),
                     Positioned(
-                      top: 70.h,
-                      right: 5.w,
+                      top: 55.h,
+                      right: 0,
                       child: IconButton(
                         onPressed: () {
                           print('bannerIndex: $bannerIndex');
@@ -125,7 +125,7 @@ class LastBanners extends StatelessWidget {
                         icon: const Icon(
                           Icons.arrow_circle_right_rounded,
                           color: Colors.white,
-                          size: 40,
+                          size: 30,
                         ),
                       ),
                     ),
@@ -144,7 +144,7 @@ class LastBanners extends StatelessWidget {
                                   'التبرع لمدارس إفريقيا',
                                   style: TextStyle(
                                     height: 1,
-                                    fontSize: 18.sp,
+                                    fontSize: 16.sp,
                                     color: Colors.white,
                                   ),
                                 ),
@@ -158,7 +158,7 @@ class LastBanners extends StatelessWidget {
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(0.9),
                                       height: 1,
-                                      fontSize: 13.3.sp,
+                                      fontSize: 13.sp,
                                     ),
                                   ),
                                 ),
@@ -171,18 +171,21 @@ class LastBanners extends StatelessWidget {
                     Positioned(
                       bottom: 5.h,
                       left: 8.w,
-                      child: SimpleButton(
-                          label: 'إقرأ المزيد',
-                          onPress: () {
-                            // PersistentNavBarNavigator.pushNewScreen(
-                            //   context,
-                            //   screen: NewsDetailsPage(news: ,),
-                            //   withNavBar:
-                            //       true, // OPTIONAL VALUE. True by default.
-                            //   pageTransitionAnimation:
-                            //       PageTransitionAnimation.cupertino,
-                            // );
-                          }),
+                      child: SizedBox(
+                        height: 30.h,
+                        child: SimpleButton(
+                            label: 'إقرأ المزيد',
+                            onPress: () {
+                              // PersistentNavBarNavigator.pushNewScreen(
+                              //   context,
+                              //   screen: NewsDetailsPage(news: ,),
+                              //   withNavBar:
+                              //       true, // OPTIONAL VALUE. True by default.
+                              //   pageTransitionAnimation:
+                              //       PageTransitionAnimation.cupertino,
+                              // );
+                            }),
+                      ),
                     ),
                   ],
                 ),

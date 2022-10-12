@@ -1,7 +1,11 @@
+import 'package:app/chances/view/chances_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 
+import '../../chances/model/chance.dart';
 import '../../news/model/news.dart';
-import '../../news/view/item_news.dart';
+import '../../news/view/news_page.dart';
+import '../../news/view/widgets/item_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +15,7 @@ import '../../banners/view/last_banners.dart';
 import '../../chances/view/widgets/item_chance.dart';
 import '../../notifications/notification_page.dart';
 import '../../widgets/circular_loading.dart';
+import '../../widgets/navigator_page.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -27,7 +32,7 @@ class HomePage extends StatelessWidget {
             children: [
               Container(
                 color: const Color(0xFF48B777),
-                height: 0.15.sh,
+                height: 0.13.sh,
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: Column(
                   children: [
@@ -43,9 +48,9 @@ class HomePage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildLastChancesSection(),
+                      _buildLastChancesSection(context),
                       SizedBox(height: 10.h),
-                      _buildLastNewsSection(),
+                      _buildLastNewsSection(context),
                     ],
                   ),
                 ),
@@ -72,7 +77,7 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               child: CircleAvatar(
-                radius: 35,
+                radius: 20,
                 backgroundImage: Image.asset("assets/images/avatar.jpg").image,
               ),
             ),
@@ -87,13 +92,13 @@ class HomePage extends StatelessWidget {
                     fontSize: 13.sp,
                   ),
                 ),
-                SizedBox(height: 3.h),
                 Text(
                   'محمد عزيز',
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.5.sp,
-                      fontWeight: FontWeight.w500),
+                    fontSize: 16.sp,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             )
@@ -118,7 +123,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding _buildLastChancesSection() {
+  Padding _buildLastChancesSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -134,34 +139,45 @@ class HomePage extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    'شاهد الكل',
-                    style: TextStyle(
-                      fontSize: 13.5.sp,
-                      height: 1,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  SizedBox(width: 3.w),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                  ),
-                ],
-              ),
+              _buildSeeAllBtn(context: context, isSeeAllChance: true)
             ],
           ),
           SizedBox(height: 13.h),
           SizedBox(
-            height: 180.h,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                10,
-                (index) => ChanceItem(),
-              ),
+            height: 235.h,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('chances')
+                  .orderBy('timestamp', descending: false)
+                  .limitToLast(10)
+                  .snapshots(),
+              builder: ((context, snapshot) {
+                List<ChanceItem> chanceItems = [];
+
+                if (snapshot.connectionState == ConnectionState.active) {
+                  print(snapshot.connectionState.toString());
+                  var chanceData = snapshot.data!.docs;
+
+                  chanceData.forEach(
+                    (chanceElement) {
+                      Chance aChance = Chance.fromDB(
+                        chanceElement.data() as Map<String, dynamic>,
+                        chanceElement.id,
+                      );
+                      chanceItems.add(ChanceItem(chance: aChance));
+                    },
+                  );
+                  return ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: chanceItems.reversed.toList(),
+                  );
+                }
+                return Column(
+                  children: const [
+                    Center(child: CircularLoading()),
+                  ],
+                );
+              }),
             ),
           ),
         ],
@@ -169,7 +185,37 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding _buildLastNewsSection() {
+  Directionality _buildSeeAllBtn({
+    required BuildContext context,
+    required bool isSeeAllChance,
+  }) {
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: TextButton.icon(
+        onPressed: () {
+          Get.offAll(
+            () => NavigatorPage(tabIndex: isSeeAllChance ? 1 : 2),
+            duration: const Duration(microseconds: 1),
+          );
+        },
+        icon: const Icon(
+          Icons.arrow_back_ios,
+          size: 14,
+          color: Colors.grey,
+        ),
+        label: Text(
+          'شاهد الكل',
+          style: TextStyle(
+            fontSize: 13.5.sp,
+            height: 1,
+            color: Colors.black54,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildLastNewsSection(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -185,28 +231,11 @@ class HomePage extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    'شاهد الكل',
-                    style: TextStyle(
-                      fontSize: 13.5.sp,
-                      height: 1,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  SizedBox(width: 3.w),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                  ),
-                ],
-              ),
+              _buildSeeAllBtn(context: context, isSeeAllChance: false)
             ],
           ),
-          SizedBox(height: 13.h),
           SizedBox(
-            height: 220.h,
+            height: 200.h,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('news')

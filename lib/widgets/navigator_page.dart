@@ -9,12 +9,15 @@ import '../home/view/home_page.dart';
 import '../news/view/news_page.dart';
 
 class NavigatorPage extends StatelessWidget {
-  NavigatorPage({Key? key}) : super(key: key);
+  NavigatorPage({
+    Key? key,
+    this.tabIndex = 0,
+  }) : super(key: key);
   late PersistentTabController _controller;
-
+  int tabIndex;
   @override
   Widget build(BuildContext context) {
-    _controller = PersistentTabController(initialIndex: 0);
+    _controller = PersistentTabController(initialIndex: tabIndex);
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -24,14 +27,19 @@ class NavigatorPage extends StatelessWidget {
         screens: _buildScreens(),
         items: _navBarsItems(),
         confineInSafeArea: true,
+
         backgroundColor: kGreenColor, // Default is Colors.white.
         handleAndroidBackButtonPress: true, // Default is true.
         resizeToAvoidBottomInset:
-            true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+            false, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
         hideNavigationBarWhenKeyboardShows:
             true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+        decoration: const NavBarDecoration(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
+          ),
+          adjustScreenBottomPaddingOnCurve: true,
           colorBehindNavBar: Colors.white,
         ),
         popAllScreensOnTapOfSelectedTab: true,
@@ -47,8 +55,8 @@ class NavigatorPage extends StatelessWidget {
           curve: Curves.ease,
           duration: Duration(milliseconds: 200),
         ),
-        navBarStyle:
-            NavBarStyle.style3, // Choose the nav bar style with this property.
+        navBarStyle: NavBarStyle.style3,
+        // Choose the nav bar style with this property.
       ),
     );
   }
@@ -57,9 +65,9 @@ class NavigatorPage extends StatelessWidget {
 List<Widget> _buildScreens() {
   return [
     HomePage(),
-    ChancesPage(),
-    NewsPage(),
-    OthersPage(),
+    const ChancesPage(),
+    const NewsPage(),
+    const OthersPage(),
   ];
 }
 

@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+
+import '../../widgets/navigator_page.dart';
 
 class NewsController extends GetxController {
   final isLoading = false.obs;
@@ -30,6 +33,11 @@ class NewsController extends GetxController {
       },
     ).then((value) {
       isLoading.value = false;
+      Fluttertoast.showToast(msg: 'تم إضافة الفرصة بنجاح');
+      Get.offAll(
+        () => NavigatorPage(tabIndex: 2),
+        duration: const Duration(microseconds: 1),
+      );
     }).catchError((e) {
       print('error on submitting the news $e');
       isLoading.value = false;
@@ -52,30 +60,8 @@ class NewsController extends GetxController {
     String imageExtenstion = path.extension(imageFile.path);
     final ref = FirebaseStorage.instance.ref().child('images').child('news').child(
         '${Timestamp.now().millisecondsSinceEpoch.toString()}$imageExtenstion');
-
     await ref.putFile(imageFile);
     String downloadURL = await ref.getDownloadURL();
-    print('download: $downloadURL');
     return downloadURL;
   }
 }
-
-  // FirebaseFirestore.instance.collection('news').get().then((value) {
-  //   print(value.docs.first.data());
-  // });
-
-  // await FirebaseFirestore.instance.collection('news').get().then((snapshot) {
-  //   snapshot.docs.forEach((element) {
-  //     News news = News.fromRTDB(element.data(), element.id);
-  //     allNews.add(news);
-  //   });
-  //   allNews.forEach(
-  //     (element) {
-  //       print('Title: ${element.title}');
-  //       print('SubTitle: ${element.subTitle}');
-  //       print('Details: ${element.details}');
-  //       print('ID: ${element.id}');
-  //       print('=======');
-  //     },
-  //   );
-  // });
