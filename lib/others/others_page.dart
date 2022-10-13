@@ -27,16 +27,17 @@ class OthersPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          // ListTile(
-          //   leading: const Icon(CupertinoIcons.person_fill),
-          //   title: const Text('حسابي'),
-          //   subtitle: const Text('معلومات عن حسابك وصلاحيته'),
-          //   trailing: const Icon(
-          //     Icons.arrow_back_ios_new_rounded,
-          //     size: 15,
-          //   ),
-          //   onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
-          // ),
+          ListTile(
+            tileColor: Colors.red.shade100,
+            leading: const Icon(CupertinoIcons.person_fill),
+            title: const Text('حسابي'),
+            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 15,
+            ),
+            onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
+          ),
           Divider(
             color: Colors.grey,
             height: 4.h,

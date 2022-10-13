@@ -46,7 +46,7 @@ class NewsDetailsPage extends StatelessWidget {
               Text(
                 news.description,
                 style: TextStyle(
-                  fontSize: 18.sp,
+                  fontSize: 16.sp,
                   color: Colors.grey.shade700,
                 ),
               ),

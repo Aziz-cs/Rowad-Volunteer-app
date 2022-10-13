@@ -6,6 +6,7 @@ import '../controller/chances_controller.dart';
 class Chance {
   String id;
   String title;
+  String shortDesc;
   String imageURL;
   String startDate;
   String endDate;
@@ -26,6 +27,7 @@ class Chance {
   Chance({
     required this.id,
     required this.title,
+    required this.shortDesc,
     required this.imageURL,
     required this.startDate,
     required this.endDate,
@@ -48,6 +50,7 @@ class Chance {
     return Chance(
       id: id,
       title: data['title'] ?? '',
+      shortDesc: data['shortDesc'] ?? '',
       organization: data['organization'] ?? '',
       imageURL: data['imageURL'] ?? '',
       category: data['category'] ?? '',

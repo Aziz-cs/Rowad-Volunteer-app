@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/news/controller/news_controller.dart';
+import 'package:app/posters/controller/poster_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,22 +8,17 @@ import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
 import '../../widgets/circular_loading.dart';
-import '../../widgets/dropdown_menu.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
 
-const String kChooseCategory = '- أختر -';
+class AddBanner extends StatelessWidget {
+  AddBanner({Key? key}) : super(key: key);
 
-class AddNews extends StatelessWidget {
-  AddNews({Key? key}) : super(key: key);
-
-  final newsController = Get.put(NewsController());
+  final posterController = Get.put(PosterController());
   final _formKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
-  final _shortDescController = TextEditingController();
-  final _longDescController = TextEditingController();
-  final newsCategory = '- أختر -'.obs;
+  final _posterURLController = TextEditingController();
 
   // late final XFile? pickedImage;
   @override
@@ -31,7 +26,7 @@ class AddNews extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: kGreenColor,
-          title: const Text('إضافة خبر'),
+          title: const Text('إضافة إعلان'),
           centerTitle: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
@@ -48,7 +43,7 @@ class AddNews extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'عنوان الخبر',
+                    'العنوان',
                     style: kTitleTextStyle,
                   ),
                   MyTextField(
@@ -60,11 +55,11 @@ class AddNews extends StatelessWidget {
                     },
                   ),
                   Text(
-                    'نبذة مختصرة',
+                    'الرابط',
                     style: kTitleTextStyle,
                   ),
                   MyTextField(
-                    controller: _shortDescController,
+                    controller: _posterURLController,
                     validator: (input) {
                       if (input!.isEmpty) {
                         return kErrEmpty;
@@ -72,61 +67,27 @@ class AddNews extends StatelessWidget {
                     },
                   ),
                   Text(
-                    'الخبر',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    inputAction: TextInputAction.newline,
-                    inputType: TextInputType.multiline,
-                    controller: _longDescController,
-                    maxLines: 7,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
-                    'التصنيف',
-                    style: kTitleTextStyle,
-                  ),
-                  Obx(() => DropDownMenu(
-                        value: newsCategory.value,
-                        items: const [
-                          kChooseCategory,
-                          'أخبار الجمعية',
-                          'البرامج والمشاريع',
-                          'التريب',
-                          'أخرى'
-                        ],
-                        removeHeightPadding: true,
-                        onChanged: (selectedCategory) {
-                          newsCategory.value =
-                              selectedCategory ?? newsCategory.value;
-                        },
-                      )),
-                  Text(
-                    'الصورة البارزة',
+                    'الصورة',
                     style: kTitleTextStyle,
                   ),
                   SimpleButton(
                       label: 'أختر الصورة',
-                      onPress: () => newsController.pickImage()),
+                      onPress: () => posterController.pickImage()),
                   Obx(
-                    () => newsController.pickedImage.value.path.isEmpty
+                    () => posterController.pickedImage.value.path.isEmpty
                         ? const SizedBox()
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Image.file(
-                                File(newsController.pickedImage.value.path),
+                                File(posterController.pickedImage.value.path),
                                 width: 250.w,
                               ),
                             ],
                           ),
                   ),
                   SizedBox(height: 10.h),
-                  Obx(() => newsController.isLoading.isTrue
+                  Obx(() => posterController.isLoading.isTrue
                       ? const Center(child: CircularLoading())
                       : SimpleButton(
                           label: 'إضافة الخبر',
@@ -134,22 +95,16 @@ class AddNews extends StatelessWidget {
                             if (!_formKey.currentState!.validate()) {
                               return;
                             }
-                            if (newsController.pickedImage.value.path.isEmpty) {
+                            if (posterController
+                                .pickedImage.value.path.isEmpty) {
                               Fluttertoast.showToast(
                                   msg: 'برجاء رفع صورة للخبر');
                               return;
                             }
-                            if (newsCategory.value == kChooseCategory) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء إختيار التصنيف');
-                              return;
-                            }
 
-                            newsController.addNews(
+                            posterController.addBanner(
                               title: _titleController.text.trim(),
-                              shortDesc: _shortDescController.text.trim(),
-                              description: _longDescController.text.trim(),
-                              category: newsCategory.value,
+                              bannerURL: _posterURLController.text.trim(),
                             );
                           },
                         )),
@@ -160,12 +115,4 @@ class AddNews extends StatelessWidget {
           ),
         ));
   }
-
-  // void resetProperties() {
-  //   _titleController.clear();
-  //   _shortDescController.clear();
-  //   _longDescController.clear();
-  //   newsController.pickedImage.value = File('');
-  //   newsCategory.value = kChooseCategory;
-  // }
 }

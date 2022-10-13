@@ -1,3 +1,4 @@
+import 'package:app/utils/helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,10 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
+import '../../widgets/back_btn.dart';
 import '../../widgets/simple_btn.dart';
 import '../model/chance.dart';
-
-const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
 
 class ChancePage extends StatelessWidget {
   ChancePage({
@@ -23,6 +23,7 @@ class ChancePage extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: const Color(0xFFF3F3F3),
+        appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
           child: Column(
             children: [
@@ -46,7 +47,7 @@ class ChancePage extends StatelessWidget {
           Text(
             'نبذة عن الفرصة التطوعية',
             style: TextStyle(
-              fontSize: 15.5.sp,
+              fontSize: 17.sp,
               color: Colors.black54,
             ),
           ),
@@ -55,19 +56,9 @@ class ChancePage extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails +
-                      opportunityDetails,
+                  chance.shortDesc,
                   style: TextStyle(
-                    fontSize: 14.sp,
+                    fontSize: 16.sp,
                     color: Colors.grey.shade700,
                   ),
                 ),
@@ -85,7 +76,7 @@ class ChancePage extends StatelessWidget {
           SizedBox(height: 7.h),
           SimpleButton(
             label: 'انضم للفرصة من خلال المنصة',
-            onPress: () {},
+            onPress: () => Helper.openURL(chance.chanceURL),
           ),
         ],
       ),
@@ -107,17 +98,17 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: 'جمعية رواد للعمل التطوعي',
+                label: chance.organization,
                 iconData: CupertinoIcons.check_mark_circled_solid,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: 'الجهة الشرقية - جدة',
+                label: chance.city,
                 iconData: CupertinoIcons.location_fill,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: '22-9-2022 إلى 2022-10-1',
+                label: '${chance.startDate} إلى ${chance.endDate}',
                 iconData: CupertinoIcons.calendar_today,
               ),
             ],
@@ -127,17 +118,17 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: '١٠ أيام',
+                label: '١٠ أيام',
                 iconData: CupertinoIcons.time_solid,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: '75 متطوع',
+                label: '${chance.sitsNo} متطوع',
                 iconData: CupertinoIcons.person_fill,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                title: 'مؤهل عالى - دبلومة فنية',
+                label: chance.requiredDegree,
                 iconData: Icons.bar_chart_sharp,
               ),
             ],
@@ -148,19 +139,19 @@ class ChancePage extends StatelessWidget {
   }
 
   Row _buildIconInfo({
-    required String title,
+    required String label,
     required IconData iconData,
   }) {
     return Row(
       children: [
         Icon(
           iconData,
-          color: Colors.grey.shade400,
+          color: kGreenColor,
           size: 22,
         ),
         SizedBox(width: 5.w),
         Text(
-          title,
+          label,
           style: TextStyle(
             color: Colors.black87,
             height: 1,
@@ -206,29 +197,8 @@ class ChancePage extends StatelessWidget {
               )),
         ),
         Positioned(
-          child: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                    size: 13,
-                  ),
-                  Text(
-                    'رجوع',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 13.sp,
-                      height: 0.8,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          right: 5.w,
+          child: const BackBtn(),
         ),
         Positioned(
           bottom: 16.h,
@@ -268,7 +238,9 @@ class ChancePage extends StatelessWidget {
           bottom: 16.h,
           left: 10.w,
           child: SimpleButton(
-              label: 'انضم للفرصة', onPress: () => print('join change')),
+            label: 'انضم للفرصة',
+            onPress: () => Helper.openURL(chance.chanceURL),
+          ),
         )
       ],
     );

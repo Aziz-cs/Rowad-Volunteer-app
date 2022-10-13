@@ -1,19 +1,17 @@
-import 'package:app/chances/view/chances_page.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
-
-import '../../chances/model/chance.dart';
-import '../../news/model/news.dart';
-import '../../news/view/news_page.dart';
-import '../../news/view/widgets/item_news.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
-import '../../banners/view/last_banners.dart';
+import '../../chances/model/chance.dart';
 import '../../chances/view/widgets/item_chance.dart';
+import '../../news/model/news.dart';
+import '../../news/view/widgets/item_news.dart';
 import '../../notifications/notification_page.dart';
+import '../../posters/view/slider_banners.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/navigator_page.dart';
 
@@ -43,14 +41,14 @@ class HomePage extends StatelessWidget {
                   ],
                 ),
               ),
-              LastBanners(),
+              SlideBanners(),
+              // LastBanners(),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _buildLastChancesSection(context),
-                      SizedBox(height: 10.h),
                       _buildLastNewsSection(context),
+                      _buildLastChancesSection(context),
                     ],
                   ),
                 ),
@@ -77,8 +75,9 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               child: CircleAvatar(
-                radius: 20,
-                backgroundImage: Image.asset("assets/images/avatar.jpg").image,
+                radius: 22,
+                backgroundImage:
+                    Image.asset("assets/images/welcome_avatar.png").image,
               ),
             ),
             SizedBox(width: 9.w),
@@ -93,7 +92,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'محمد عزيز',
+                  'بالضــيف',
                   style: TextStyle(
                     fontSize: 16.sp,
                     color: Colors.white,
@@ -104,21 +103,33 @@ class HomePage extends StatelessWidget {
             )
           ],
         ),
-        IconButton(
-          onPressed: () {
-            PersistentNavBarNavigator.pushNewScreen(
-              context,
-              screen: const NotificationPage(),
-              withNavBar: true, // OPTIONAL VALUE. True by default.
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            );
-          },
-          icon: const Icon(
-            CupertinoIcons.bell,
-            size: 26,
-            color: Colors.white,
-          ),
-        )
+        Stack(
+          children: [
+            IconButton(
+              onPressed: () {
+                PersistentNavBarNavigator.pushNewScreen(
+                  context,
+                  screen: const NotificationPage(),
+                  withNavBar: true, // OPTIONAL VALUE. True by default.
+                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                );
+              },
+              icon: const Icon(
+                CupertinoIcons.bell,
+                size: 26,
+                color: Colors.white,
+              ),
+            ),
+            Positioned(
+              top: 8.h,
+              right: 7.w,
+              child: const CircleAvatar(
+                backgroundColor: Colors.red,
+                radius: 3.5,
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }

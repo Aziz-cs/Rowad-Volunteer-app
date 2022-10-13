@@ -22,7 +22,7 @@ class NewsController extends GetxController {
   }) async {
     isLoading.value = true;
     String imageURL = await uploadImage(imageFile: pickedImage.value);
-    await FirebaseFirestore.instance.collection('news').doc().set(
+    await FirebaseFirestore.instance.collection('news').add(
       {
         'title': title,
         'subTitle': shortDesc,

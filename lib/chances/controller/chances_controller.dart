@@ -23,6 +23,7 @@ class ChancesController extends GetxController {
 
   Future<void> addChance({
     required String title,
+    required String shortDesc,
     required String startDate,
     required String endDate,
     required String city,
@@ -41,15 +42,16 @@ class ChancesController extends GetxController {
     isLoading.value = true;
     String imageURL = await uploadImage(imageFile: pickedImage.value);
 
-    await FirebaseFirestore.instance.collection('chances').doc().set({
+    await FirebaseFirestore.instance.collection('chances').add({
       'title': title,
+      'shortDesc': title,
       'startDate': startDate,
       'endDate': endDate,
       'city': city,
       'organization': organization,
       'sitsNo': sitsNo,
       'category': category,
-      'degree': requiredDegree,
+      'requiredDegree': requiredDegree,
       'gender': getGenderType(genderEnum),
       'isTeamWork': isTeamWork,
       'isUrgent': isUrgent,
@@ -63,7 +65,7 @@ class ChancesController extends GetxController {
       isLoading.value = false;
       Fluttertoast.showToast(msg: 'تم إضافة الفرصة بنجاح');
       Get.offAll(
-        () => NavigatorPage(tabIndex: 3),
+        () => NavigatorPage(tabIndex: 1),
         duration: const Duration(microseconds: 1),
       );
     }).catchError((e) {

@@ -77,8 +77,8 @@ class AddChance extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
+  final _shortDescController = TextEditingController();
   final _organizationController = TextEditingController();
-  final _locationController = TextEditingController();
   final _sitNumbersController = TextEditingController();
   final _chanceURLController = TextEditingController();
   final category = 'عام'.obs;
@@ -125,6 +125,22 @@ class AddChance extends StatelessWidget {
                     },
                   ),
                   Text(
+                    'نبذة مختصرة',
+                    style: kTitleTextStyle,
+                  ),
+                  MyTextField(
+                    controller: _shortDescController,
+                    maxLines: 4,
+                    validator: (input) {
+                      if (input!.isEmpty) {
+                        return kErrEmpty;
+                      }
+                      if (input.length < 10) {
+                        return kErrTooShort;
+                      }
+                    },
+                  ),
+                  Text(
                     'الجهة المسؤولة',
                     style: kTitleTextStyle,
                   ),
@@ -139,6 +155,29 @@ class AddChance extends StatelessWidget {
                       }
                     },
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Expanded(
+                          child: Divider(
+                        color: kGreenColor,
+                      )),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10.w, vertical: 3),
+                        child: Text('التصنيف',
+                            style: TextStyle(
+                              fontSize: 15.sp,
+                              height: 1,
+                            )),
+                      ),
+                      const Expanded(
+                          child: Divider(
+                        color: kGreenColor,
+                      )),
+                    ],
+                  ),
+                  SizedBox(height: 5.h),
                   Row(
                     children: [
                       Expanded(
@@ -189,8 +228,6 @@ class AddChance extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text('التصنيف', style: kTitleTextStyle),
-                  SizedBox(height: 5.h),
                   Row(
                     children: [
                       Expanded(
@@ -516,10 +553,11 @@ class AddChance extends StatelessWidget {
                             }
                             chancesController.addChance(
                               title: _titleController.text.trim(),
+                              shortDesc: _shortDescController.text.trim(),
                               organization: _organizationController.text.trim(),
                               startDate: startDate.value,
                               endDate: endDate.value,
-                              city: _locationController.text.trim(),
+                              city: city.value,
                               sitsNo: _sitNumbersController.text.trim(),
                               category: category.value,
                               requiredDegree: requiredDegree.value,
