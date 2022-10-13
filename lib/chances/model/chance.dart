@@ -76,4 +76,11 @@ class Chance {
     var formattedDate = DateFormat('HH:mm - MM/dd/yyyy').format(dateTime);
     return formattedDate;
   }
+
+  int getDaysLeft() {
+    var formatter = DateFormat('dd-MM-yyyy');
+    DateTime startDateTime = formatter.parse(startDate);
+    DateTime endDateTime = formatter.parse(endDate);
+    return endDateTime.difference(startDateTime).inDays;
+  }
 }

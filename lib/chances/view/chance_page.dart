@@ -118,7 +118,7 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: '١٠ أيام',
+                label: '${chance.getDaysLeft()} أيام',
                 iconData: CupertinoIcons.time_solid,
               ),
               SizedBox(height: 13.h),

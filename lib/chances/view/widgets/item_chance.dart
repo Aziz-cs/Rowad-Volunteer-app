@@ -134,9 +134,28 @@ class ChanceItem extends StatelessWidget {
                         ),
                         if (chance.title.length < 25) SizedBox(height: 7.h),
                         SizedBox(height: 2.h),
-                        _buildIconTitleRow(
-                          title: chance.city,
-                          iconData: Icons.pin_drop,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            _buildIconTitleRow(
+                              title: chance.city,
+                              iconData: Icons.pin_drop,
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                  color: kGreenColor,
+                                  borderRadius: BorderRadius.circular(5)),
+                              child: Text(
+                                '${chance.getDaysLeft()} أيام',
+                                style: TextStyle(
+                                  fontSize: 11.sp,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
                         ),
                       ],
                     ),
