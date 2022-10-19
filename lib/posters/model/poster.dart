@@ -25,11 +25,4 @@ class Poster {
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }
-
-  String getFormatedDate() {
-    var dateTime =
-        DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
-    var formattedDate = DateFormat('MM/dd/yyyy').format(dateTime);
-    return formattedDate;
-  }
 }

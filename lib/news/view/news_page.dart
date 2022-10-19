@@ -1,4 +1,5 @@
 import 'package:app/news/model/news.dart';
+import 'package:app/news/view/widgets/item_news_list.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,7 +62,7 @@ class NewsPage extends StatelessWidget {
                 .orderBy('timestamp')
                 .snapshots(),
             builder: ((context, snapshot) {
-              List<NewsItem> newsItems = [];
+              List<NewsListItem> newsItems = [];
               print(snapshot.connectionState.toString());
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasError) {
@@ -75,20 +76,23 @@ class NewsPage extends StatelessWidget {
                       newsElement.data() as Map<String, dynamic>,
                       newsElement.id,
                     );
-                    newsItems.add(NewsItem(news: news));
+                    newsItems.add(NewsListItem(news: news));
                   },
                 );
-                return Expanded(
-                  child: GridView.count(
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.98,
-                    mainAxisSpacing: 8,
-                    crossAxisSpacing: 8,
-                    children: newsItems.reversed.toList(),
-                  ),
+                return Column(
+                  children: newsItems.reversed.toList(),
                 );
+                // Expanded(
+                //   child: GridView.count(
+                //     padding: EdgeInsets.zero,
+                //     shrinkWrap: true,
+                //     crossAxisCount: 2,
+                //     childAspectRatio: 0.98,
+                //     mainAxisSpacing: 8,
+                //     crossAxisSpacing: 8,
+                //     children: newsItems.reversed.toList(),
+                //   ),
+                // );
               }
               return Column(
                 children: const [

@@ -31,7 +31,6 @@ class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('current page: $currentPage');
-    FirebaseAuth.instance.signInAnonymously();
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(

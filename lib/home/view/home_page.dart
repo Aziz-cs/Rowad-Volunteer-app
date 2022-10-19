@@ -1,3 +1,4 @@
+import 'package:app/utils/constants.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,6 +54,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -153,7 +155,6 @@ class HomePage extends StatelessWidget {
               _buildSeeAllBtn(context: context, isSeeAllChance: true)
             ],
           ),
-          SizedBox(height: 13.h),
           SizedBox(
             height: 235.h,
             child: StreamBuilder<QuerySnapshot>(
@@ -282,7 +283,6 @@ class HomePage extends StatelessWidget {
               }),
             ),
           ),
-          SizedBox(height: 30.h),
         ],
       ),
     );

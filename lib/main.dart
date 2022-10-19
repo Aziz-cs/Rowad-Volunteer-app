@@ -1,4 +1,5 @@
 import 'package:app/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'splash/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +17,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await sharedPrefs.init();
+  await FirebaseAuth.instance.signInAnonymously();
 
   runApp(const MyApp());
 }
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
                   centerTitle: true,
                 ),
             // platform: TargetPlatform.android,
+            // highlightColor: kGreenColor,
+            splashColor: kGreenColor,
           ),
           home: SplashPage(),
         );

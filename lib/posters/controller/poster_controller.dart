@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:app/controller/image_controller.dart';
+import 'package:app/utils/constants.dart';
+import 'package:app/widgets/navigator_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,34 +16,26 @@ class PosterController extends GetxController {
   final pickedImage = File('').obs;
   final ImagePicker picker = ImagePicker();
 
-  Poster poster = Poster(
-      id: '',
-      title: 'title',
-      posterURL: 'posterURL',
-      imageURL: 'imageURL',
-      timestamp: Timestamp.now());
-  Future<void> addBanner({
+  Future<void> addPoster({
     required String title,
-    required String bannerURL,
+    required String posterURL,
   }) async {
+    isLoading.value = true;
+    String imageURL = await ImageController.uploadImage(
+        imageFile: pickedImage.value, category: 'posters');
     FirebaseFirestore.instance.collection('posters').add({
-      'title': 'توصيل المياة لـ ١٠٠ أسرة فى الدمام',
-      'imageURL':
-          'https://www.islamicreliefcanada.org/wp-content/uploads/2022/04/RS260227_IMG_8669-1-scaled.jpg',
+      'title': title,
+      'imageURL': imageURL,
       'timestamp': Timestamp.now(),
       'bannerURL': 'https://nvg.gov.sa/',
+    }).then((value) {
+      isLoading.value = false;
+      Fluttertoast.showToast(msg: 'تم نشر الإعلان بنجاح');
+      Get.offAll(() => NavigatorPage(tabIndex: 0));
+    }).catchError((e) {
+      print('error on publishing poster $e');
+      isLoading.value = false;
+      Fluttertoast.showToast(msg: kErrEmpty);
     });
-  }
-
-  Future<void> pickImage() async {
-    try {
-      final XFile? imageFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 17,
-      );
-      pickedImage.value = File(imageFile!.path);
-    } catch (e) {
-      print('error in image picking $e');
-    }
   }
 }

@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 
+import '../../controller/image_controller.dart';
+
 enum Gender { males, females, both }
 
 class ChancesController extends GetxController {
@@ -41,7 +43,10 @@ class ChancesController extends GetxController {
     required String chanceURL,
   }) async {
     isLoading.value = true;
-    String imageURL = await uploadImage(imageFile: pickedImage.value);
+    String imageURL = await ImageController.uploadImage(
+      imageFile: pickedImage.value,
+      category: 'chances',
+    );
 
     await FirebaseFirestore.instance.collection('chances').add({
       'title': title,
@@ -73,31 +78,6 @@ class ChancesController extends GetxController {
       isLoading.value = false;
       print('error on adding chance $e');
     });
-  }
-
-  Future<void> pickImage() async {
-    try {
-      final XFile? imageFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 17,
-      );
-      pickedImage.value = File(imageFile!.path);
-    } catch (e) {
-      print('error in image picking $e');
-    }
-  }
-
-  Future<String> uploadImage({required File imageFile}) async {
-    String imageExtenstion = path.extension(imageFile.path);
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('images')
-        .child('chances')
-        .child(
-            '${Timestamp.now().millisecondsSinceEpoch.toString()}$imageExtenstion');
-    await ref.putFile(imageFile);
-    String downloadURL = await ref.getDownloadURL();
-    return downloadURL;
   }
 }
 

@@ -1,10 +1,13 @@
 import 'package:app/widgets/online_img.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:app/utils/helper.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
 import '../../widgets/circular_loading.dart';
@@ -49,8 +52,8 @@ class SlideBanners extends StatelessWidget {
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('posters')
-                .orderBy('timestamp', descending: false)
-                .limitToLast(10)
+                .orderBy('timestamp')
+                .limitToLast(5)
                 .snapshots(),
             builder: ((context, snapshot) {
               List<Poster> posterItems = [];
@@ -77,12 +80,7 @@ class SlideBanners extends StatelessWidget {
                         children: [
                           Positioned.fill(
                               child: CachedOnlineIMG(
-                                  imageURL: posterItems[index].imageURL)
-                              // Image.asset(
-                              //   'assets/images/news_$index.jpeg',
-                              //   fit: BoxFit.fill,
-                              // ),
-                              ),
+                                  imageURL: posterItems[index].imageURL)),
                           Container(
                             height: 200.h,
                             decoration: BoxDecoration(
@@ -99,6 +97,54 @@ class SlideBanners extends StatelessWidget {
                                     0.5,
                                   ],
                                 )),
+                          ),
+                          Positioned(
+                            top: 2.h,
+                            left: 7.w,
+                            child: Text(
+                              getFormatedDate(posterItems[index].timestamp),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                                backgroundColor: Colors.black26,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            right: 3,
+                            child: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.delete,
+                                size: 19,
+                                color: Colors.red.shade300,
+                              ),
+                              onPressed: () {
+                                Get.defaultDialog(
+                                  title: 'حذف هذا الإعلان',
+                                  middleText: '',
+                                  actions: [
+                                    SimpleButton(
+                                      label: 'تأكيد',
+                                      onPress: () {
+                                        FirebaseFirestore.instance
+                                            .collection('posters')
+                                            .doc(posterItems[index].id)
+                                            .delete();
+                                        Get.back();
+
+                                        Fluttertoast.showToast(
+                                            msg: kMsgDeleted);
+                                      },
+                                    ),
+                                    SimpleButton(
+                                      label: 'إلغاء',
+                                      onPress: () => Get.back(),
+                                    )
+                                  ],
+                                );
+                              },
+                            ),
                           ),
                           Positioned(
                             top: 55.h,

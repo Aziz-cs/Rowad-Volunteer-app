@@ -1,11 +1,10 @@
 import 'dart:io';
 
+import 'package:app/controller/image_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path/path.dart' as path;
 
 import '../../widgets/navigator_page.dart';
 
@@ -21,7 +20,8 @@ class NewsController extends GetxController {
     required String category,
   }) async {
     isLoading.value = true;
-    String imageURL = await uploadImage(imageFile: pickedImage.value);
+    String imageURL = await ImageController.uploadImage(
+        imageFile: pickedImage.value, category: 'news');
     await FirebaseFirestore.instance.collection('news').add(
       {
         'title': title,
@@ -42,26 +42,5 @@ class NewsController extends GetxController {
       print('error on submitting the news $e');
       isLoading.value = false;
     });
-  }
-
-  Future<void> pickImage() async {
-    try {
-      final XFile? imageFile = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 17,
-      );
-      pickedImage.value = File(imageFile!.path);
-    } catch (e) {
-      print('error in image picking $e');
-    }
-  }
-
-  Future<String> uploadImage({required File imageFile}) async {
-    String imageExtenstion = path.extension(imageFile.path);
-    final ref = FirebaseStorage.instance.ref().child('images').child('news').child(
-        '${Timestamp.now().millisecondsSinceEpoch.toString()}$imageExtenstion');
-    await ref.putFile(imageFile);
-    String downloadURL = await ref.getDownloadURL();
-    return downloadURL;
   }
 }

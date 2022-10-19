@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/controller/image_controller.dart';
 import 'package:app/posters/controller/poster_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +12,8 @@ import '../../widgets/circular_loading.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
 
-class AddBanner extends StatelessWidget {
-  AddBanner({Key? key}) : super(key: key);
+class AddPoster extends StatelessWidget {
+  AddPoster({Key? key}) : super(key: key);
 
   final posterController = Get.put(PosterController());
   final _formKey = GlobalKey<FormState>();
@@ -71,8 +72,12 @@ class AddBanner extends StatelessWidget {
                     style: kTitleTextStyle,
                   ),
                   SimpleButton(
-                      label: 'أختر الصورة',
-                      onPress: () => posterController.pickImage()),
+                    label: 'أختر الصورة',
+                    onPress: () async {
+                      posterController.pickedImage.value =
+                          await ImageController.pickImage(imageQuality: 25);
+                    },
+                  ),
                   Obx(
                     () => posterController.pickedImage.value.path.isEmpty
                         ? const SizedBox()
@@ -90,21 +95,26 @@ class AddBanner extends StatelessWidget {
                   Obx(() => posterController.isLoading.isTrue
                       ? const Center(child: CircularLoading())
                       : SimpleButton(
-                          label: 'إضافة الخبر',
+                          label: 'إضافة الإعلان',
                           onPress: () {
                             if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+                            if (_posterURLController.text.trim().isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: 'برجاء إضافة رابط للإعلان');
                               return;
                             }
                             if (posterController
                                 .pickedImage.value.path.isEmpty) {
                               Fluttertoast.showToast(
-                                  msg: 'برجاء رفع صورة للخبر');
+                                  msg: 'برجاء رفع صورة للإعلان');
                               return;
                             }
 
-                            posterController.addBanner(
+                            posterController.addPoster(
                               title: _titleController.text.trim(),
-                              bannerURL: _posterURLController.text.trim(),
+                              posterURL: _posterURLController.text.trim(),
                             );
                           },
                         )),

@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:app/controller/image_controller.dart';
 import 'package:app/news/controller/news_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -90,28 +92,56 @@ class AddNews extends StatelessWidget {
                     'التصنيف',
                     style: kTitleTextStyle,
                   ),
-                  Obx(() => DropDownMenu(
-                        value: newsCategory.value,
-                        items: const [
-                          kChooseCategory,
-                          'أخبار الجمعية',
-                          'البرامج والمشاريع',
-                          'التريب',
-                          'أخرى'
-                        ],
-                        removeHeightPadding: true,
-                        onChanged: (selectedCategory) {
-                          newsCategory.value =
-                              selectedCategory ?? newsCategory.value;
-                        },
-                      )),
+                  FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('news_categories')
+                          .orderBy('name')
+                          .get(),
+                      builder: ((context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          List<String> categoriesList = [];
+                          var result = snapshot.data!.docs;
+                          result.forEach((element) {
+                            Map category = element.data() as Map;
+                            categoriesList.add(category['name']);
+                          });
+                          return Obx(() => DropDownMenu(
+                                value: newsCategory.value,
+                                items: categoriesList.toList(),
+                                removeHeightPadding: true,
+                                onChanged: (selectedCategory) {
+                                  newsCategory.value =
+                                      selectedCategory ?? newsCategory.value;
+                                },
+                              ));
+                        }
+                        return const Center(child: CircularLoading());
+                      })),
+                  // Obx(() => DropDownMenu(
+                  //       value: newsCategory.value,
+                  //       items: const [
+                  //         kChooseCategory,
+                  //         'أخبار الجمعية',
+                  //         'البرامج والمشاريع',
+                  //         'التريب',
+                  //         'أخرى'
+                  //       ],
+                  //       removeHeightPadding: true,
+                  //       onChanged: (selectedCategory) {
+                  //         newsCategory.value =
+                  //             selectedCategory ?? newsCategory.value;
+                  //       },
+                  //     )),
                   Text(
                     'الصورة البارزة',
                     style: kTitleTextStyle,
                   ),
                   SimpleButton(
                       label: 'أختر الصورة',
-                      onPress: () => newsController.pickImage()),
+                      onPress: () async {
+                        newsController.pickedImage.value =
+                            await ImageController.pickImage();
+                      }),
                   Obx(
                     () => newsController.pickedImage.value.path.isEmpty
                         ? const SizedBox()

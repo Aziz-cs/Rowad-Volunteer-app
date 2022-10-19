@@ -85,7 +85,7 @@ class ChancesPage extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       crossAxisCount: 2,
-                      childAspectRatio: 0.75,
+                      childAspectRatio: 0.71,
                       mainAxisSpacing: 8,
                       crossAxisSpacing: 8,
                       children: chanceItems.reversed.toList(),

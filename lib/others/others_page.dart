@@ -1,3 +1,5 @@
+import 'package:app/admin/view/admin_panel_page.dart';
+import 'package:app/posters/view/add_poster_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../chances/view/add_chance_page.dart';
@@ -27,21 +29,6 @@ class OthersPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          ListTile(
-            tileColor: Colors.red.shade100,
-            leading: const Icon(CupertinoIcons.person_fill),
-            title: const Text('حسابي'),
-            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
-            trailing: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 15,
-            ),
-            onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
-          ),
-          Divider(
-            color: Colors.grey,
-            height: 4.h,
-          ),
           ListTile(
             leading: const Icon(Icons.newspaper),
             title: const Text('إضافة خبر'),
@@ -75,6 +62,59 @@ class OthersPage extends StatelessWidget {
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 4.h,
+          ),
+          ListTile(
+            leading: const Icon(CupertinoIcons.news_solid),
+            title: const Text('إضافة إعلان'),
+            subtitle: const Text('إضافة إعلان فى أعلى الصفحة الرئيسية'),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 15,
+            ),
+            onTap: () => PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: AddPoster(),
+              withNavBar: true, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            ),
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 4.h,
+          ),
+          ListTile(
+            leading: const Icon(Icons.admin_panel_settings),
+            title: const Text('لوحة التحكم'),
+            subtitle: const Text('إعدادات المدير العام'),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 15,
+            ),
+            onTap: () => PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: AdminPanelPage(),
+              withNavBar: true, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            ),
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 4.h,
+          ),
+          ListTile(
+            tileColor: Colors.amber.shade100,
+            leading: const Icon(CupertinoIcons.person_fill),
+            title: const Text('حسابي'),
+            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 15,
+            ),
+            onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
           ),
           Divider(
             color: Colors.grey,

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/chances/controller/chances_controller.dart';
+import 'package:app/controller/image_controller.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -473,7 +474,8 @@ class AddChance extends StatelessWidget {
                   SimpleButton(
                     label: 'أختر الصورة',
                     onPress: () async {
-                      chancesController.pickImage();
+                      chancesController.pickedImage.value =
+                          await ImageController.pickImage();
                     },
                   ),
                   Obx(

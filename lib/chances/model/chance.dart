@@ -70,17 +70,17 @@ class Chance {
     );
   }
 
-  String getFormatedDate() {
-    var dateTime =
-        DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
-    var formattedDate = DateFormat('HH:mm - MM/dd/yyyy').format(dateTime);
-    return formattedDate;
-  }
-
   int getDaysLeft() {
     var formatter = DateFormat('dd-MM-yyyy');
     DateTime startDateTime = formatter.parse(startDate);
     DateTime endDateTime = formatter.parse(endDate);
     return endDateTime.difference(startDateTime).inDays;
+  }
+
+  String getDaysWordinArabic() {
+    if (getDaysLeft() == 1) return 'يوم';
+    if (getDaysLeft() < 11) return 'أيام';
+
+    return 'يوم';
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/constants.dart';
+import '../../utils/helper.dart';
 import '../../widgets/back_btn.dart';
 import '../../widgets/circular_loading.dart';
 import '../model/news.dart';
@@ -93,10 +94,10 @@ class NewsDetailsPage extends StatelessWidget {
               )),
         ),
         Positioned(
-          bottom: 2,
+          bottom: 2.h,
           left: 2.w,
           child: Text(
-            news.getFormatedDate(),
+            getFormatedDate(news.timestamp),
             style: TextStyle(
               color: Colors.white,
               fontSize: 12.sp,
