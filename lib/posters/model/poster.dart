@@ -6,6 +6,7 @@ class Poster {
   String title;
   String posterURL;
   String imageURL;
+  String imagePath;
   Timestamp timestamp;
 
   Poster({
@@ -13,6 +14,7 @@ class Poster {
     required this.title,
     required this.posterURL,
     required this.imageURL,
+    required this.imagePath,
     required this.timestamp,
   });
 
@@ -22,6 +24,7 @@ class Poster {
       title: data['title'] ?? '',
       posterURL: data['bannerURL'] ?? '',
       imageURL: data['imageURL'] ?? '',
+      imagePath: data['imagePath'] ?? '',
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }

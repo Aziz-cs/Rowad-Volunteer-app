@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/general/model/image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -21,19 +22,23 @@ class ImageController {
     }
   }
 
-  static Future<String> uploadImage({
+  static Future<UploadedImage> uploadImage({
     required File imageFile,
     required String category,
+    required String docID,
   }) async {
+    UploadedImage uploadedImage = UploadedImage(imageURL: '', imagePath: '');
     String imageExtenstion = path.extension(imageFile.path);
     final ref = FirebaseStorage.instance
         .ref()
         .child('images')
         .child(category)
-        .child(
-            '${Timestamp.now().millisecondsSinceEpoch.toString()}$imageExtenstion');
+        .child(docID)
+        .child('$docID$imageExtenstion');
+
     await ref.putFile(imageFile);
-    String downloadURL = await ref.getDownloadURL();
-    return downloadURL;
+    uploadedImage.imageURL = await ref.getDownloadURL();
+    uploadedImage.imagePath = ref.fullPath;
+    return uploadedImage;
   }
 }

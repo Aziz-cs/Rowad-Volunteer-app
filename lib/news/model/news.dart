@@ -6,7 +6,9 @@ class News {
   String title;
   String subTitle;
   String description;
+  String category;
   String imageURL;
+  String imagePath;
   Timestamp timestamp;
 
   News({
@@ -14,7 +16,9 @@ class News {
     required this.title,
     required this.subTitle,
     required this.description,
+    required this.category,
     required this.imageURL,
+    required this.imagePath,
     required this.timestamp,
   });
 
@@ -24,7 +28,9 @@ class News {
       title: data['title'] ?? '',
       subTitle: data['subTitle'] ?? '',
       description: data['description'] ?? '',
+      category: data['category'] ?? '',
       imageURL: data['imageURL'] ?? '',
+      imagePath: data['imagePath'] ?? '',
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }

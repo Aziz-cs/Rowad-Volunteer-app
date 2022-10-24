@@ -107,39 +107,6 @@ class NewsItem extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                icon: Icon(
-                                  CupertinoIcons.delete,
-                                  size: 17,
-                                  color: Colors.red.withOpacity(0.5),
-                                ),
-                                onPressed: () {
-                                  Get.defaultDialog(
-                                    title: 'حذف هذا الخبر؟',
-                                    middleText: '',
-                                    actions: [
-                                      SimpleButton(
-                                        label: 'تأكيد',
-                                        onPress: () {
-                                          FirebaseFirestore.instance
-                                              .collection('news')
-                                              .doc(news.id)
-                                              .delete();
-                                          Get.back();
-                                          Fluttertoast.showToast(
-                                              msg: kMsgDeleted);
-                                        },
-                                      ),
-                                      SimpleButton(
-                                        label: 'إلغاء',
-                                        onPress: () => Get.back(),
-                                      )
-                                    ],
-                                  );
-                                },
-                              ),
                             ],
                           ),
                         ],

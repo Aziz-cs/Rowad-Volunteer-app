@@ -39,7 +39,7 @@ class OthersPage extends StatelessWidget {
             ),
             onTap: () => PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: AddNews(),
+              screen: AddNewsPage(),
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),

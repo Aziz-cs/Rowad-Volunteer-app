@@ -138,35 +138,6 @@ class ChanceItem extends StatelessWidget {
                               ],
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => Get.defaultDialog(
-                              title: 'حذف هذه الفرصة؟',
-                              middleText: '',
-                              actions: [
-                                SimpleButton(
-                                  label: 'تأكيد',
-                                  onPress: () {
-                                    FirebaseFirestore.instance
-                                        .collection('chances')
-                                        .doc(chance.id)
-                                        .delete();
-                                    Get.back();
-
-                                    Fluttertoast.showToast(msg: kMsgDeleted);
-                                  },
-                                ),
-                                SimpleButton(
-                                  label: 'إلغاء',
-                                  onPress: () => Get.back(),
-                                )
-                              ],
-                            ),
-                            child: Icon(
-                              CupertinoIcons.delete,
-                              size: 17,
-                              color: Colors.red.withOpacity(0.5),
-                            ),
-                          ),
                         ],
                       ),
                       if (chance.title.length < 25) SizedBox(height: 7.h),

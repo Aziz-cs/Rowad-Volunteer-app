@@ -17,8 +17,13 @@ import '../../widgets/textfield.dart';
 
 const String kChooseCategory = '- أختر -';
 
-class AddNewsPage extends StatelessWidget {
-  AddNewsPage({Key? key}) : super(key: key);
+class EditNewsPage extends StatelessWidget {
+  EditNewsPage({
+    Key? key,
+    required this.news,
+  }) : super(key: key);
+
+  final News news;
 
   final newsController = Get.put(NewsController());
   final _formKey = GlobalKey<FormState>();
@@ -28,21 +33,23 @@ class AddNewsPage extends StatelessWidget {
   final _descriptionController = TextEditingController();
   final newsCategory = '- أختر -'.obs;
 
-  // late final XFile? pickedImage;
   @override
   Widget build(BuildContext context) {
+    setNewsData();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: kGreenColor,
-          title: const Text('إضافة خبر'),
-          centerTitle: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(15),
-            ),
+      appBar: AppBar(
+        backgroundColor: kGreenColor,
+        title: const Text('تعديل خبر'),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
           ),
         ),
-        body: Padding(
+      ),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             child: Form(
@@ -123,7 +130,7 @@ class AddNewsPage extends StatelessWidget {
                     style: kTitleTextStyle,
                   ),
                   SimpleButton(
-                      label: 'أختر الصورة',
+                      label: 'تغيير الصورة',
                       onPress: () async {
                         newsController.pickedImage.value =
                             await ImageController.pickImage();
@@ -141,46 +148,69 @@ class AddNewsPage extends StatelessWidget {
                             ],
                           ),
                   ),
-                  SizedBox(height: 10.h),
-                  Obx(() => newsController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
-                      : SimpleButton(
-                          label: 'إضافة الخبر',
-                          onPress: () {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-                            if (newsController.pickedImage.value.path.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء رفع صورة للخبر');
-                              return;
-                            }
-                            if (newsCategory.value == kChooseCategory) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء إختيار التصنيف');
-                              return;
-                            }
-
-                            News news = News(
-                              id: '',
-                              title: _titleController.text.trim(),
-                              subTitle: _subTitleController.text.trim(),
-                              description: _descriptionController.text.trim(),
-                              category: newsCategory.value,
-                              imageURL: '',
-                              imagePath: '',
-                              timestamp: Timestamp.now(),
-                            );
-
-                            newsController.addModifyNews(news: news);
-                          },
-                        )),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),
           ),
-        ));
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
+        child: Obx(
+          () => newsController.isLoading.isTrue
+              ? const CircularLoading()
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SimpleButton(
+                        label: 'تعديل الخبر',
+                        onPress: () {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+
+                          if (newsCategory.value == kChooseCategory) {
+                            Fluttertoast.showToast(msg: 'برجاء إختيار التصنيف');
+                            return;
+                          }
+
+                          News modifiedNews = News(
+                            id: news.id,
+                            title: _titleController.text.trim(),
+                            subTitle: _subTitleController.text.trim(),
+                            description: _descriptionController.text.trim(),
+                            category: newsCategory.value,
+                            imageURL: news.imageURL,
+                            imagePath: news.imagePath,
+                            timestamp: news.timestamp,
+                          );
+
+                          newsController.addModifyNews(
+                            news: modifiedNews,
+                            isModifing: true,
+                            isChangedPic: newsController
+                                .pickedImage.value.path.isNotEmpty,
+                          );
+                        }),
+                    SimpleButton(
+                      backgroundColor: Colors.red.shade600,
+                      label: 'حذف الخبر',
+                      onPress: () => newsController.deleteNews(news),
+                    ),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
+  void setNewsData() {
+    _titleController.text = news.title;
+    _subTitleController.text = news.subTitle;
+    _descriptionController.text = news.description;
+    newsCategory.value = news.category;
   }
 
   // void resetProperties() {

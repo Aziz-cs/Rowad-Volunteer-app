@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:app/controller/image_controller.dart';
 import 'package:app/posters/controller/poster_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../general/controller/image_controller.dart';
 import '../../utils/constants.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/simple_btn.dart';

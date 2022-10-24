@@ -1,18 +1,20 @@
 import 'dart:io';
 
 import 'package:app/chances/controller/chances_controller.dart';
-import 'package:app/controller/image_controller.dart';
 import 'package:app/widgets/circular_loading.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../../general/controller/image_controller.dart';
 import '../../utils/constants.dart';
 import '../../widgets/dropdown_menu.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
+import '../model/chance.dart';
 
 const DatePickerTheme datePickerTheme = DatePickerTheme(
   doneStyle: TextStyle(color: Colors.white),
@@ -72,7 +74,9 @@ const cityDegrees = [
 const kChooseCity = 'اختر المدينة';
 
 class AddChance extends StatelessWidget {
-  AddChance({Key? key}) : super(key: key);
+  AddChance({
+    Key? key,
+  }) : super(key: key);
 
   ChancesController chancesController = Get.put(ChancesController());
   final _formKey = GlobalKey<FormState>();
@@ -388,6 +392,7 @@ class AddChance extends StatelessWidget {
                   _buildTwoRadioBtnsOnly(
                     firstLabel: 'فردي',
                     secondLabel: 'جماعي',
+                    isGroupValueFirstChoice: false,
                     rxBool: chancesController.isTeamWork,
                   ),
                   _aDivider(),
@@ -405,6 +410,7 @@ class AddChance extends StatelessWidget {
                               _buildTwoRadioBtnsOnly(
                                 firstLabel: 'نعم',
                                 secondLabel: 'لا',
+                                isGroupValueFirstChoice: true,
                                 rxBool: chancesController.isUrgent,
                               ),
                             ],
@@ -421,6 +427,7 @@ class AddChance extends StatelessWidget {
                               _buildTwoRadioBtnsOnly(
                                 firstLabel: 'نعم',
                                 secondLabel: 'لا',
+                                isGroupValueFirstChoice: true,
                                 rxBool: chancesController.isOnline,
                               ),
                             ],
@@ -443,6 +450,7 @@ class AddChance extends StatelessWidget {
                             _buildTwoRadioBtnsOnly(
                               firstLabel: 'نعم',
                               secondLabel: 'لا',
+                              isGroupValueFirstChoice: true,
                               rxBool: chancesController.isSupportDisabled,
                             ),
                           ],
@@ -459,6 +467,7 @@ class AddChance extends StatelessWidget {
                             _buildTwoRadioBtnsOnly(
                               firstLabel: 'نعم',
                               secondLabel: 'لا',
+                              isGroupValueFirstChoice: true,
                               rxBool: chancesController.isNeedInterview,
                             ),
                           ],
@@ -553,7 +562,8 @@ class AddChance extends StatelessWidget {
                                   msg: 'برجاء رفع صورة للخبر');
                               return;
                             }
-                            chancesController.addChance(
+
+                            Chance chance = Chance(
                               title: _titleController.text.trim(),
                               shortDesc: _shortDescController.text.trim(),
                               organization: _organizationController.text.trim(),
@@ -563,7 +573,8 @@ class AddChance extends StatelessWidget {
                               sitsNo: _sitNumbersController.text.trim(),
                               category: category.value,
                               requiredDegree: requiredDegree.value,
-                              genderEnum: chancesController.genderType.value,
+                              gender: chancesController.getGenderType(
+                                  chancesController.genderType.value),
                               isTeamWork: chancesController.isTeamWork.value,
                               isUrgent: chancesController.isUrgent.value,
                               isOnline: chancesController.isOnline.value,
@@ -572,7 +583,12 @@ class AddChance extends StatelessWidget {
                               isNeedInterview:
                                   chancesController.isNeedInterview.value,
                               chanceURL: _chanceURLController.text.trim(),
+                              id: '',
+                              imageURL: '',
+                              imagePath: '',
+                              timestamp: Timestamp.now(),
                             );
+                            chancesController.addModifyChance(chance: chance);
                           },
                         )),
                   SizedBox(height: 20.h),
@@ -657,6 +673,7 @@ class AddChance extends StatelessWidget {
   Row _buildTwoRadioBtnsOnly({
     required String firstLabel,
     required String secondLabel,
+    required isGroupValueFirstChoice,
     required RxBool rxBool,
   }) {
     return Row(
@@ -674,7 +691,7 @@ class AddChance extends StatelessWidget {
                 ),
               ),
               value: rxBool.value,
-              groupValue: false,
+              groupValue: isGroupValueFirstChoice,
               onChanged: (_) {
                 rxBool.value = !rxBool.value;
               },
@@ -694,7 +711,7 @@ class AddChance extends StatelessWidget {
                 ),
               ),
               value: rxBool.value,
-              groupValue: true,
+              groupValue: !isGroupValueFirstChoice,
               onChanged: (value) {
                 rxBool.value = !rxBool.value;
               },

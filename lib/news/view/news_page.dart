@@ -3,7 +3,6 @@ import 'package:app/news/view/widgets/item_news_list.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'widgets/item_news.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

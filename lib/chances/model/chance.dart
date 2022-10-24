@@ -8,6 +8,7 @@ class Chance {
   String title;
   String shortDesc;
   String imageURL;
+  String imagePath;
   String startDate;
   String endDate;
   String city;
@@ -29,6 +30,7 @@ class Chance {
     required this.title,
     required this.shortDesc,
     required this.imageURL,
+    required this.imagePath,
     required this.startDate,
     required this.endDate,
     required this.city,
@@ -53,14 +55,15 @@ class Chance {
       shortDesc: data['shortDesc'] ?? '',
       organization: data['organization'] ?? '',
       imageURL: data['imageURL'] ?? '',
+      imagePath: data['imagePath'] ?? '',
       category: data['category'] ?? '',
       chanceURL: data['chanceURL'] ?? '',
       startDate: data['startDate'] ?? '',
       endDate: data['endDate'] ?? '',
-      gender: data[''] ?? '',
+      gender: data['gender'] ?? '',
       isNeedInterview: data['isNeedInterview'] ?? false,
       isOnline: data['isOnline'] ?? false,
-      isSupportDisabled: data['isSupportedDisabled'] ?? false,
+      isSupportDisabled: data['isSupportDisabled'] ?? false,
       isTeamWork: data['isTeamWork'] ?? false,
       isUrgent: data['isUrgent'] ?? false,
       city: data['city'] ?? '',
