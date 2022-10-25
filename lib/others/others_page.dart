@@ -77,7 +77,7 @@ class OthersPage extends StatelessWidget {
             ),
             onTap: () => PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: AddPoster(),
+              screen: AddPosterPage(),
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),

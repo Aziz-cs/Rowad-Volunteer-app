@@ -190,7 +190,7 @@ class EditNewsPage extends StatelessWidget {
                           newsController.addModifyNews(
                             news: modifiedNews,
                             isModifing: true,
-                            isChangedPic: newsController
+                            isPicChanged: newsController
                                 .pickedImage.value.path.isNotEmpty,
                           );
                         }),

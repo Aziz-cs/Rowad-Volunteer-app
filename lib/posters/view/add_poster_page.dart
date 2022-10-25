@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/posters/controller/poster_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,9 +12,10 @@ import '../../utils/constants.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
+import '../model/poster.dart';
 
-class AddPoster extends StatelessWidget {
-  AddPoster({Key? key}) : super(key: key);
+class AddPosterPage extends StatelessWidget {
+  AddPosterPage({Key? key}) : super(key: key);
 
   final posterController = Get.put(PosterController());
   final _formKey = GlobalKey<FormState>();
@@ -60,6 +62,7 @@ class AddPoster extends StatelessWidget {
                     style: kTitleTextStyle,
                   ),
                   MyTextField(
+                    isLTRdirection: true,
                     controller: _posterURLController,
                     validator: (input) {
                       if (input!.isEmpty) {
@@ -112,10 +115,16 @@ class AddPoster extends StatelessWidget {
                               return;
                             }
 
-                            posterController.addPoster(
+                            Poster poster = Poster(
+                              id: '',
                               title: _titleController.text.trim(),
                               posterURL: _posterURLController.text.trim(),
+                              imageURL: '',
+                              imagePath: '',
+                              timestamp: Timestamp.now(),
                             );
+
+                            posterController.addModifyPoster(poster: poster);
                           },
                         )),
                   SizedBox(height: 30.h),

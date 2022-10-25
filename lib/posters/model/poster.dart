@@ -22,7 +22,7 @@ class Poster {
     return Poster(
       id: id,
       title: data['title'] ?? '',
-      posterURL: data['bannerURL'] ?? '',
+      posterURL: data['posterURL'] ?? '',
       imageURL: data['imageURL'] ?? '',
       imagePath: data['imagePath'] ?? '',
       timestamp: data['timestamp'] ?? Timestamp.now(),

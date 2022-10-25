@@ -1,12 +1,10 @@
+import 'package:app/posters/view/edit_poster_screen.dart';
+import 'package:app/utils/helper.dart';
 import 'package:app/widgets/online_img.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:app/utils/helper.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
@@ -60,9 +58,9 @@ class SlideBanners extends StatelessWidget {
 
               if (snapshot.connectionState == ConnectionState.active) {
                 print(snapshot.connectionState.toString());
-                var chanceData = snapshot.data!.docs;
+                var posterData = snapshot.data!.docs;
 
-                chanceData.forEach(
+                posterData.forEach(
                   (chanceElement) {
                     Poster aPoster = Poster.fromDB(
                       chanceElement.data() as Map<String, dynamic>,
@@ -114,35 +112,11 @@ class SlideBanners extends StatelessWidget {
                           Positioned(
                             right: 3,
                             child: IconButton(
-                              icon: Icon(
-                                CupertinoIcons.delete,
-                                size: 19,
-                                color: Colors.red.shade300,
-                              ),
+                              icon: const Icon(Icons.edit,
+                                  size: 19, color: Colors.white),
                               onPressed: () {
-                                Get.defaultDialog(
-                                  title: 'حذف هذا الإعلان',
-                                  middleText: '',
-                                  actions: [
-                                    SimpleButton(
-                                      label: 'تأكيد',
-                                      onPress: () {
-                                        FirebaseFirestore.instance
-                                            .collection('posters')
-                                            .doc(posterItems[index].id)
-                                            .delete();
-                                        Get.back();
-
-                                        Fluttertoast.showToast(
-                                            msg: kMsgDeleted);
-                                      },
-                                    ),
-                                    SimpleButton(
-                                      label: 'إلغاء',
-                                      onPress: () => Get.back(),
-                                    )
-                                  ],
-                                );
+                                Get.to(() =>
+                                    EditPosterPage(poster: posterItems[index]));
                               },
                             ),
                           ),

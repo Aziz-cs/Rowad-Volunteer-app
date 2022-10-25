@@ -19,7 +19,7 @@ class NewsController extends GetxController {
   Future<void> addModifyNews({
     required News news,
     bool isModifing = false,
-    bool isChangedPic = false,
+    bool isPicChanged = false,
   }) async {
     isLoading.value = true;
 
@@ -36,33 +36,33 @@ class NewsController extends GetxController {
           .collection('news')
           .doc(news.id)
           .update(newsData)
-          .then((value) async {
-        if (isChangedPic) {
-          UploadedImage uploadedImage = await ImageController.uploadImage(
-            imageFile: pickedImage.value,
-            category: 'news',
-            docID: news.id,
-          );
-
-          await FirebaseFirestore.instance
-              .collection('news')
-              .doc(news.id)
-              .update({
-            'imageURL': uploadedImage.imageURL,
-            'imagePath': uploadedImage.imagePath,
-          });
-        }
-
-        isLoading.value = false;
-        Fluttertoast.showToast(msg: 'تم تعديل الفرصة بنجاح');
-        Get.offAll(
-          () => NavigatorPage(tabIndex: 2),
-          duration: const Duration(microseconds: 1),
-        );
-      }).catchError((e) {
+          .catchError((e) {
         print('error on submitting the news $e');
         isLoading.value = false;
       });
+
+      if (isPicChanged) {
+        UploadedImage uploadedImage = await ImageController.uploadImage(
+          imageFile: pickedImage.value,
+          category: 'news',
+          docID: news.id,
+        );
+
+        await FirebaseFirestore.instance
+            .collection('news')
+            .doc(news.id)
+            .update({
+          'imageURL': uploadedImage.imageURL,
+          'imagePath': uploadedImage.imagePath,
+        });
+      }
+
+      isLoading.value = false;
+      Fluttertoast.showToast(msg: 'تم تعديل الفرصة بنجاح');
+      Get.offAll(
+        () => NavigatorPage(tabIndex: 2),
+        duration: const Duration(microseconds: 1),
+      );
     } else {
       await FirebaseFirestore.instance
           .collection('news')

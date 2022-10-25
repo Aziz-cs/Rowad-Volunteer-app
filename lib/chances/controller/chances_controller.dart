@@ -35,7 +35,7 @@ class ChancesController extends GetxController {
   Future<void> addModifyChance({
     required Chance chance,
     bool isModifing = false,
-    bool isChangedPic = false,
+    bool isPicChanged = false,
   }) async {
     isLoading.value = true;
 
@@ -66,31 +66,31 @@ class ChancesController extends GetxController {
           .collection(kDBChances)
           .doc(chance.id)
           .update(chanceMapData)
-          .then((value) async {
-        if (isChangedPic) {
-          UploadedImage uploadedImage = await ImageController.uploadImage(
-            imageFile: pickedImage.value,
-            category: kDBChances,
-            docID: chance.id,
-          );
-          await FirebaseFirestore.instance
-              .collection(kDBChances)
-              .doc(chance.id)
-              .update({
-            'imageURL': uploadedImage.imageURL,
-            'imagePath': uploadedImage.imagePath,
-          });
-        }
-        isLoading.value = false;
-        Fluttertoast.showToast(msg: 'تم تعديل الفرصة بنجاح');
-        Get.offAll(
-          () => NavigatorPage(tabIndex: 1),
-          duration: const Duration(microseconds: 1),
-        );
-      }).catchError((e) {
+          .catchError((e) {
         isLoading.value = false;
         print('error on editing chance $e');
       });
+
+      if (isPicChanged) {
+        UploadedImage uploadedImage = await ImageController.uploadImage(
+          imageFile: pickedImage.value,
+          category: kDBChances,
+          docID: chance.id,
+        );
+        await FirebaseFirestore.instance
+            .collection(kDBChances)
+            .doc(chance.id)
+            .update({
+          'imageURL': uploadedImage.imageURL,
+          'imagePath': uploadedImage.imagePath,
+        });
+      }
+      isLoading.value = false;
+      Fluttertoast.showToast(msg: 'تم تعديل الفرصة بنجاح');
+      Get.offAll(
+        () => NavigatorPage(tabIndex: 1),
+        duration: const Duration(microseconds: 1),
+      );
     } else {
       // adding new chance
       await FirebaseFirestore.instance

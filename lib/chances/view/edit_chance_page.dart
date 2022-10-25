@@ -604,7 +604,7 @@ class EditChance extends StatelessWidget {
                           chancesController.addModifyChance(
                             chance: modifiedChance,
                             isModifing: true,
-                            isChangedPic: chancesController
+                            isPicChanged: chancesController
                                 .pickedImage.value.path.isNotEmpty,
                           );
                         },
