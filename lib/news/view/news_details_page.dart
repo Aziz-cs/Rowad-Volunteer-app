@@ -1,20 +1,14 @@
 import 'package:app/news/view/edit_news_page.dart';
-import 'package:app/widgets/navigator_page.dart';
-import 'package:app/widgets/simple_btn.dart';
-import 'package:app/widgets/textfield.dart';
+import 'package:app/widgets/online_img.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
 import '../../utils/helper.dart';
 import '../../widgets/back_btn.dart';
-import '../../widgets/circular_loading.dart';
-import '../../widgets/dropdown_menu.dart';
 import '../model/news.dart';
 
 const String opportunityDetails = 'هذا النص الذي يعطي نبذة عن الفرصة التطوعية ';
@@ -37,17 +31,38 @@ class NewsDetailsPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildOpportunityHeadbar(context),
+              _buildNewsHeadbar(context),
               SizedBox(height: 10.h),
-              _buildOppertunityDetails(),
+              _buildNewsDetails(),
+              if (news.gallery.isNotEmpty) SizedBox(height: 190.h),
+              SizedBox(height: 20.h),
             ],
           ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                aspectRatio: 2.1,
+                initialPage: 1,
+                enlargeCenterPage: true,
+                autoPlayInterval: const Duration(seconds: 3),
+              ),
+              items: news.gallery
+                  .map((imageURL) => CachedOnlineIMG(imageURL: imageURL))
+                  .toList(),
+            ),
+            SizedBox(height: 20.h),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildOppertunityDetails() {
+  Widget _buildNewsDetails() {
     return Expanded(
       child: SingleChildScrollView(
         child: Padding(
@@ -69,7 +84,7 @@ class NewsDetailsPage extends StatelessWidget {
     );
   }
 
-  Stack _buildOpportunityHeadbar(BuildContext context) {
+  Stack _buildNewsHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
         CachedNetworkImage(
@@ -143,6 +158,7 @@ class NewsDetailsPage extends StatelessWidget {
                 children: [
                   Text(
                     news.title,
+                    maxLines: 2,
                     style: TextStyle(
                       height: 1,
                       fontSize: 18.sp,
@@ -152,6 +168,8 @@ class NewsDetailsPage extends StatelessWidget {
                   SizedBox(height: 5.h),
                   Text(
                     news.subTitle,
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white.withOpacity(0.9),
                       height: 1,

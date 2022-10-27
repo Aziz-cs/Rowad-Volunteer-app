@@ -35,10 +35,10 @@ class _ChancePageState extends State<ChancePage> {
         body: SafeArea(
           child: Column(
             children: [
-              _buildOpportunityHeadbar(context),
-              _buildOpportunityInfo(),
+              _buildChanceHeadbar(context),
+              _buildChanceInfo(),
               Divider(color: Colors.grey.shade800),
-              _buildOppertunityDetails(),
+              _buildChanceDetails(),
             ],
           ),
         ),
@@ -46,7 +46,7 @@ class _ChancePageState extends State<ChancePage> {
     );
   }
 
-  Padding _buildOppertunityDetails() {
+  Padding _buildChanceDetails() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.h),
       child: Column(
@@ -92,7 +92,7 @@ class _ChancePageState extends State<ChancePage> {
   }
 
   // _buildIconInfo(
-  Widget _buildOpportunityInfo() {
+  Widget _buildChanceInfo() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -179,7 +179,7 @@ class _ChancePageState extends State<ChancePage> {
     );
   }
 
-  Stack _buildOpportunityHeadbar(BuildContext context) {
+  Stack _buildChanceHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
         CachedNetworkImage(

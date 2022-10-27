@@ -3,6 +3,7 @@ import 'package:app/posters/view/add_poster_page.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../chances/view/add_chance_page.dart';
+import '../main.dart';
 import '../news/view/add_news_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +116,28 @@ class OthersPage extends StatelessWidget {
               size: 15,
             ),
             onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 4.h,
+          ),
+          ListTile(
+            tileColor: kGreenColor.withOpacity(0.5),
+            leading: const Icon(Icons.update_sharp),
+            title: const Text(
+              'تطبيق رواد [تحت الإنشاء]',
+            ),
+            subtitle: const Text('نسخة $appVersion'),
+            trailing: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 15,
+            ),
+            onTap: () => PersistentNavBarNavigator.pushNewScreen(
+              context,
+              screen: AdminPanelPage(),
+              withNavBar: true, // OPTIONAL VALUE. True by default.
+              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            ),
           ),
           Divider(
             color: Colors.grey,

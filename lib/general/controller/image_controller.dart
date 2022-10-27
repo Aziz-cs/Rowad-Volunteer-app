@@ -26,15 +26,24 @@ class ImageController {
     required File imageFile,
     required String category,
     required String docID,
+    bool isNewsGallery = false,
   }) async {
     UploadedImage uploadedImage = UploadedImage(imageURL: '', imagePath: '');
     String imageExtenstion = path.extension(imageFile.path);
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child('images')
-        .child(category)
-        .child(docID)
-        .child('$docID$imageExtenstion');
+    final ref = isNewsGallery
+        ? FirebaseStorage.instance
+            .ref()
+            .child('images')
+            .child(category)
+            .child(docID)
+            .child('album')
+            .child('${Timestamp.now().microsecondsSinceEpoch}$imageExtenstion')
+        : FirebaseStorage.instance
+            .ref()
+            .child('images')
+            .child(category)
+            .child(docID)
+            .child('$docID$imageExtenstion');
 
     await ref.putFile(imageFile);
     uploadedImage.imageURL = await ref.getDownloadURL();

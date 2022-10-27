@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/news/controller/news_controller.dart';
 import 'package:app/news/model/news.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -31,6 +32,7 @@ class AddNewsPage extends StatelessWidget {
   // late final XFile? pickedImage;
   @override
   Widget build(BuildContext context) {
+    clearProperties();
     return Scaffold(
         appBar: AppBar(
           backgroundColor: kGreenColor,
@@ -142,6 +144,78 @@ class AddNewsPage extends StatelessWidget {
                           ),
                   ),
                   SizedBox(height: 10.h),
+                  Text(
+                    'ألبوم الصور (إختياري)',
+                    style: kTitleTextStyle,
+                  ),
+                  Obx(() => Visibility(
+                        visible: newsController.photoAlbum.length < 3,
+                        child: SimpleButton(
+                            label: 'أضف صورة',
+                            onPress: () async {
+                              File pickedImage =
+                                  await ImageController.pickImage();
+                              if (pickedImage.path.isNotEmpty) {
+                                newsController.photoAlbum.add(pickedImage);
+                              }
+
+                              // newsController.pickedImage.value =
+                              //     await ImageController.pickImage();
+                            }),
+                      )),
+                  Obx(
+                    () => Row(
+                      children: newsController.photoAlbum
+                          .map(
+                            (e) => Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 1.w),
+                              child: Stack(
+                                children: [
+                                  Image.file(
+                                    File((e as File).path),
+                                    width: 100.w,
+                                    height: 100.h,
+                                    fit: BoxFit.fill,
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: IconButton(
+                                      padding: EdgeInsets.zero,
+                                      constraints: const BoxConstraints(),
+                                      icon: const Icon(
+                                        CupertinoIcons.xmark,
+                                        color: Colors.red,
+                                        size: 16,
+                                      ),
+                                      onPressed: () {
+                                        print('pressed');
+                                        newsController.photoAlbum.removeWhere(
+                                            (imageFile) =>
+                                                (imageFile as File).path ==
+                                                e.path);
+                                        Fluttertoast.showToast(
+                                          msg: 'تم إزالة الصورة',
+                                          toastLength: Toast.LENGTH_SHORT,
+                                        );
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    //  Column(
+                    //   children: newsController.photoAlbum
+                    //       .map((e) => Text(
+                    //             textDirection: TextDirection.ltr,
+                    //             (e as File).path,
+                    //           ))
+                    //       .toList(),
+                    // ),
+                  ),
                   Obx(() => newsController.isLoading.isTrue
                       ? const Center(child: CircularLoading())
                       : SimpleButton(
@@ -169,6 +243,7 @@ class AddNewsPage extends StatelessWidget {
                               category: newsCategory.value,
                               imageURL: '',
                               imagePath: '',
+                              gallery: newsController.photoAlbum,
                               timestamp: Timestamp.now(),
                             );
 
@@ -181,6 +256,11 @@ class AddNewsPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  void clearProperties() {
+    newsController.photoAlbum.clear();
+    newsController.pickedImage.value = File('');
   }
 
   // void resetProperties() {

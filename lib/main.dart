@@ -8,11 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import 'news/model/news.dart';
 import 'utils/sharedprefs.dart';
 
-List<News> allNews = [];
-
+const String appVersion = 'v1.0.4';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

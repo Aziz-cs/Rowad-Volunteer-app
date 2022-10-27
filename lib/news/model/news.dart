@@ -9,6 +9,7 @@ class News {
   String category;
   String imageURL;
   String imagePath;
+  List gallery;
   Timestamp timestamp;
 
   News({
@@ -19,6 +20,7 @@ class News {
     required this.category,
     required this.imageURL,
     required this.imagePath,
+    required this.gallery,
     required this.timestamp,
   });
 
@@ -31,6 +33,7 @@ class News {
       category: data['category'] ?? '',
       imageURL: data['imageURL'] ?? '',
       imagePath: data['imagePath'] ?? '',
+      gallery: data['gallery'] ?? [],
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }
