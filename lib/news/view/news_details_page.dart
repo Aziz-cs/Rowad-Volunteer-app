@@ -72,7 +72,7 @@ class NewsDetailsPage extends StatelessWidget {
               Text(
                 news.description,
                 style: TextStyle(
-                  fontSize: 16.sp,
+                  fontSize: 15.5.sp,
                   color: Colors.grey.shade700,
                 ),
               ),

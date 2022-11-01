@@ -1,4 +1,4 @@
-import 'package:app/posters/view/edit_poster_screen.dart';
+import 'package:app/posters/view/edit_poster_page.dart';
 import 'package:app/utils/helper.dart';
 import 'package:app/widgets/online_img.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -7,10 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../utils/constants.dart';
-import '../../widgets/circular_loading.dart';
-import '../../widgets/simple_btn.dart';
-import '../model/poster.dart';
+import '../../../utils/constants.dart';
+import '../../../widgets/circular_loading.dart';
+import '../../../widgets/simple_btn.dart';
+import '../../model/poster.dart';
 
 const Color background = kGreenColor;
 const Color fill = Color(0xFFF3F3F3);

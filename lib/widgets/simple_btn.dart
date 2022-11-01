@@ -68,7 +68,7 @@ class SimpleButton extends StatelessWidget {
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(isCurved ? 10.0 : 6),
+            borderRadius: BorderRadius.circular(isCurved ? 10.0 : 0),
           ),
         ),
         padding: MaterialStateProperty.all(

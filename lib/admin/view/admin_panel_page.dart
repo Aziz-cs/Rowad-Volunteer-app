@@ -1,12 +1,16 @@
+import 'package:app/chances/view/add_chance_page.dart';
+import 'package:app/courses/view/add_course_page.dart';
 import 'package:app/news/view/add_news_page.dart';
+import 'package:app/posters/view/add_poster_page.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../utils/constants.dart';
 
@@ -32,100 +36,74 @@ class AdminPanelPage extends StatelessWidget {
           children: [
             ListTile(
               leading: const Icon(Icons.newspaper),
-              title: const Text('المركز الإعلامي'),
-              subtitle: const Text('اضف تصنيف'),
+              title: const Text('إضافة خبر'),
+              subtitle: const Text('إضافة خبر جديد للمركز الإعلامي'),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 15,
               ),
-              onTap: () => Get.defaultDialog(
-                title: 'اضافة تصنيف',
-                content: Directionality(
-                  textDirection: TextDirection.rtl,
-                  child: Column(
-                    children: [
-                      StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection('news_categories')
-                              .orderBy('name')
-                              .snapshots(),
-                          builder: ((context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.active) {
-                              var result = snapshot.data!.docs;
-                              return Column(
-                                children: List.generate(
-                                  result.length,
-                                  (index) => result[index]['name'] ==
-                                          kChooseCategory
-                                      ? const SizedBox()
-                                      : ListTile(
-                                          title: Text(result[index]['name']),
-                                          trailing: IconButton(
-                                            icon: const Icon(
-                                              CupertinoIcons.xmark,
-                                              size: 18,
-                                              color: Colors.red,
-                                            ),
-                                            onPressed: () {
-                                              FirebaseFirestore.instance
-                                                  .collection('news_categories')
-                                                  .doc(result[index].id)
-                                                  .delete();
-                                            },
-                                          ),
-                                        ),
-                                ),
-                              );
-                              // result.forEach((element) {
-                              //   print(element.data());
-                              //   Map category = element.data() as Map;
-                              //   categoriesList.add(category['name']);
-                              // });
-                            }
-                            return const Center(child: CircularLoading());
-                          })),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: MyTextField(
-                                label: 'التصنيف الجديد',
-                                controller: _addCategoryController,
-                                validator: (input) {}),
-                          ),
-                          Obx(() => _isLoading.isTrue
-                              ? const CircularLoading()
-                              : IconButton(
-                                  icon: const Icon(
-                                    CupertinoIcons.add_circled_solid,
-                                    color: kGreenColor,
-                                    size: 30,
-                                  ),
-                                  onPressed: () async {
-                                    print('pressed');
-                                    if (_addCategoryController.text
-                                        .trim()
-                                        .isEmpty) {
-                                      Fluttertoast.showToast(
-                                          msg: 'برجاء كتابة التصنيف');
-                                      return;
-                                    }
-                                    _isLoading.value = true;
-                                    await FirebaseFirestore.instance
-                                        .collection('news_categories')
-                                        .add({
-                                      'name':
-                                          _addCategoryController.text.trim(),
-                                    });
-                                    _isLoading.value = false;
-                                    _addCategoryController.clear();
-                                  },
-                                ))
-                        ],
-                      )
-                    ],
-                  ),
-                ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AddNewsPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.news_solid),
+              title: const Text('إضافة فرصة'),
+              subtitle: const Text('إضافة فرصة تطوعية جديدة'),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AddChance(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.rectangle),
+              title: const Text('إضافة إعلان'),
+              subtitle: const Text('إضافة إعلان فى أعلى الصفحة الرئيسية'),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AddPosterPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
+              leading: const Icon(CupertinoIcons.collections),
+              title: const Text('إضافة دورة تدريبية'),
+              subtitle: const Text(''),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AddCoursePage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
               ),
             ),
             Divider(

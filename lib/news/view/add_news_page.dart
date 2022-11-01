@@ -20,8 +20,10 @@ const String kChooseCategory = '- أختر -';
 
 class AddNewsPage extends StatelessWidget {
   AddNewsPage({Key? key}) : super(key: key);
-
   final newsController = Get.put(NewsController());
+  final _addCategoryController = TextEditingController();
+  final _isLoading = false.obs;
+
   final _formKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
@@ -95,31 +97,141 @@ class AddNewsPage extends StatelessWidget {
                     'التصنيف',
                     style: kTitleTextStyle,
                   ),
-                  FutureBuilder<QuerySnapshot>(
-                      future: FirebaseFirestore.instance
-                          .collection('news_categories')
-                          .orderBy('name')
-                          .get(),
-                      builder: ((context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          List<String> categoriesList = [];
-                          var result = snapshot.data!.docs;
-                          result.forEach((element) {
-                            Map category = element.data() as Map;
-                            categoriesList.add(category['name']);
-                          });
-                          return Obx(() => DropDownMenu(
-                                value: newsCategory.value,
-                                items: categoriesList.toList(),
-                                removeHeightPadding: true,
-                                onChanged: (selectedCategory) {
-                                  newsCategory.value =
-                                      selectedCategory ?? newsCategory.value;
-                                },
-                              ));
-                        }
-                        return const Center(child: CircularLoading());
-                      })),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('news_categories')
+                                .orderBy('name')
+                                .snapshots(),
+                            builder: ((context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.active) {
+                                List<String> categoriesList = [];
+                                var result = snapshot.data!.docs;
+                                result.forEach((element) {
+                                  Map category = element.data() as Map;
+                                  categoriesList.add(category['name']);
+                                });
+                                return Obx(() => DropDownMenu(
+                                      value: newsCategory.value,
+                                      items: categoriesList.toList(),
+                                      removeHeightPadding: true,
+                                      onChanged: (selectedCategory) {
+                                        newsCategory.value = selectedCategory ??
+                                            newsCategory.value;
+                                      },
+                                    ));
+                              }
+                              return const Center(child: CircularLoading());
+                            })),
+                      ),
+                      SimpleButton(
+                        label: 'اضف تصنيف',
+                        onPress: () => Get.defaultDialog(
+                          title: 'اضافة تصنيف',
+                          content: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: Column(
+                              children: [
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('news_categories')
+                                        .orderBy('name')
+                                        .snapshots(),
+                                    builder: ((context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.active) {
+                                        var result = snapshot.data!.docs;
+                                        return Column(
+                                          children: List.generate(
+                                            result.length,
+                                            (index) => result[index]['name'] ==
+                                                    kChooseCategory
+                                                ? const SizedBox()
+                                                : ListTile(
+                                                    title: Text(
+                                                        result[index]['name']),
+                                                    trailing: IconButton(
+                                                      icon: const Icon(
+                                                        CupertinoIcons.xmark,
+                                                        size: 18,
+                                                        color: Colors.red,
+                                                      ),
+                                                      onPressed: () {
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                'news_categories')
+                                                            .doc(result[index]
+                                                                .id)
+                                                            .delete();
+                                                        Fluttertoast.showToast(
+                                                            msg:
+                                                                'تم حذف التصنيف');
+                                                      },
+                                                    ),
+                                                  ),
+                                          ),
+                                        );
+                                        // result.forEach((element) {
+                                        //   print(element.data());
+                                        //   Map category = element.data() as Map;
+                                        //   categoriesList.add(category['name']);
+                                        // });
+                                      }
+                                      return const Center(
+                                          child: CircularLoading());
+                                    })),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: MyTextField(
+                                          label: 'التصنيف الجديد',
+                                          controller: _addCategoryController,
+                                          validator: (input) {}),
+                                    ),
+                                    Obx(() => _isLoading.isTrue
+                                        ? const CircularLoading()
+                                        : IconButton(
+                                            icon: const Icon(
+                                              CupertinoIcons.add_circled_solid,
+                                              color: kGreenColor,
+                                              size: 30,
+                                            ),
+                                            onPressed: () async {
+                                              print('pressed');
+                                              if (_addCategoryController.text
+                                                  .trim()
+                                                  .isEmpty) {
+                                                Fluttertoast.showToast(
+                                                    msg: 'برجاء كتابة التصنيف');
+                                                return;
+                                              }
+                                              _isLoading.value = true;
+                                              await FirebaseFirestore.instance
+                                                  .collection('news_categories')
+                                                  .add({
+                                                'name': _addCategoryController
+                                                    .text
+                                                    .trim(),
+                                              });
+                                              Fluttertoast.showToast(
+                                                  msg: 'تم إضافة التصنيف');
+                                              _isLoading.value = false;
+                                              _addCategoryController.clear();
+                                            },
+                                          ))
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Text(
                     'الصورة البارزة',
                     style: kTitleTextStyle,

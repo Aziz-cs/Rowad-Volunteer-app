@@ -1,0 +1,376 @@
+import 'dart:io';
+
+import 'package:app/courses/controller/course_controller.dart';
+import 'package:app/courses/model/course.dart';
+import 'package:app/news/controller/news_controller.dart';
+import 'package:app/news/model/news.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+
+import '../../chances/view/add_chance_page.dart';
+import '../../general/controller/image_controller.dart';
+import '../../utils/constants.dart';
+import '../../widgets/circular_loading.dart';
+import '../../widgets/dropdown_menu.dart';
+import '../../widgets/simple_btn.dart';
+import '../../widgets/textfield.dart';
+
+const String kChooseCategory = '- أختر -';
+const List<String> hourIntervals = [
+  '12:00',
+  '12:30',
+  '01:00',
+  '01:30',
+  '02:00',
+  '02:30',
+  '03:00',
+  '03:30',
+  '04:00',
+  '04:30',
+  '05:00',
+  '05:30',
+  '06:00',
+  '06:30',
+  '07:00',
+  '07:30',
+  '08:00',
+  '08:30',
+  '09:00',
+  '09:30',
+  '10:00',
+  '10:30',
+  '11:00',
+  '11:30',
+];
+
+const List<String> timeZoneList = [
+  'صباحا',
+  'مساء',
+];
+
+class AddCoursePage extends StatelessWidget {
+  AddCoursePage({Key? key}) : super(key: key);
+
+  final coursesController = Get.put(CoursesController());
+  final _formKey = GlobalKey<FormState>();
+
+  final _courseNameController = TextEditingController();
+  final _ownerNameController = TextEditingController();
+  final _instructorNameController = TextEditingController();
+  final _courseIntroController = TextEditingController();
+  final _courseDetailsController = TextEditingController();
+  final _durationInDaysController = TextEditingController();
+
+  final isRegisterationOpen = true.obs;
+  final startDate = ''.obs;
+  final selectedHour = '12:00'.obs;
+  final timeZone = 'صباحا'.obs;
+
+  // late final XFile? pickedImage;
+  @override
+  Widget build(BuildContext context) {
+    clearProperties();
+    return Scaffold(
+        appBar: AppBar(
+          backgroundColor: kGreenColor,
+          title: const Text('إضافة دورة تدريبية'),
+          centerTitle: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(15),
+            ),
+          ),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'اسم البرنامج التدريبي',
+                    style: kTitleTextStyle,
+                  ),
+                  MyTextField(
+                    controller: _courseNameController,
+                    validator: (input) {
+                      if (input!.isEmpty) {
+                        return kErrEmpty;
+                      }
+                    },
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'الجهة المقدمة للبرنامج',
+                              style: kTitleTextStyle,
+                            ),
+                            MyTextField(
+                              controller: _ownerNameController,
+                              validator: (input) {
+                                if (input!.isEmpty) {
+                                  return kErrEmpty;
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'مقدم البرنامج التدريبي',
+                              style: kTitleTextStyle,
+                            ),
+                            MyTextField(
+                              controller: _instructorNameController,
+                              validator: (input) {
+                                if (input!.isEmpty) {
+                                  return kErrEmpty;
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'نبذة عن البرنامج',
+                    style: kTitleTextStyle,
+                  ),
+                  MyTextField(
+                    inputAction: TextInputAction.newline,
+                    inputType: TextInputType.multiline,
+                    controller: _courseIntroController,
+                    maxLines: 2,
+                    validator: (input) {
+                      if (input!.isEmpty) {
+                        return kErrEmpty;
+                      }
+                    },
+                  ),
+                  Text(
+                    'تفاصيل البرنامج',
+                    style: kTitleTextStyle,
+                  ),
+                  MyTextField(
+                    inputAction: TextInputAction.newline,
+                    inputType: TextInputType.multiline,
+                    controller: _courseDetailsController,
+                    maxLines: 4,
+                    validator: (input) {
+                      if (input!.isEmpty) {
+                        return kErrEmpty;
+                      }
+                    },
+                  ),
+                  Obx(() => SwitchListTile.adaptive(
+                        activeColor: kGreenColor,
+                        value: isRegisterationOpen.value,
+                        onChanged: (_) {
+                          isRegisterationOpen.value =
+                              !isRegisterationOpen.value;
+                        },
+                        title: Text(
+                          'التسجيل',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('تاريخ البدء', style: kTitleTextStyle),
+                            SizedBox(height: 4.h),
+                            GestureDetector(
+                              onTap: () {
+                                DatePicker.showDatePicker(
+                                  context,
+                                  showTitleActions: true,
+                                  minTime: DateTime.now(),
+                                  onConfirm: (date) {
+                                    startDate.value =
+                                        "${date.day}-${date.month}-${date.year}";
+                                  },
+                                  currentTime: DateTime.now(),
+                                  locale: LocaleType.ar,
+                                  theme: datePickerTheme,
+                                );
+                              },
+                              child: Obx(() => Container(
+                                    alignment: Alignment.center,
+                                    width: double.infinity,
+                                    height: 41.h,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        border: Border.all(
+                                          color: kGreenColor.withOpacity(0.5),
+                                        )),
+                                    child: Text(
+                                      startDate.value,
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(width: 5.w),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'عدد الأيام',
+                              style: kTitleTextStyle,
+                            ),
+                            MyTextField(
+                              inputType: TextInputType.number,
+                              controller: _durationInDaysController,
+                              validator: (input) {
+                                if (input!.isEmpty) {
+                                  return kErrEmpty;
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  Text(
+                    'الوقت',
+                    style: kTitleTextStyle,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Obx(
+                          () => DropDownMenu(
+                            fontSize: 17,
+                            value: selectedHour.value,
+                            items: hourIntervals,
+                            removeHeightPadding: true,
+                            onChanged: (pickedHour) {
+                              selectedHour.value =
+                                  pickedHour ?? selectedHour.value;
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Obx(
+                          () => DropDownMenu(
+                            fontSize: 17,
+                            value: timeZone.value,
+                            items: timeZoneList,
+                            removeHeightPadding: true,
+                            onChanged: (pickedZone) {
+                              timeZone.value = pickedZone ?? timeZone.value;
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    'الصورة البارزة',
+                    style: kTitleTextStyle,
+                  ),
+                  SimpleButton(
+                      label: 'أختر الصورة',
+                      onPress: () async {
+                        coursesController.pickedImage.value =
+                            await ImageController.pickImage();
+                      }),
+                  Obx(
+                    () => coursesController.pickedImage.value.path.isEmpty
+                        ? const SizedBox()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.file(
+                                File(coursesController.pickedImage.value.path),
+                                width: 250.w,
+                              ),
+                            ],
+                          ),
+                  ),
+                  Obx(() => coursesController.isLoading.isTrue
+                      ? const Center(child: CircularLoading())
+                      : SimpleButton(
+                          label: 'إضافة الدورة التدريبية',
+                          onPress: () {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+                            if (coursesController
+                                .pickedImage.value.path.isEmpty) {
+                              Fluttertoast.showToast(
+                                  msg: 'برجاء رفع صورة للخبر');
+                              return;
+                            }
+
+                            Course course = Course(
+                              name: _courseNameController.text.trim(),
+                              intro: _courseIntroController.text.trim(),
+                              details: _courseDetailsController.text.trim(),
+                              owner: _ownerNameController.text.trim(),
+                              instructorName:
+                                  _instructorNameController.text.trim(),
+                              startDate: startDate.value,
+                              duration: _durationInDaysController.text.trim(),
+                              isRegisterationOpen: isRegisterationOpen.value,
+                              id: '',
+                              imageURL: '',
+                              imagePath: '',
+                              registerationURL: '',
+                              timestamp: Timestamp.now(),
+                            );
+                            coursesController.addModifyCourses(course: course);
+                          },
+                        )),
+                  SizedBox(height: 30.h),
+                ],
+              ),
+            ),
+          ),
+        ));
+  }
+
+  void clearProperties() {
+    coursesController.pickedImage.value = File('');
+  }
+
+  // void resetProperties() {
+  //   _titleController.clear();
+  //   _shortDescController.clear();
+  //   _longDescController.clear();
+  //   newsController.pickedImage.value = File('');
+  //   newsCategory.value = kChooseCategory;
+  // }
+}

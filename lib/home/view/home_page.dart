@@ -1,3 +1,5 @@
+import 'package:app/courses/view/courses_page.dart';
+import 'package:app/courses/view/widgets/item_course_hp.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +9,15 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../chances/model/chance.dart';
 import '../../chances/view/widgets/item_chance.dart';
+import '../../courses/model/course.dart';
 import '../../news/model/news.dart';
 import '../../news/view/widgets/item_news.dart';
 import '../../notifications/notification_page.dart';
-import '../../posters/view/slider_banners.dart';
+import '../../posters/view/widgets/slider_banners.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/navigator_page.dart';
+
+enum Category { news, chances, courses, programs }
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -48,6 +53,7 @@ class HomePage extends StatelessWidget {
                     children: [
                       _buildLastNewsSection(context),
                       _buildLastChancesSection(context),
+                      _buildLastCoursesSection(context),
                     ],
                   ),
                 ),
@@ -150,7 +156,10 @@ class HomePage extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
-              _buildSeeAllBtn(context: context, isSeeAllChance: true)
+              _buildSeeAllBtn(
+                context: context,
+                categoryToRoute: Category.chances,
+              )
             ],
           ),
           SizedBox(
@@ -197,16 +206,37 @@ class HomePage extends StatelessWidget {
 
   Directionality _buildSeeAllBtn({
     required BuildContext context,
-    required bool isSeeAllChance,
+    required Category categoryToRoute,
   }) {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: TextButton.icon(
         onPressed: () {
-          Get.offAll(
-            () => NavigatorPage(tabIndex: isSeeAllChance ? 1 : 2),
-            duration: const Duration(microseconds: 1),
-          );
+          switch (categoryToRoute) {
+            case Category.news:
+              Get.offAll(
+                () => NavigatorPage(tabIndex: 2),
+                duration: const Duration(microseconds: 1),
+              );
+              break;
+            case Category.chances:
+              Get.offAll(
+                () => NavigatorPage(tabIndex: 1),
+                duration: const Duration(microseconds: 1),
+              );
+              break;
+            case Category.courses:
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: const CoursesPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+              break;
+            case Category.programs:
+              break;
+            default:
+          }
         },
         icon: const Icon(
           Icons.arrow_back_ios,
@@ -241,7 +271,10 @@ class HomePage extends StatelessWidget {
                   color: Colors.black54,
                 ),
               ),
-              _buildSeeAllBtn(context: context, isSeeAllChance: false)
+              _buildSeeAllBtn(
+                context: context,
+                categoryToRoute: Category.news,
+              )
             ],
           ),
           SizedBox(
@@ -271,6 +304,70 @@ class HomePage extends StatelessWidget {
                   return ListView(
                     scrollDirection: Axis.horizontal,
                     children: newsItems.reversed.toList(),
+                  );
+                }
+                return Column(
+                  children: const [
+                    Center(child: CircularLoading()),
+                  ],
+                );
+              }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildLastCoursesSection(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'آخر الدورات',
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                ),
+              ),
+              _buildSeeAllBtn(
+                context: context,
+                categoryToRoute: Category.courses,
+              )
+            ],
+          ),
+          SizedBox(
+            height: 240.h,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('courses')
+                  .orderBy('timestamp', descending: false)
+                  .limitToLast(10)
+                  .snapshots(),
+              builder: ((context, snapshot) {
+                List<CourseItemHP> courseItems = [];
+
+                if (snapshot.connectionState == ConnectionState.active) {
+                  print(snapshot.connectionState.toString());
+                  var coursesResult = snapshot.data!.docs;
+
+                  coursesResult.forEach(
+                    (courseElement) {
+                      Course course = Course.fromDB(
+                        courseElement.data() as Map<String, dynamic>,
+                        courseElement.id,
+                      );
+                      courseItems.add(CourseItemHP(course: course));
+                    },
+                  );
+                  return ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: courseItems.reversed.toList(),
                   );
                 }
                 return Column(

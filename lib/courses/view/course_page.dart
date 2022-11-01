@@ -1,24 +1,21 @@
-import 'package:app/chances/controller/chances_controller.dart';
-import 'package:app/chances/view/edit_chance_page.dart';
+import 'package:app/courses/model/course.dart';
 import 'package:app/utils/helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
 import '../../widgets/back_btn.dart';
 import '../../widgets/simple_btn.dart';
-import '../model/chance.dart';
 
-class ChancePage extends StatelessWidget {
-  ChancePage({
+class CoursePage extends StatelessWidget {
+  CoursePage({
     Key? key,
-    required this.chance,
+    required this.course,
   }) : super(key: key);
 
-  Chance chance;
+  Course course;
 
   @override
   Widget build(BuildContext context) {
@@ -28,27 +25,29 @@ class ChancePage extends StatelessWidget {
         backgroundColor: const Color(0xFFF3F3F3),
         appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
-          child: Column(
-            children: [
-              _buildChanceHeadbar(context),
-              _buildChanceInfo(),
-              Divider(color: Colors.grey.shade800),
-              _buildChanceDetails(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _buildCourseHeadbar(context),
+                _buildCourseInfo(),
+                Divider(color: Colors.grey.shade800),
+                _buildCourseDetails(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Padding _buildChanceDetails() {
+  Padding _buildCourseDetails() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'نبذة عن الفرصة التطوعية',
+            'تفاصيل الدورة التدريبية',
             style: TextStyle(
               fontSize: 17.sp,
               color: Colors.black54,
@@ -59,7 +58,7 @@ class ChancePage extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  chance.shortDesc,
+                  course.details,
                   style: TextStyle(
                     fontSize: 15.5.sp,
                     color: Colors.grey.shade700,
@@ -68,26 +67,13 @@ class ChancePage extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 7.h),
-          Divider(color: Colors.grey.shade800),
-          Text(
-            'رابط الفرصة على المنصة',
-            style: TextStyle(
-              fontSize: 15.5.sp,
-            ),
-          ),
-          SizedBox(height: 7.h),
-          SimpleButton(
-            label: 'انضم للفرصة من خلال المنصة',
-            onPress: () => Helper.openURL(chance.chanceURL),
-          ),
         ],
       ),
     );
   }
 
   // _buildIconInfo(
-  Widget _buildChanceInfo() {
+  Widget _buildCourseInfo() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -99,23 +85,18 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: chance.organization,
-                iconData: CupertinoIcons.check_mark_circled_solid,
+                label: course.name,
+                iconData: Icons.class_,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: chance.city,
-                iconData: CupertinoIcons.location_fill,
+                label: course.startDate,
+                iconData: CupertinoIcons.time_solid,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: '${chance.sitsNo} متطوع',
-                iconData: CupertinoIcons.person_fill,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: '${chance.startDate} إلى ${chance.endDate}',
-                iconData: CupertinoIcons.calendar_today,
+                label: '${course.duration} أيام',
+                iconData: CupertinoIcons.calendar,
               ),
             ],
           ),
@@ -124,23 +105,13 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label:
-                    '${chance.getDaysLeft()} ${chance.getDaysWordinArabic()}',
-                iconData: CupertinoIcons.time_solid,
+                label: course.instructorName,
+                iconData: Icons.person,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: chance.requiredDegree,
-                iconData: Icons.bar_chart_sharp,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: chance.gender,
-                iconData: chance.gender == kMales
-                    ? Icons.male
-                    : chance.gender == kFemales
-                        ? Icons.female
-                        : Icons.group,
+                label: course.owner,
+                iconData: CupertinoIcons.check_mark_circled_solid,
               ),
             ],
           ),
@@ -173,11 +144,11 @@ class ChancePage extends StatelessWidget {
     );
   }
 
-  Stack _buildChanceHeadbar(BuildContext context) {
+  Stack _buildCourseHeadbar(BuildContext context) {
     return Stack(
       children: <Widget>[
         CachedNetworkImage(
-          imageUrl: chance.imageURL,
+          imageUrl: course.imageURL,
           fit: BoxFit.fill,
           height: 210.h,
           width: double.infinity,
@@ -199,11 +170,11 @@ class ChancePage extends StatelessWidget {
                 end: FractionalOffset.centerRight,
                 colors: [
                   Colors.grey.withOpacity(0.0),
-                  Colors.black.withOpacity(0.65),
+                  Colors.black.withOpacity(0.75),
                 ],
                 stops: const [
                   0.0,
-                  0.7,
+                  0.5,
                 ],
               )),
         ),
@@ -215,15 +186,7 @@ class ChancePage extends StatelessWidget {
             left: 4.w,
             child: IconButton(
               onPressed: () {
-                Get.to(() => EditChance(chance: chance));
-                // Get.defaultDialog(
-                //   title: 'تعديل الفرصة',
-                //   content: Column(
-                //     children: [],
-                //   ),
-                // ).then((value) {
-                //   setState(() {});
-                // });
+                // Get.to(() => EditChance(chance: course));
               },
               icon: const Icon(
                 Icons.edit,
@@ -235,32 +198,32 @@ class ChancePage extends StatelessWidget {
           right: 10.w,
           child: Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      chance.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        height: 1,
-                        fontSize: 18.sp,
-                      ),
+            child: SizedBox(
+              width: 235.w,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    course.name,
+                    style: TextStyle(
+                      color: Colors.white,
+                      height: 1,
+                      fontSize: 18.sp,
                     ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      chance.organization,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        height: 1,
-                        fontSize: 13.sp,
-                      ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Text(
+                    course.intro,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.9),
+                      height: 1,
+                      fontSize: 13.sp,
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -268,8 +231,8 @@ class ChancePage extends StatelessWidget {
           bottom: 16.h,
           left: 10.w,
           child: SimpleButton(
-            label: 'انضم للفرصة',
-            onPress: () => Helper.openURL(chance.chanceURL),
+            label: 'سجل الآن',
+            onPress: () => Helper.openURL(course.registerationURL),
           ),
         )
       ],

@@ -1,16 +1,10 @@
 import 'package:app/news/model/news.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/helper.dart';
-import 'package:app/widgets/circular_loading.dart';
 import 'package:app/widgets/online_img.dart';
-import 'package:app/widgets/simple_btn.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../news_details_page.dart';

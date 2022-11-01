@@ -101,7 +101,7 @@ class PosterController extends GetxController {
       print("error on deleting poster's image $e");
     });
     isLoading.value = true;
-    Fluttertoast.showToast(msg: 'تم حذف الإعلان بنجاح');
+    Fluttertoast.showToast(msg: 'تم حذف الإعلان');
     Get.offAll(() => NavigatorPage(tabIndex: 0));
   }
 }
