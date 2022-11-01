@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app/courses/view/courses_page.dart';
 import 'package:app/general/model/image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -29,6 +30,8 @@ class CoursesController extends GetxController {
       'owner': course.owner,
       'instructorName': course.instructorName,
       'startDate': course.startDate,
+      'startHour': course.startHour,
+      'isAMorPM': course.isAMorPM,
       'duration': course.duration,
       'registerationURL': course.registerationURL,
       'isRegisterationOpen': course.isRegisterationOpen,
@@ -64,7 +67,7 @@ class CoursesController extends GetxController {
       isLoading.value = false;
       Fluttertoast.showToast(msg: 'تم تعديل الدورة بنجاح');
       Get.offAll(
-        () => NavigatorPage(tabIndex: 2),
+        () => NavigatorPage(),
         duration: const Duration(microseconds: 1),
       );
     } else {
@@ -88,7 +91,7 @@ class CoursesController extends GetxController {
         isLoading.value = false;
         Fluttertoast.showToast(msg: 'تم إضافة الدورة بنجاح');
         Get.offAll(
-          () => NavigatorPage(tabIndex: 2),
+          () => NavigatorPage(tabIndex: 0),
           duration: const Duration(microseconds: 1),
         );
       }).catchError((e) {
@@ -120,7 +123,7 @@ class CoursesController extends GetxController {
 
     Fluttertoast.showToast(msg: 'تم حذف الدورة');
     Get.offAll(
-      () => NavigatorPage(tabIndex: 2),
+      () => NavigatorPage(),
       duration: const Duration(microseconds: 1),
     );
 

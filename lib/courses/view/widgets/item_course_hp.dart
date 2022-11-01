@@ -39,7 +39,32 @@ class CourseItemHP extends StatelessWidget {
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
               ),
-              child: CachedOnlineIMG(imageURL: course.imageURL),
+              child: Stack(
+                children: [
+                  SizedBox(
+                      height: 100.h,
+                      child: CachedOnlineIMG(
+                        imageURL: course.imageURL,
+                      )),
+                  Container(
+                    height: 100.h,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        gradient: LinearGradient(
+                          begin: FractionalOffset.centerLeft,
+                          end: FractionalOffset.centerRight,
+                          colors: [
+                            Colors.grey.withOpacity(0.0),
+                            Colors.black.withOpacity(0.50),
+                          ],
+                          stops: const [
+                            0.0,
+                            0.5,
+                          ],
+                        )),
+                  ),
+                ],
+              ),
             ),
             Expanded(
               child: Column(
@@ -81,7 +106,7 @@ class CourseItemHP extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'التاريخ:',
+                                'تاريخ البدء:',
                                 style: TextStyle(
                                   fontSize: 13.sp,
                                   color: kGreenColor,

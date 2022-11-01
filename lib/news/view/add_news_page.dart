@@ -374,12 +374,4 @@ class AddNewsPage extends StatelessWidget {
     newsController.photoAlbum.clear();
     newsController.pickedImage.value = File('');
   }
-
-  // void resetProperties() {
-  //   _titleController.clear();
-  //   _shortDescController.clear();
-  //   _longDescController.clear();
-  //   newsController.pickedImage.value = File('');
-  //   newsCategory.value = kChooseCategory;
-  // }
 }

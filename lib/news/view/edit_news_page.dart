@@ -214,12 +214,4 @@ class EditNewsPage extends StatelessWidget {
     _descriptionController.text = news.description;
     newsCategory.value = news.category;
   }
-
-  // void resetProperties() {
-  //   _titleController.clear();
-  //   _shortDescController.clear();
-  //   _longDescController.clear();
-  //   newsController.pickedImage.value = File('');
-  //   newsCategory.value = kChooseCategory;
-  // }
 }

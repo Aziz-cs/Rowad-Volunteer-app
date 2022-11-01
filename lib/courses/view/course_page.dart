@@ -1,9 +1,11 @@
 import 'package:app/courses/model/course.dart';
+import 'package:app/courses/view/edit_course_page.dart';
 import 'package:app/utils/helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../utils/constants.dart';
 import '../../widgets/back_btn.dart';
@@ -91,12 +93,12 @@ class CoursePage extends StatelessWidget {
               SizedBox(height: 13.h),
               _buildIconInfo(
                 label: course.startDate,
-                iconData: CupertinoIcons.time_solid,
+                iconData: CupertinoIcons.calendar,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
                 label: '${course.duration} أيام',
-                iconData: CupertinoIcons.calendar,
+                iconData: Icons.timer_outlined,
               ),
             ],
           ),
@@ -107,6 +109,11 @@ class CoursePage extends StatelessWidget {
               _buildIconInfo(
                 label: course.instructorName,
                 iconData: Icons.person,
+              ),
+              SizedBox(height: 13.h),
+              _buildIconInfo(
+                label: '${course.startHour} ${course.isAMorPM}',
+                iconData: CupertinoIcons.time_solid,
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
@@ -186,7 +193,7 @@ class CoursePage extends StatelessWidget {
             left: 4.w,
             child: IconButton(
               onPressed: () {
-                // Get.to(() => EditChance(chance: course));
+                Get.to(() => EditCoursePage(course: course));
               },
               icon: const Icon(
                 Icons.edit,

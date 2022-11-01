@@ -215,7 +215,7 @@ class ChancePage extends StatelessWidget {
             left: 4.w,
             child: IconButton(
               onPressed: () {
-                Get.to(() => EditChance(chance: chance));
+                Get.to(() => EditChancePage(chance: chance));
                 // Get.defaultDialog(
                 //   title: 'تعديل الفرصة',
                 //   content: Column(

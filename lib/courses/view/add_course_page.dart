@@ -11,6 +11,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../chances/view/add_chance_page.dart';
 import '../../general/controller/image_controller.dart';
@@ -19,6 +20,7 @@ import '../../widgets/circular_loading.dart';
 import '../../widgets/dropdown_menu.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
+import 'courses_page.dart';
 
 const String kChooseCategory = '- أختر -';
 const List<String> hourIntervals = [
@@ -68,8 +70,8 @@ class AddCoursePage extends StatelessWidget {
 
   final isRegisterationOpen = true.obs;
   final startDate = ''.obs;
-  final selectedHour = '12:00'.obs;
-  final timeZone = 'صباحا'.obs;
+  final startHour = '12:00'.obs;
+  final isAMorPM = 'صباحا'.obs;
 
   // late final XFile? pickedImage;
   @override
@@ -272,12 +274,11 @@ class AddCoursePage extends StatelessWidget {
                         child: Obx(
                           () => DropDownMenu(
                             fontSize: 17,
-                            value: selectedHour.value,
+                            value: startHour.value,
                             items: hourIntervals,
                             removeHeightPadding: true,
                             onChanged: (pickedHour) {
-                              selectedHour.value =
-                                  pickedHour ?? selectedHour.value;
+                              startHour.value = pickedHour ?? startHour.value;
                             },
                           ),
                         ),
@@ -286,11 +287,11 @@ class AddCoursePage extends StatelessWidget {
                         child: Obx(
                           () => DropDownMenu(
                             fontSize: 17,
-                            value: timeZone.value,
+                            value: isAMorPM.value,
                             items: timeZoneList,
                             removeHeightPadding: true,
                             onChanged: (pickedZone) {
-                              timeZone.value = pickedZone ?? timeZone.value;
+                              isAMorPM.value = pickedZone ?? isAMorPM.value;
                             },
                           ),
                         ),
@@ -345,13 +346,17 @@ class AddCoursePage extends StatelessWidget {
                               startDate: startDate.value,
                               duration: _durationInDaysController.text.trim(),
                               isRegisterationOpen: isRegisterationOpen.value,
+                              startHour: startHour.value,
+                              isAMorPM: isAMorPM.value,
                               id: '',
                               imageURL: '',
                               imagePath: '',
                               registerationURL: '',
                               timestamp: Timestamp.now(),
                             );
-                            coursesController.addModifyCourses(course: course);
+                            coursesController.addModifyCourses(
+                              course: course,
+                            );
                           },
                         )),
                   SizedBox(height: 30.h),
@@ -365,12 +370,4 @@ class AddCoursePage extends StatelessWidget {
   void clearProperties() {
     coursesController.pickedImage.value = File('');
   }
-
-  // void resetProperties() {
-  //   _titleController.clear();
-  //   _shortDescController.clear();
-  //   _longDescController.clear();
-  //   newsController.pickedImage.value = File('');
-  //   newsCategory.value = kChooseCategory;
-  // }
 }

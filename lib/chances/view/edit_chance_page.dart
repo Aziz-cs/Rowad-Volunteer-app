@@ -74,8 +74,8 @@ const cityDegrees = [
 
 const kChooseCity = 'اختر المدينة';
 
-class EditChance extends StatelessWidget {
-  EditChance({
+class EditChancePage extends StatelessWidget {
+  EditChancePage({
     Key? key,
     required this.chance,
   }) : super(key: key);

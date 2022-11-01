@@ -8,6 +8,8 @@ class Course {
   String owner;
   String instructorName;
   String startDate;
+  String startHour;
+  String isAMorPM;
   String duration;
   String imageURL;
   String imagePath;
@@ -23,6 +25,8 @@ class Course {
     required this.owner,
     required this.instructorName,
     required this.startDate,
+    required this.startHour,
+    required this.isAMorPM,
     required this.duration,
     required this.imageURL,
     required this.imagePath,
@@ -40,6 +44,8 @@ class Course {
       owner: data['owner'] ?? '',
       instructorName: data['instructorName'] ?? '',
       startDate: data['startDate'] ?? '',
+      startHour: data['startHour'] ?? '',
+      isAMorPM: data['isAMorPM'] ?? '',
       duration: data['duration'] ?? '',
       imageURL: data['imageURL'] ?? '',
       imagePath: data['imagePath'] ?? '',
