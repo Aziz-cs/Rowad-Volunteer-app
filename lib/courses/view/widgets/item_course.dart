@@ -31,7 +31,7 @@ class CourseItem extends StatelessWidget {
         width: double.infinity,
         margin: EdgeInsets.symmetric(
           horizontal: 3.w,
-          vertical: 2.h,
+          vertical: 5.h,
         ),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -165,16 +165,13 @@ class CourseItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             SizedBox(height: 5.h),
-            SizedBox(
-              height: 30.h,
-              child: SimpleButton(
-                label: 'اقرأ المزيد',
-                onPress: () => PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: CoursePage(course: course),
-                  withNavBar: true, // OPTIONAL VALUE. True by default.
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                ),
+            SimpleButton(
+              label: 'اقرأ المزيد',
+              onPress: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: CoursePage(course: course),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
               ),
             ),
           ],

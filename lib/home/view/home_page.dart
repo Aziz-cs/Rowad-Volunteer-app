@@ -52,7 +52,9 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     children: [
                       _buildLastNewsSection(context),
+                      SizedBox(height: 12.h),
                       _buildLastChancesSection(context),
+                      SizedBox(height: 12.h),
                       _buildLastCoursesSection(context),
                     ],
                   ),
@@ -163,7 +165,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 235.h,
+            height: 265.h,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('chances')
@@ -342,7 +344,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 240.h,
+            height: 265.h,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('courses')

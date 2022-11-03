@@ -237,10 +237,16 @@ class CoursePage extends StatelessWidget {
         Positioned(
           bottom: 16.h,
           left: 10.w,
-          child: SimpleButton(
-            label: 'سجل الآن',
-            onPress: () => Helper.openURL(course.registerationURL),
-          ),
+          child: course.isRegisterationOpen
+              ? SimpleButton(
+                  label: 'سجل الآن',
+                  onPress: () => Helper.openURL(course.registerationURL),
+                )
+              : SimpleButton(
+                  backgroundColor: Colors.red.shade700,
+                  label: 'التسجيل مغلق',
+                  onPress: () => Helper.openURL(course.registerationURL),
+                ),
         )
       ],
     );

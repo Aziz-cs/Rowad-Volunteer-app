@@ -154,17 +154,14 @@ class CourseItemHP extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: 30.h,
-                    child: SimpleButton(
-                      label: 'اقرأ المزيد',
-                      onPress: () => PersistentNavBarNavigator.pushNewScreen(
-                        context,
-                        screen: CoursePage(course: course),
-                        withNavBar: true, // OPTIONAL VALUE. True by default.
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      ),
+                  SimpleButton(
+                    label: 'اقرأ المزيد',
+                    onPress: () => PersistentNavBarNavigator.pushNewScreen(
+                      context,
+                      screen: CoursePage(course: course),
+                      withNavBar: true, // OPTIONAL VALUE. True by default.
+                      pageTransitionAnimation:
+                          PageTransitionAnimation.cupertino,
                     ),
                   ),
                 ],

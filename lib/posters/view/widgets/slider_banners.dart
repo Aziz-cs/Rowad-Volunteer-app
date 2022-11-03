@@ -188,13 +188,10 @@ class SlideBanners extends StatelessWidget {
                           Positioned(
                             bottom: 5.h,
                             left: 8.w,
-                            child: SizedBox(
-                              height: 30.h,
-                              child: SimpleButton(
-                                label: 'إقرأ المزيد',
-                                onPress: () =>
-                                    Helper.openURL('https://nvg.gov.sa/'),
-                              ),
+                            child: SimpleButton(
+                              label: 'إقرأ المزيد',
+                              onPress: () =>
+                                  Helper.openURL('https://nvg.gov.sa/'),
                             ),
                           ),
                         ],

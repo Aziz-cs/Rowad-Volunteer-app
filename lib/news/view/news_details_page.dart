@@ -29,54 +29,48 @@ class NewsDetailsPage extends StatelessWidget {
         appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildNewsHeadbar(context),
-              SizedBox(height: 10.h),
-              _buildNewsDetails(),
-              if (news.gallery.isNotEmpty) SizedBox(height: 190.h),
-              SizedBox(height: 20.h),
-            ],
-          ),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CarouselSlider(
-              options: CarouselOptions(
-                autoPlay: true,
-                aspectRatio: 2.1,
-                initialPage: 1,
-                enlargeCenterPage: true,
-                autoPlayInterval: const Duration(seconds: 3),
-              ),
-              items: news.gallery
-                  .map((imageURL) => CachedOnlineIMG(imageURL: imageURL))
-                  .toList(),
-            ),
-            SizedBox(height: 20.h),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNewsDetails() {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10.h),
-          child: Column(
-            children: [
-              Text(
-                news.description,
-                style: TextStyle(
-                  fontSize: 15.5.sp,
-                  color: Colors.grey.shade700,
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10.h),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        child: Text(
+                          news.description,
+                          style: TextStyle(
+                            fontSize: 15.5.sp,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10.h),
+                      if (news.gallery.isNotEmpty)
+                        CarouselSlider(
+                          options: CarouselOptions(
+                            autoPlay: true,
+                            aspectRatio: 16 / 9,
+                            initialPage: 1,
+                            enlargeCenterPage: true,
+                            autoPlayInterval: const Duration(seconds: 3),
+                          ),
+                          items: news.gallery
+                              .map((imageURL) => InkWell(
+                                  onTap: () => Get.defaultDialog(
+                                      title: news.title,
+                                      content: CachedNetworkImage(
+                                        imageUrl: imageURL,
+                                      )),
+                                  child: CachedOnlineIMG(imageURL: imageURL)))
+                              .toList(),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(height: 20.h),
             ],
           ),
         ),

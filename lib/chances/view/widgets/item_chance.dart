@@ -31,6 +31,7 @@ class ChanceItem extends StatelessWidget {
       ),
       child: Container(
         width: 160.w,
+        height: 265.h,
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -46,24 +47,25 @@ class ChanceItem extends StatelessWidget {
               ),
               child: CachedOnlineIMG(imageURL: chance.imageURL),
             ),
+            Container(
+              padding: EdgeInsets.only(left: 5.w, right: 5.w, bottom: 5.h),
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: kGreenColor,
+              ),
+              child: Text(
+                chance.title,
+                maxLines: 2,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            const Spacer(),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  padding: EdgeInsets.only(left: 5.w, right: 5.w, bottom: 5.h),
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: kGreenColor,
-                  ),
-                  child: Text(
-                    chance.title,
-                    maxLines: 2,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
                 if (chance.title.length < 25) SizedBox(height: 7.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -140,36 +142,41 @@ class ChanceItem extends StatelessWidget {
                           ),
                         ],
                       ),
-                      if (chance.title.length < 25) SizedBox(height: 7.h),
-                      SizedBox(height: 5.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          _buildIconTitleRow(
-                            title: chance.city,
-                            iconData: Icons.pin_drop,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                                color: kGreenColor,
-                                borderRadius: BorderRadius.circular(5)),
-                            child: Text(
-                              '${chance.getDaysLeft()} ${chance.getDaysWordinArabic()}',
-                              style: TextStyle(
-                                fontSize: 11.sp,
-                                color: Colors.white,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
                     ],
                   ),
                 ),
               ],
             ),
+            const Spacer(),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: _buildIconTitleRow(
+                      title: chance.city,
+                      iconData: Icons.pin_drop,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: kGreenColor,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Text(
+                      '${chance.getDaysLeft()} ${chance.getDaysWordinArabic()}',
+                      style: TextStyle(
+                        fontSize: 11.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            const Spacer(),
           ],
         ),
       ),
@@ -187,11 +194,14 @@ Row _buildIconTitleRow({required String title, required IconData iconData}) {
         color: Colors.green,
       ),
       SizedBox(width: 3.w),
-      Text(
-        title,
-        style: TextStyle(
-          fontSize: 13.sp,
-          color: Colors.grey.shade600,
+      Flexible(
+        child: Text(
+          title,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 13.sp,
+            color: Colors.grey.shade600,
+          ),
         ),
       ),
     ],
