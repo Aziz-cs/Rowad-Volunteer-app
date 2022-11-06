@@ -15,8 +15,6 @@ import '../../widgets/dropdown_menu.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
 
-const String kChooseCategory = '- أختر -';
-
 class EditNewsPage extends StatelessWidget {
   EditNewsPage({
     Key? key,

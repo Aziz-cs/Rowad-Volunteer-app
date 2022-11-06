@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 import 'utils/sharedprefs.dart';
 
-const String appVersion = 'v1.0.4';
+const String appVersion = 'v1.0.6';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -22,7 +22,6 @@ import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
 import 'courses_page.dart';
 
-const String kChooseCategory = '- أختر -';
 const List<String> hourIntervals = [
   '12:00',
   '12:30',

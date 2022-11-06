@@ -16,8 +16,6 @@ import '../../widgets/dropdown_menu.dart';
 import '../../widgets/simple_btn.dart';
 import '../../widgets/textfield.dart';
 
-const String kChooseCategory = '- أختر -';
-
 class AddNewsPage extends StatelessWidget {
   AddNewsPage({Key? key}) : super(key: key);
   final newsController = Get.put(NewsController());

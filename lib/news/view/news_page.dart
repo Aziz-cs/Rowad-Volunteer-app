@@ -1,5 +1,5 @@
 import 'package:app/news/model/news.dart';
-import 'package:app/news/view/widgets/item_news_list.dart';
+import 'package:app/news/view/widgets/item_news.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -61,7 +61,7 @@ class NewsPage extends StatelessWidget {
                 .orderBy('timestamp')
                 .snapshots(),
             builder: ((context, snapshot) {
-              List<NewsListItem> newsItems = [];
+              List<NewsItem> newsItems = [];
               print(snapshot.connectionState.toString());
               if (snapshot.connectionState == ConnectionState.active) {
                 if (snapshot.hasError) {
@@ -75,7 +75,7 @@ class NewsPage extends StatelessWidget {
                       newsElement.data() as Map<String, dynamic>,
                       newsElement.id,
                     );
-                    newsItems.add(NewsListItem(news: news));
+                    newsItems.add(NewsItem(news: news));
                   },
                 );
                 return Column(
