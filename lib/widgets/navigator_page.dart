@@ -66,7 +66,7 @@ List<Widget> _buildScreens() {
   return [
     HomePage(),
     const ChancesPage(),
-    const NewsPage(),
+    NewsPage(),
     const OthersPage(),
   ];
 }

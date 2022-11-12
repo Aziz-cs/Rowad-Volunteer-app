@@ -352,7 +352,7 @@ class AddChance extends StatelessWidget {
                                   return kErrEmpty;
                                 }
                               },
-                              label: 'العدد',
+                              hintText: 'العدد',
                               isLabelCentered: true,
                             ),
                           ],
@@ -513,7 +513,7 @@ class AddChance extends StatelessWidget {
                         return kErrEmpty;
                       }
                       if (!GetUtils.isURL(input)) {
-                        return kErrValidURL;
+                        return kErrInvalidURL;
                       }
                     },
                   ),

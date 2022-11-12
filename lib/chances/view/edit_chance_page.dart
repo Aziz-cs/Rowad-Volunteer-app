@@ -362,7 +362,7 @@ class EditChancePage extends StatelessWidget {
                                     return kErrEmpty;
                                   }
                                 },
-                                label: 'العدد',
+                                hintText: 'العدد',
                                 isLabelCentered: true,
                               ),
                             ],
@@ -524,7 +524,7 @@ class EditChancePage extends StatelessWidget {
                           return kErrEmpty;
                         }
                         if (!GetUtils.isURL(input)) {
-                          return kErrValidURL;
+                          return kErrInvalidURL;
                         }
                       },
                     ),

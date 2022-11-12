@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class MyTextField extends StatelessWidget {
   const MyTextField({
     Key? key,
-    this.label = '',
+    this.hintText = '',
     required this.controller,
     required this.validator,
     this.preIcon = const SizedBox(),
@@ -19,7 +19,7 @@ class MyTextField extends StatelessWidget {
     this.isReadOnly = false,
   }) : super(key: key);
 
-  final String label;
+  final String hintText;
   final TextEditingController controller;
   final String? Function(String?) validator;
   final Widget preIcon;
@@ -54,7 +54,7 @@ class MyTextField extends StatelessWidget {
         decoration: InputDecoration(
           // labelText: labelText,
           filled: true,
-          hintText: label,
+          hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey.shade400),
           hintTextDirection: TextDirection.rtl,
           fillColor: Colors.white,

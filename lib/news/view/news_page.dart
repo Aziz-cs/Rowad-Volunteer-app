@@ -1,15 +1,17 @@
 import 'package:app/news/model/news.dart';
+import 'package:app/news/view/widgets/filter_bar.dart';
 import 'package:app/news/view/widgets/item_news.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/constants.dart';
 
 class NewsPage extends StatelessWidget {
-  const NewsPage({Key? key}) : super(key: key);
+  NewsPage({Key? key}) : super(key: key);
+  var selectedNewsCategory = kAllNewsCategory.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -26,23 +28,23 @@ class NewsPage extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'ترتيب حسب',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    height: 1,
-                  ),
-                ),
-                SizedBox(width: 3.w),
-                const Icon(
-                  Icons.filter_list,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //     Text(
+            //       'ترتيب حسب',
+            //       style: TextStyle(
+            //         fontSize: 13.sp,
+            //         height: 1,
+            //       ),
+            //     ),
+            //     SizedBox(width: 3.w),
+            //     const Icon(
+            //       Icons.filter_list,
+            //       color: Colors.white,
+            //     ),
+            //   ],
+            // ),
           ],
         ),
         centerTitle: true,
@@ -55,50 +57,58 @@ class NewsPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('news')
-                .orderBy('timestamp')
-                .snapshots(),
-            builder: ((context, snapshot) {
-              List<NewsItem> newsItems = [];
-              print(snapshot.connectionState.toString());
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasError) {
-                  print('has error in loading news');
-                  return const Center(child: Text('هناك خطأ ما'));
+          NewsFilterBar(selectedNewsCategory: selectedNewsCategory),
+          Obx(
+            () => StreamBuilder<QuerySnapshot>(
+              stream: selectedNewsCategory.value == kAllNewsCategory
+                  ? FirebaseFirestore.instance
+                      .collection('news')
+                      .orderBy('timestamp', descending: false)
+                      .snapshots()
+                  : FirebaseFirestore.instance
+                      .collection('news')
+                      .where('category', isEqualTo: selectedNewsCategory.value)
+                      .snapshots(),
+              builder: ((context, snapshot) {
+                List<NewsItem> newsItems = [];
+                print(snapshot.connectionState.toString());
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasError) {
+                    print('has error in loading news');
+                    return const Center(child: Text('هناك خطأ ما'));
+                  }
+                  var newsResult = snapshot.data!.docs;
+                  newsResult.forEach(
+                    (newsElement) {
+                      News news = News.fromDB(
+                        newsElement.data() as Map<String, dynamic>,
+                        newsElement.id,
+                      );
+                      newsItems.add(NewsItem(news: news));
+                    },
+                  );
+                  return Column(
+                    children: newsItems.reversed.toList(),
+                  );
+                  // Expanded(
+                  //   child: GridView.count(
+                  //     padding: EdgeInsets.zero,
+                  //     shrinkWrap: true,
+                  //     crossAxisCount: 2,
+                  //     childAspectRatio: 0.98,
+                  //     mainAxisSpacing: 8,
+                  //     crossAxisSpacing: 8,
+                  //     children: newsItems.reversed.toList(),
+                  //   ),
+                  // );
                 }
-                var newsResult = snapshot.data!.docs;
-                newsResult.forEach(
-                  (newsElement) {
-                    News news = News.fromDB(
-                      newsElement.data() as Map<String, dynamic>,
-                      newsElement.id,
-                    );
-                    newsItems.add(NewsItem(news: news));
-                  },
-                );
                 return Column(
-                  children: newsItems.reversed.toList(),
+                  children: const [
+                    Center(child: CircularLoading()),
+                  ],
                 );
-                // Expanded(
-                //   child: GridView.count(
-                //     padding: EdgeInsets.zero,
-                //     shrinkWrap: true,
-                //     crossAxisCount: 2,
-                //     childAspectRatio: 0.98,
-                //     mainAxisSpacing: 8,
-                //     crossAxisSpacing: 8,
-                //     children: newsItems.reversed.toList(),
-                //   ),
-                // );
-              }
-              return Column(
-                children: const [
-                  Center(child: CircularLoading()),
-                ],
-              );
-            }),
+              }),
+            ),
           ),
           SizedBox(height: 20.h),
         ],

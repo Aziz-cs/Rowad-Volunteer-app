@@ -26,7 +26,7 @@ class NewsItemHP extends StatelessWidget {
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
       child: Container(
-        width: 190.w,
+        width: 220.w,
         padding: const EdgeInsets.all(4),
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         decoration: BoxDecoration(
@@ -66,6 +66,16 @@ class NewsItemHP extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: Colors.black87,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      news.description,
+                      maxLines: 4,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: Colors.black54,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

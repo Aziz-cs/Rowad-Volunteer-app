@@ -24,7 +24,6 @@ class CoursePage extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF3F3F3),
         appBar: AppBar(toolbarHeight: 0),
         body: SafeArea(
           child: SingleChildScrollView(

@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 import 'utils/sharedprefs.dart';
 
-const String appVersion = 'v1.0.6';
+const String appVersion = 'v1.0.8';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
+            scaffoldBackgroundColor: kOffWhite,
             colorScheme: ThemeData().colorScheme.copyWith(
                   secondary: kGreenColor,
                 ),

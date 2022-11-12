@@ -2,6 +2,7 @@ import 'package:app/chances/view/add_chance_page.dart';
 import 'package:app/courses/view/add_course_page.dart';
 import 'package:app/news/view/add_news_page.dart';
 import 'package:app/posters/view/add_poster_page.dart';
+import 'package:app/teams/view/add_team_page.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -102,6 +103,27 @@ class AdminPanelPage extends StatelessWidget {
               onTap: () => PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: AddCoursePage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.group,
+              ),
+              title: const Text('إضافة فريق تطوعي'),
+              subtitle: const Text(''),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AddTeamPage(),
                 withNavBar: true, // OPTIONAL VALUE. True by default.
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               ),

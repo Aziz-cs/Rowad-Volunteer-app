@@ -11,12 +11,10 @@ import '../../chances/model/chance.dart';
 import '../../chances/view/widgets/item_chance.dart';
 import '../../courses/model/course.dart';
 import '../../news/model/news.dart';
-import '../../news/view/add_news_page.dart';
-import '../../news/view/widgets/item_news_hp.dart';
+import '../../news/view/widgets/filter_bar.dart';
 import '../../news/view/widgets/item_news_new.dart';
 import '../../notifications/notification_page.dart';
 import '../../posters/view/widgets/slider_banners.dart';
-import '../../utils/constants.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/navigator_page.dart';
 
@@ -24,14 +22,13 @@ enum Category { news, chances, courses, programs }
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
-  var selectedNewsCategory = ''.obs;
+  var selectedNewsCategory = kAllNewsCategory.obs;
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        backgroundColor: const Color(0xFFF3F3F3),
         body: SafeArea(
           top: false,
           child: Column(
@@ -283,82 +280,12 @@ class HomePage extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(
-            height: 30.h,
-            child: Row(
-              children: [
-                Expanded(
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('news_categories')
-                        .snapshots(),
-                    builder: ((context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.active) {
-                        print(snapshot.connectionState.toString());
-                        var newsCategoriesResult = snapshot.data!.docs;
-                        return ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: List.generate(
-                            newsCategoriesResult.length,
-                            (index) => newsCategoriesResult[index]['name'] ==
-                                    kChooseCategory
-                                ? const SizedBox()
-                                : GestureDetector(
-                                    onTap: () {
-                                      print('pressed');
-                                      print(
-                                          newsCategoriesResult[index]['name']);
-                                      selectedNewsCategory.value =
-                                          newsCategoriesResult[index]['name'];
-                                    },
-                                    child: Obx(
-                                      () => Container(
-                                        margin: EdgeInsets.symmetric(
-                                            horizontal: 4.w),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 9.w, vertical: 3.h),
-                                        decoration: BoxDecoration(
-                                          color: selectedNewsCategory.value ==
-                                                  newsCategoriesResult[index]
-                                                      ['name']
-                                              ? kGreenColor
-                                              : Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        child: Text(
-                                          newsCategoriesResult[index]['name'],
-                                          style: TextStyle(
-                                            fontSize: 13.sp,
-                                            color: selectedNewsCategory.value ==
-                                                    newsCategoriesResult[index]
-                                                        ['name']
-                                                ? Colors.white
-                                                : Colors.grey.shade500,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                          ),
-                        );
-                      }
-                      return Column(
-                        children: const [
-                          Center(child: CircularLoading()),
-                        ],
-                      );
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          NewsFilterBar(selectedNewsCategory: selectedNewsCategory),
           SizedBox(height: 3.h),
           SizedBox(
-            height: 230.h,
+            height: 300.h,
             child: Obx(() => StreamBuilder<QuerySnapshot>(
-                  stream: selectedNewsCategory.isEmpty
+                  stream: selectedNewsCategory.value == kAllNewsCategory
                       ? FirebaseFirestore.instance
                           .collection('news')
                           .orderBy('timestamp', descending: false)
