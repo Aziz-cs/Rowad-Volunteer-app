@@ -13,3 +13,13 @@ const String kErrTooShort = 'قصير جدا';
 const String kErrInvalidURL = 'برجاء إدخال رابط صحيح';
 const String kErrInvalidEmail = 'برجاء إدخال إيميل صحيح';
 const String kErrSomethingWrong = 'هناك خطأ ما، برجاء إعادة المحاولة';
+
+// const kGradientGrey = LinearGradient(
+//   begin: Alignment.topCenter,
+//   end: Alignment.bottomCenter,
+//   colors: [
+//     Colors.white,
+//     Colors.white,
+//     Colors.white10,
+//   ],
+// );

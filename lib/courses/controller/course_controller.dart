@@ -115,7 +115,7 @@ class CoursesController extends GetxController {
         .catchError((e) {
       print('error main image is not deleted $e');
       Get.offAll(
-        () => NavigatorPage(tabIndex: 2),
+        () => NavigatorPage(),
         duration: const Duration(microseconds: 1),
       );
       isLoading.value = false;

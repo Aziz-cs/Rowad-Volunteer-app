@@ -8,43 +8,44 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/constants.dart';
+import '../../widgets/menu_drawer.dart';
 
 class NewsPage extends StatelessWidget {
   NewsPage({Key? key}) : super(key: key);
   var selectedNewsCategory = kAllNewsCategory.obs;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const MenuDrawer(),
       appBar: AppBar(
         backgroundColor: kGreenColor,
+        leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            }),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'المركز الإعلامي',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Text(
+                'المركز الإعلامي',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: [
-            //     Text(
-            //       'ترتيب حسب',
-            //       style: TextStyle(
-            //         fontSize: 13.sp,
-            //         height: 1,
-            //       ),
-            //     ),
-            //     SizedBox(width: 3.w),
-            //     const Icon(
-            //       Icons.filter_list,
-            //       color: Colors.white,
-            //     ),
-            //   ],
-            // ),
+            IconButton(
+              icon: const Icon(
+                Icons.filter_list,
+                color: kGreenColor,
+              ),
+              onPressed: () {},
+            ),
           ],
         ),
         centerTitle: true,

@@ -16,3 +16,10 @@ String getFormatedDate(Timestamp timestamp) {
   var formattedDate = DateFormat('dd/MM/yyyy').format(dateTime);
   return formattedDate;
 }
+
+void openUrl(String url) async {
+  if (!await launchUrl(
+    Uri.parse(url),
+    mode: LaunchMode.externalApplication,
+  )) throw 'Could not launch $url';
+}

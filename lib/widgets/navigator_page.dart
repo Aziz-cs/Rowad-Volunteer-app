@@ -17,7 +17,9 @@ class NavigatorPage extends StatelessWidget {
   int tabIndex;
   @override
   Widget build(BuildContext context) {
-    _controller = PersistentTabController(initialIndex: tabIndex);
+    _controller = PersistentTabController(
+      initialIndex: tabIndex,
+    );
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -26,8 +28,9 @@ class NavigatorPage extends StatelessWidget {
         controller: _controller,
         screens: _buildScreens(),
         items: _navBarsItems(),
-        confineInSafeArea: true,
 
+        confineInSafeArea: true,
+        popAllScreensOnTapAnyTabs: true,
         backgroundColor: kGreenColor, // Default is Colors.white.
         handleAndroidBackButtonPress: true, // Default is true.
         resizeToAvoidBottomInset:
@@ -65,9 +68,9 @@ class NavigatorPage extends StatelessWidget {
 List<Widget> _buildScreens() {
   return [
     HomePage(),
-    const ChancesPage(),
+    ChancesPage(),
     NewsPage(),
-    const OthersPage(),
+    OthersPage(),
   ];
 }
 

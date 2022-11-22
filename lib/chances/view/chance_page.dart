@@ -208,7 +208,7 @@ class ChancePage extends StatelessWidget {
         ),
         Positioned(
           right: 5.w,
-          child: const BackBtn(),
+          child: BackBtn(),
         ),
         Positioned(
             left: 4.w,

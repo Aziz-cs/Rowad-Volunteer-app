@@ -1,18 +1,23 @@
 import 'package:app/courses/model/course.dart';
 import 'package:app/courses/view/widgets/item_course.dart';
 import 'package:app/widgets/circular_loading.dart';
+import 'package:app/widgets/menu_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../utils/constants.dart';
 
 class CoursesPage extends StatelessWidget {
-  const CoursesPage({Key? key}) : super(key: key);
+  CoursesPage({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const MenuDrawer(),
       appBar: AppBar(
         backgroundColor: kGreenColor,
         title: Text(
@@ -22,6 +27,11 @@ class CoursesPage extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
+        leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            }),
         centerTitle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(

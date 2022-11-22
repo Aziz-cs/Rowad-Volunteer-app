@@ -137,7 +137,7 @@ class NewsDetailsPage extends StatelessWidget {
         ),
         Positioned(
           right: 5.w,
-          child: const BackBtn(),
+          child: BackBtn(),
         ),
         Positioned(
           bottom: 30.h,

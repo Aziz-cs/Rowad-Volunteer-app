@@ -1,5 +1,6 @@
 import 'package:app/courses/view/courses_page.dart';
 import 'package:app/courses/view/widgets/item_course_hp.dart';
+import 'package:app/widgets/menu_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ enum Category { news, chances, courses, programs }
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   var selectedNewsCategory = kAllNewsCategory.obs;
 
   @override
@@ -29,6 +32,8 @@ class HomePage extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        key: _scaffoldKey,
+        drawer: const MenuDrawer(),
         body: SafeArea(
           top: false,
           child: Column(
@@ -75,6 +80,14 @@ class HomePage extends StatelessWidget {
       children: [
         Row(
           children: [
+            IconButton(
+                icon: const Icon(
+                  Icons.menu,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  _scaffoldKey.currentState!.openDrawer();
+                }),
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
@@ -231,7 +244,7 @@ class HomePage extends StatelessWidget {
             case Category.courses:
               PersistentNavBarNavigator.pushNewScreen(
                 context,
-                screen: const CoursesPage(),
+                screen: CoursesPage(),
                 withNavBar: true, // OPTIONAL VALUE. True by default.
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );

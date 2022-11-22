@@ -9,10 +9,11 @@ class Team {
   String category;
   String imageURL;
   String imagePath;
-  String teamLeaderUID;
-  String deputyUID;
-  String mediaUID;
-  String econmicUID;
+  String teamLeaderEmail;
+  String teamLeaderName;
+  String deputyName;
+  String mediaName;
+  String econmicName;
   Timestamp timestamp;
 
   Team({
@@ -24,10 +25,11 @@ class Team {
     required this.category,
     required this.imageURL,
     required this.imagePath,
-    required this.teamLeaderUID,
-    required this.deputyUID,
-    required this.mediaUID,
-    required this.econmicUID,
+    required this.teamLeaderEmail,
+    required this.teamLeaderName,
+    required this.deputyName,
+    required this.mediaName,
+    required this.econmicName,
     required this.timestamp,
   });
 
@@ -36,15 +38,16 @@ class Team {
       id: id,
       name: data['name'] ?? '',
       brief: data['brief'] ?? '',
-      goals: data['gaols'] ?? '',
+      goals: data['goals'] ?? '',
       futurePlans: data['futurePlans'] ?? '',
       imageURL: data['imageURL'] ?? '',
       imagePath: data['imagePath'] ?? '',
       category: data['category'] ?? '',
-      teamLeaderUID: data['teamLeaderUID'],
-      deputyUID: data['dupterUID'],
-      econmicUID: data['econmicUID'],
-      mediaUID: data['mediaUID'],
+      teamLeaderEmail: data['teamLeaderEmail'] ?? '',
+      teamLeaderName: data['teamLeaderName'] ?? '',
+      deputyName: data['deputyName'] ?? '',
+      econmicName: data['econmicName'] ?? '',
+      mediaName: data['mediaName'] ?? '',
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }

@@ -4,9 +4,11 @@ import 'package:app/news/controller/news_controller.dart';
 import 'package:app/news/model/news.dart';
 import 'package:app/teams/controller/team_controller.dart';
 import 'package:app/teams/model/team.dart';
+import 'package:app/teams/view/wysiwyg_editor_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -21,6 +23,9 @@ import '../../widgets/textfield.dart';
 class AddTeamPage extends StatelessWidget {
   AddTeamPage({Key? key}) : super(key: key);
   final teamController = Get.put(TeamController());
+
+  quill.QuillController _controller = quill.QuillController.basic();
+
   final _addCategoryController = TextEditingController();
   final _isLoading = false.obs;
 
@@ -30,7 +35,8 @@ class AddTeamPage extends StatelessWidget {
   final _teamFuturePlansController = TextEditingController();
   final _teamGoalsController = TextEditingController();
   final _teamBriefController = TextEditingController();
-  final _teamLeaderController = TextEditingController();
+  final _teamLeaderEmailController = TextEditingController();
+  final _teamLeaderNameController = TextEditingController();
   final _teamDeputyController = TextEditingController();
   final _teamMediaController = TextEditingController();
   final _teamEconomicController = TextEditingController();
@@ -41,208 +47,219 @@ class AddTeamPage extends StatelessWidget {
   Widget build(BuildContext context) {
     clearProperties();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: kGreenColor,
-          title: const Text('إضافة فريق تطوعي'),
-          centerTitle: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(15),
+      appBar: AppBar(
+        backgroundColor: kGreenColor,
+        title: const Text('إضافة فريق تطوعي'),
+        centerTitle: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(15),
+          ),
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'اسم الفريق',
+                  style: kTitleTextStyle,
+                ),
+                MyTextField(
+                  controller: _teamNameController,
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return kErrEmpty;
+                    }
+                  },
+                ),
+                Text(
+                  'نبذة عن الفريق',
+                  style: kTitleTextStyle,
+                ),
+                MyTextField(
+                  controller: _teamBriefController,
+                  maxLines: 4,
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return kErrEmpty;
+                    }
+                  },
+                ),
+                Text(
+                  'الأهداف',
+                  style: kTitleTextStyle,
+                ),
+                MyTextField(
+                  inputAction: TextInputAction.newline,
+                  inputType: TextInputType.multiline,
+                  controller: _teamGoalsController,
+                  maxLines: 4,
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return kErrEmpty;
+                    }
+                  },
+                ),
+                Text(
+                  'الخطط المستقبلية',
+                  style: kTitleTextStyle,
+                ),
+                MyTextField(
+                  inputAction: TextInputAction.newline,
+                  inputType: TextInputType.multiline,
+                  controller: _teamFuturePlansController,
+                  maxLines: 4,
+                  validator: (input) {
+                    if (input!.isEmpty) {
+                      return kErrEmpty;
+                    }
+                  },
+                ),
+                Text(
+                  'التصنيف',
+                  style: kTitleTextStyle,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('general_categories')
+                              .orderBy('name')
+                              .snapshots(),
+                          builder: ((context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.active) {
+                              List<String> categoriesList = [];
+                              var result = snapshot.data!.docs;
+                              result.forEach((element) {
+                                Map category = element.data() as Map;
+                                categoriesList.add(category['name']);
+                              });
+                              return Obx(() => DropDownMenu(
+                                    value: teamCategory.value,
+                                    items: categoriesList.toList(),
+                                    removeHeightPadding: true,
+                                    onChanged: (selectedCategory) {
+                                      teamCategory.value = selectedCategory ??
+                                          teamCategory.value;
+                                    },
+                                  ));
+                            }
+                            return const Center(child: CircularLoading());
+                          })),
+                    ),
+                    SimpleButton(
+                      label: 'اضف تصنيفا',
+                      onPress: () => showAddCategoryDialog(),
+                    ),
+                  ],
+                ),
+                Text(
+                  'صورة رمزية للفريق',
+                  style: kTitleTextStyle,
+                ),
+                SimpleButton(
+                    label: 'أختر الصورة',
+                    onPress: () async {
+                      teamController.pickedImage.value =
+                          await ImageController.pickImage();
+                    }),
+                Obx(
+                  () => teamController.pickedImage.value.path.isEmpty
+                      ? const SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.file(
+                              File(teamController.pickedImage.value.path),
+                              width: 250.w,
+                            ),
+                          ],
+                        ),
+                ),
+                SizedBox(height: 5.h),
+                _buildAddUserRoleToTeam(
+                  userRole: 'البريد الألكتروني لقائد الفريق',
+                  isLTRdirection: true,
+                  hintText: 'البريد المسجل به العضو',
+                  controller: _teamLeaderEmailController,
+                ),
+                _buildAddUserRoleToTeam(
+                  userRole: 'قائد الفريق',
+                  controller: _teamLeaderNameController,
+                ),
+                _buildAddUserRoleToTeam(
+                  userRole: 'نائب الفريق',
+                  controller: _teamDeputyController,
+                ),
+                _buildAddUserRoleToTeam(
+                  userRole: 'العضو الإعلامي',
+                  controller: _teamMediaController,
+                ),
+                _buildAddUserRoleToTeam(
+                  userRole: 'العضو المالي',
+                  controller: _teamEconomicController,
+                ),
+                SizedBox(height: 5.h),
+                Obx(() => teamController.isLoading.isTrue
+                    ? const Center(child: CircularLoading())
+                    : SimpleButton(
+                        label: 'إضافة الفريق',
+                        onPress: () {
+                          if (!_formKey.currentState!.validate()) {
+                            return;
+                          }
+                          if (teamController.pickedImage.value.path.isEmpty) {
+                            Fluttertoast.showToast(
+                                msg: 'برجاء رفع صورة للفريق');
+                            return;
+                          }
+                          if (teamCategory.value == kChooseCategory) {
+                            Fluttertoast.showToast(msg: 'برجاء إختيار التصنيف');
+                            return;
+                          }
+
+                          Team team = Team(
+                            name: _teamNameController.text.trim(),
+                            brief: _teamBriefController.text.trim(),
+                            goals: _teamGoalsController.text.trim(),
+                            futurePlans: _teamFuturePlansController.text.trim(),
+                            category: teamCategory.value,
+                            teamLeaderEmail:
+                                _teamLeaderEmailController.text.trim(),
+                            teamLeaderName:
+                                _teamLeaderNameController.text.trim(),
+                            deputyName: _teamDeputyController.text.trim(),
+                            mediaName: _teamMediaController.text.trim(),
+                            econmicName: _teamEconomicController.text.trim(),
+                            id: '',
+                            imageURL: '',
+                            imagePath: '',
+                            timestamp: Timestamp.now(),
+                          );
+
+                          teamController.addModifyTeam(team: team);
+                        },
+                      )),
+                SizedBox(height: 30.h),
+              ],
             ),
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'اسم الفريق',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    controller: _teamNameController,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
-                    'نبذة عن الفريق',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    controller: _teamBriefController,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
-                    'الأهداف',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    inputAction: TextInputAction.newline,
-                    inputType: TextInputType.multiline,
-                    controller: _teamGoalsController,
-                    maxLines: 4,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
-                    'الخطط المستقبلية',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    inputAction: TextInputAction.newline,
-                    inputType: TextInputType.multiline,
-                    controller: _teamFuturePlansController,
-                    maxLines: 4,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
-                    'التصنيف',
-                    style: kTitleTextStyle,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: StreamBuilder<QuerySnapshot>(
-                            stream: FirebaseFirestore.instance
-                                .collection('general_categories')
-                                .orderBy('name')
-                                .snapshots(),
-                            builder: ((context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.active) {
-                                List<String> categoriesList = [];
-                                var result = snapshot.data!.docs;
-                                result.forEach((element) {
-                                  Map category = element.data() as Map;
-                                  categoriesList.add(category['name']);
-                                });
-                                return Obx(() => DropDownMenu(
-                                      value: teamCategory.value,
-                                      items: categoriesList.toList(),
-                                      removeHeightPadding: true,
-                                      onChanged: (selectedCategory) {
-                                        teamCategory.value = selectedCategory ??
-                                            teamCategory.value;
-                                      },
-                                    ));
-                              }
-                              return const Center(child: CircularLoading());
-                            })),
-                      ),
-                      SimpleButton(
-                        label: 'اضف تصنيفا',
-                        onPress: () => showAddCategoryDialog(),
-                      ),
-                    ],
-                  ),
-                  Text(
-                    'صورة رمزية للفريق',
-                    style: kTitleTextStyle,
-                  ),
-                  SimpleButton(
-                      label: 'أختر الصورة',
-                      onPress: () async {
-                        teamController.pickedImage.value =
-                            await ImageController.pickImage();
-                      }),
-                  Obx(
-                    () => teamController.pickedImage.value.path.isEmpty
-                        ? const SizedBox()
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.file(
-                                File(teamController.pickedImage.value.path),
-                                width: 250.w,
-                              ),
-                            ],
-                          ),
-                  ),
-                  SizedBox(height: 5.h),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'قائد الفريق',
-                    controller: _teamLeaderController,
-                  ),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'نائب الفريق',
-                    controller: _teamDeputyController,
-                  ),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'العضو الإعلامي',
-                    controller: _teamMediaController,
-                  ),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'العضو المالي',
-                    controller: _teamEconomicController,
-                  ),
-                  SizedBox(height: 5.h),
-                  Obx(() => teamController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
-                      : SimpleButton(
-                          label: 'إضافة الفريق',
-                          onPress: () {
-                            if (!_formKey.currentState!.validate()) {
-                              return;
-                            }
-                            if (teamController.pickedImage.value.path.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء رفع صورة للفريق');
-                              return;
-                            }
-                            if (teamCategory.value == kChooseCategory) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء إختيار التصنيف');
-                              return;
-                            }
-
-                            Team team = Team(
-                              name: _teamNameController.text.trim(),
-                              brief: _teamBriefController.text.trim(),
-                              goals: _teamGoalsController.text.trim(),
-                              futurePlans:
-                                  _teamFuturePlansController.text.trim(),
-                              category: teamCategory.value,
-                              teamLeaderUID: _teamLeaderController.text.trim(),
-                              deputyUID: _teamDeputyController.text.trim(),
-                              mediaUID: _teamMediaController.text.trim(),
-                              econmicUID: _teamEconomicController.text.trim(),
-                              id: '',
-                              imageURL: '',
-                              imagePath: '',
-                              timestamp: Timestamp.now(),
-                            );
-
-                            teamController.addModifyTeam(team: team);
-                          },
-                        )),
-                  SizedBox(height: 30.h),
-                ],
-              ),
-            ),
-          ),
-        ));
+      ),
+    );
   }
 
   Column _buildAddUserRoleToTeam({
     required String userRole,
+    String hintText = 'الأسم',
+    bool isLTRdirection = false,
     required TextEditingController controller,
   }) {
     return Column(
@@ -257,14 +274,17 @@ class AddTeamPage extends StatelessWidget {
             Expanded(
               flex: 3,
               child: MyTextField(
+                isLTRdirection: isLTRdirection,
                 controller: controller,
-                hintText: 'الإيميل المسجل به العضو',
+                hintText: hintText,
                 validator: (input) {
                   if (input!.isEmpty) {
                     return kErrEmpty;
                   }
-                  if (GetUtils.isEmail(input)) {
-                    return kErrInvalidEmail;
+                  if (isLTRdirection) {
+                    if (!GetUtils.isEmail(input)) {
+                      return kErrInvalidEmail;
+                    }
                   }
                 },
               ),

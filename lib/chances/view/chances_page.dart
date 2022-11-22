@@ -1,3 +1,4 @@
+import 'package:app/widgets/menu_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,42 +8,38 @@ import '../model/chance.dart';
 import 'widgets/item_chance.dart';
 
 class ChancesPage extends StatelessWidget {
-  const ChancesPage({Key? key}) : super(key: key);
+  ChancesPage({Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: const MenuDrawer(),
       appBar: AppBar(
         backgroundColor: kGreenColor,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'جميع الفرص التطوعية',
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  'ترتيب حسب',
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    height: 1,
-                  ),
-                ),
-                SizedBox(width: 3.w),
-                const Icon(
-                  Icons.filter_list,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ],
+        leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            }),
+        title: Text(
+          'جميع الفرص التطوعية',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
+        actions: [
+          // IconButton(
+          //   icon: const Icon(
+          //     Icons.filter_list,
+          //     color: Colors.white,
+          //   ),
+          //   onPressed: () {},
+          // ),
+        ],
         centerTitle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(

@@ -30,10 +30,11 @@ class TeamController extends GetxController {
       'goals': team.goals,
       'category': team.category,
       'futurePlans': team.futurePlans,
-      'teamLeaderUID': team.teamLeaderUID,
-      'dupterUID': team.deputyUID,
-      'econmicUID': team.econmicUID,
-      'mediaUID': team.mediaUID,
+      'teamLeaderEmail': team.teamLeaderEmail,
+      'teamLeaderName': team.teamLeaderName,
+      'deputyName': team.deputyName,
+      'econmicName': team.econmicName,
+      'mediaName': team.mediaName,
       'timestamp': isModifing ? team.timestamp : FieldValue.serverTimestamp(),
     };
 
@@ -66,7 +67,7 @@ class TeamController extends GetxController {
       isLoading.value = false;
       Fluttertoast.showToast(msg: 'تم تعديل الفريق بنجاح');
       Get.offAll(
-        () => NavigatorPage(tabIndex: 2),
+        () => NavigatorPage(),
         duration: const Duration(microseconds: 1),
       );
     } else {
@@ -90,7 +91,7 @@ class TeamController extends GetxController {
         isLoading.value = false;
         Fluttertoast.showToast(msg: 'تم إضافة الفريق بنجاح');
         Get.offAll(
-          () => NavigatorPage(tabIndex: 2),
+          () => NavigatorPage(),
           duration: const Duration(microseconds: 1),
         );
       }).catchError((e) {
@@ -111,7 +112,7 @@ class TeamController extends GetxController {
         .catchError((e) {
       print('error main image is not deleted $e');
       Get.offAll(
-        () => NavigatorPage(tabIndex: 2),
+        () => NavigatorPage(),
         duration: const Duration(microseconds: 1),
       );
       isLoading.value = false;
@@ -119,7 +120,7 @@ class TeamController extends GetxController {
 
     Fluttertoast.showToast(msg: 'تم حذف الفريق');
     Get.offAll(
-      () => NavigatorPage(tabIndex: 2),
+      () => NavigatorPage(),
       duration: const Duration(microseconds: 1),
     );
 

@@ -8,10 +8,12 @@ class CachedOnlineIMG extends StatelessWidget {
     Key? key,
     required this.imageURL,
     this.imageHeight = 100,
+    this.imageWidth = double.infinity,
   }) : super(key: key);
 
   final String imageURL;
   final int imageHeight;
+  final double imageWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class CachedOnlineIMG extends StatelessWidget {
       imageUrl: imageURL,
       fit: BoxFit.fill,
       height: imageHeight.h,
-      width: double.infinity,
+      width: imageWidth.w,
       placeholder: (context, url) => Padding(
         padding: const EdgeInsets.all(30.0),
         child: Image.asset('assets/images/loading_spinner.gif'),
