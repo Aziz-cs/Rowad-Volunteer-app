@@ -33,42 +33,14 @@ class TeamPage extends StatelessWidget {
             child: Column(
               children: [
                 _buildTeamHeadbar(context),
-
                 _buildTeamInfo(),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     SizedBox(
-                //       width: 200.w,
-                //       child: Column(
-                //         crossAxisAlignment: CrossAxisAlignment.center,
-                //         children: [
-                //           _buildUserRole(
-                //             label: 'قائد الفريق:',
-                //             userName: team.teamLeaderName,
-                //           ),
-                //           _buildUserRole(
-                //             label: 'نائب الفريق:',
-                //             userName: team.deputyName,
-                //           ),
-                //           _buildUserRole(
-                //             label: 'المسؤول المالي:',
-                //             userName: team.econmicName,
-                //           ),
-                //           _buildUserRole(
-                //             label: 'المسؤول الإعلامي:',
-                //             userName: team.mediaName,
-                //           ),
-                //         ],
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 const Divider(color: Colors.grey),
                 _buildTeamTitleDesc(title: 'نبذه عن الفريق', desc: team.brief),
-                _buildTeamTitleDesc(title: 'الأهداف', desc: team.goals),
-                _buildTeamTitleDesc(
-                    title: 'الخطط المستقبلية', desc: team.futurePlans),
+                if (team.goals.isNotEmpty)
+                  _buildTeamTitleDesc(title: 'الأهداف', desc: team.goals),
+                if (team.futurePlans.isNotEmpty)
+                  _buildTeamTitleDesc(
+                      title: 'الخطط المستقبلية', desc: team.futurePlans),
               ],
             ),
           ),
@@ -133,18 +105,21 @@ class TeamPage extends StatelessWidget {
                 label: 'قائد الفريق:',
                 iconData: CupertinoIcons.star_circle_fill,
               ),
-              _buildIconInfo(
-                label: 'نائب الفريق:',
-                iconData: CupertinoIcons.person_crop_square_fill,
-              ),
-              _buildIconInfo(
-                label: 'المسؤول المالي',
-                iconData: CupertinoIcons.money_dollar_circle_fill,
-              ),
-              _buildIconInfo(
-                label: 'المسؤول الإعلامي',
-                iconData: CupertinoIcons.tv_circle_fill,
-              ),
+              if (team.deputyName.isNotEmpty)
+                _buildIconInfo(
+                  label: 'نائب الفريق:',
+                  iconData: CupertinoIcons.person_crop_square_fill,
+                ),
+              if (team.econmicName.isNotEmpty)
+                _buildIconInfo(
+                  label: 'المسؤول المالي',
+                  iconData: CupertinoIcons.money_dollar_circle_fill,
+                ),
+              if (team.mediaName.isNotEmpty)
+                _buildIconInfo(
+                  label: 'المسؤول الإعلامي',
+                  iconData: CupertinoIcons.tv_circle_fill,
+                ),
             ],
           ),
           Column(
@@ -159,18 +134,21 @@ class TeamPage extends StatelessWidget {
                 label: team.teamLeaderName,
                 iconData: Icons.person,
               ),
-              _buildIconInfo(
-                label: team.deputyName,
-                iconData: Icons.person,
-              ),
-              _buildIconInfo(
-                label: team.econmicName,
-                iconData: Icons.person,
-              ),
-              _buildIconInfo(
-                label: team.mediaName,
-                iconData: Icons.person,
-              ),
+              if (team.deputyName.isNotEmpty)
+                _buildIconInfo(
+                  label: team.deputyName,
+                  iconData: Icons.person,
+                ),
+              if (team.econmicName.isNotEmpty)
+                _buildIconInfo(
+                  label: team.econmicName,
+                  iconData: Icons.person,
+                ),
+              if (team.mediaName.isNotEmpty)
+                _buildIconInfo(
+                  label: team.mediaName,
+                  iconData: Icons.person,
+                ),
             ],
           ),
         ],
@@ -239,6 +217,7 @@ class TeamPage extends StatelessWidget {
 
   Widget _buildTeamHeadbar(BuildContext context) {
     return Container(
+      // color: Colors.white,
       color: Colors.grey.shade200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

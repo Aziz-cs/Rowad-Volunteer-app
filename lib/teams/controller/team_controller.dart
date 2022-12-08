@@ -16,6 +16,7 @@ class TeamController extends GetxController {
   final pickedImage = File('').obs;
   final List photoAlbum = [].obs;
   final ImagePicker picker = ImagePicker();
+  var isDeleteLoading = false.obs;
 
   Future<void> addModifyTeam({
     required Team team,
@@ -36,6 +37,8 @@ class TeamController extends GetxController {
       'econmicName': team.econmicName,
       'mediaName': team.mediaName,
       'timestamp': isModifing ? team.timestamp : FieldValue.serverTimestamp(),
+      'imageURL': team.imageURL,
+      'imagePath': team.imagePath,
     };
 
     if (isModifing) {
@@ -75,19 +78,20 @@ class TeamController extends GetxController {
           .collection('teams')
           .add(teamData)
           .then((doc) async {
-        UploadedImage uploadedImage = await ImageController.uploadImage(
-          imageFile: pickedImage.value,
-          category: 'teams',
-          docID: doc.id,
-        );
-        await FirebaseFirestore.instance
-            .collection('teams')
-            .doc(doc.id)
-            .update({
-          'imageURL': uploadedImage.imageURL,
-          'imagePath': uploadedImage.imagePath,
-        });
-
+        if (pickedImage.value.path.isNotEmpty) {
+          UploadedImage uploadedImage = await ImageController.uploadImage(
+            imageFile: pickedImage.value,
+            category: 'teams',
+            docID: doc.id,
+          );
+          await FirebaseFirestore.instance
+              .collection('teams')
+              .doc(doc.id)
+              .update({
+            'imageURL': uploadedImage.imageURL,
+            'imagePath': uploadedImage.imagePath,
+          });
+        }
         isLoading.value = false;
         Fluttertoast.showToast(msg: 'تم إضافة الفريق بنجاح');
         Get.offAll(
@@ -102,28 +106,29 @@ class TeamController extends GetxController {
   }
 
   Future<void> deleteTeam(Team team) async {
-    isLoading.value = true;
-    await FirebaseFirestore.instance.collection('news').doc(team.id).delete();
+    isDeleteLoading.value = true;
+    await FirebaseFirestore.instance.collection('teams').doc(team.id).delete();
 
-    await FirebaseStorage.instance
-        .ref()
-        .child(team.imagePath)
-        .delete()
-        .catchError((e) {
-      print('error main image is not deleted $e');
-      Get.offAll(
-        () => NavigatorPage(),
-        duration: const Duration(microseconds: 1),
-      );
-      isLoading.value = false;
-    });
-
+    if (team.imagePath.isNotEmpty) {
+      await FirebaseStorage.instance
+          .ref()
+          .child(team.imagePath)
+          .delete()
+          .catchError((e) {
+        print('error main image is not deleted $e');
+        Get.offAll(
+          () => NavigatorPage(),
+          duration: const Duration(microseconds: 1),
+        );
+        isDeleteLoading.value = false;
+      });
+    }
     Fluttertoast.showToast(msg: 'تم حذف الفريق');
     Get.offAll(
       () => NavigatorPage(),
       duration: const Duration(microseconds: 1),
     );
 
-    isLoading.value = false;
+    isDeleteLoading.value = false;
   }
 }

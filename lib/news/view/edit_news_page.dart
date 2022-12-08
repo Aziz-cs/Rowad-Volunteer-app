@@ -177,7 +177,7 @@ class EditNewsPage extends StatelessWidget {
                             News modifiedNews = News(
                               id: news.id,
                               title: _titleController.text.trim(),
-                              subTitle: _subTitleController.text.trim(),
+                              // subTitle: _subTitleController.text.trim(),
                               description: _descriptionController.text.trim(),
                               category: newsCategory.value,
                               imageURL: news.imageURL,
@@ -208,7 +208,7 @@ class EditNewsPage extends StatelessWidget {
 
   void setNewsData() {
     _titleController.text = news.title;
-    _subTitleController.text = news.subTitle;
+    // _subTitleController.text = news.subTitle;
     _descriptionController.text = news.description;
     newsCategory.value = news.category;
   }

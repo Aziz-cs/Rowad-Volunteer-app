@@ -100,9 +100,9 @@ class AddTeamPage extends StatelessWidget {
                   controller: _teamGoalsController,
                   maxLines: 4,
                   validator: (input) {
-                    if (input!.isEmpty) {
-                      return kErrEmpty;
-                    }
+                    // if (input!.isEmpty) {
+                    //   return kErrEmpty;
+                    // }
                   },
                 ),
                 Text(
@@ -115,9 +115,9 @@ class AddTeamPage extends StatelessWidget {
                   controller: _teamFuturePlansController,
                   maxLines: 4,
                   validator: (input) {
-                    if (input!.isEmpty) {
-                      return kErrEmpty;
-                    }
+                    // if (input!.isEmpty) {
+                    //   return kErrEmpty;
+                    // }
                   },
                 ),
                 Text(
@@ -189,10 +189,12 @@ class AddTeamPage extends StatelessWidget {
                   isLTRdirection: true,
                   hintText: 'البريد المسجل به العضو',
                   controller: _teamLeaderEmailController,
+                  isOptional: false,
                 ),
                 _buildAddUserRoleToTeam(
                   userRole: 'قائد الفريق',
                   controller: _teamLeaderNameController,
+                  isOptional: false,
                 ),
                 _buildAddUserRoleToTeam(
                   userRole: 'نائب الفريق',
@@ -215,11 +217,11 @@ class AddTeamPage extends StatelessWidget {
                           if (!_formKey.currentState!.validate()) {
                             return;
                           }
-                          if (teamController.pickedImage.value.path.isEmpty) {
-                            Fluttertoast.showToast(
-                                msg: 'برجاء رفع صورة للفريق');
-                            return;
-                          }
+                          // if (teamController.pickedImage.value.path.isEmpty) {
+                          //   Fluttertoast.showToast(
+                          //       msg: 'برجاء رفع صورة للفريق');
+                          //   return;
+                          // }
                           if (teamCategory.value == kChooseCategory) {
                             Fluttertoast.showToast(msg: 'برجاء إختيار التصنيف');
                             return;
@@ -239,7 +241,10 @@ class AddTeamPage extends StatelessWidget {
                             mediaName: _teamMediaController.text.trim(),
                             econmicName: _teamEconomicController.text.trim(),
                             id: '',
-                            imageURL: '',
+                            imageURL:
+                                teamController.pickedImage.value.path.isEmpty
+                                    ? kDefaultImgURL
+                                    : '',
                             imagePath: '',
                             timestamp: Timestamp.now(),
                           );
@@ -260,6 +265,7 @@ class AddTeamPage extends StatelessWidget {
     required String userRole,
     String hintText = 'الأسم',
     bool isLTRdirection = false,
+    bool isOptional = true,
     required TextEditingController controller,
   }) {
     return Column(
@@ -278,7 +284,7 @@ class AddTeamPage extends StatelessWidget {
                 controller: controller,
                 hintText: hintText,
                 validator: (input) {
-                  if (input!.isEmpty) {
+                  if (input!.isEmpty && !isOptional) {
                     return kErrEmpty;
                   }
                   if (isLTRdirection) {
@@ -320,27 +326,27 @@ class AddTeamPage extends StatelessWidget {
                           child: Column(
                             children: List.generate(
                               result.length,
-                              (index) => result[index]['name'] ==
-                                      kChooseCategory
-                                  ? const SizedBox()
-                                  : ListTile(
-                                      title: Text(result[index]['name']),
-                                      trailing: IconButton(
-                                        icon: const Icon(
-                                          CupertinoIcons.xmark,
-                                          size: 18,
-                                          color: Colors.red,
+                              (index) =>
+                                  result[index]['name'] == kChooseCategory
+                                      ? const SizedBox()
+                                      : ListTile(
+                                          title: Text(result[index]['name']),
+                                          // trailing: IconButton(
+                                          //   icon: const Icon(
+                                          //     CupertinoIcons.xmark,
+                                          //     size: 18,
+                                          //     color: Colors.red,
+                                          //   ),
+                                          //   onPressed: () {
+                                          //     FirebaseFirestore.instance
+                                          //         .collection('general_categories')
+                                          //         .doc(result[index].id)
+                                          //         .delete();
+                                          //     Fluttertoast.showToast(
+                                          //         msg: 'تم حذف التصنيف');
+                                          //   },
+                                          // ),
                                         ),
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('general_categories')
-                                              .doc(result[index].id)
-                                              .delete();
-                                          Fluttertoast.showToast(
-                                              msg: 'تم حذف التصنيف');
-                                        },
-                                      ),
-                                    ),
                             ),
                           ),
                         ),

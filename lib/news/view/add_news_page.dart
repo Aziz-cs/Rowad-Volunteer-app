@@ -25,7 +25,7 @@ class AddNewsPage extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   final _titleController = TextEditingController();
-  final _subTitleController = TextEditingController();
+  // final _subTitleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final newsCategory = '- أختر -'.obs;
 
@@ -65,18 +65,6 @@ class AddNewsPage extends StatelessWidget {
                     },
                   ),
                   Text(
-                    'نبذة مختصرة',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    controller: _subTitleController,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
-                  Text(
                     'الخبر',
                     style: kTitleTextStyle,
                   ),
@@ -86,9 +74,9 @@ class AddNewsPage extends StatelessWidget {
                     controller: _descriptionController,
                     maxLines: 7,
                     validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
+                      // if (input!.isEmpty) {
+                      //   return kErrEmpty;
+                      // }
                     },
                   ),
                   Text(
@@ -156,28 +144,28 @@ class AddNewsPage extends StatelessWidget {
                                                           title: Text(
                                                               result[index]
                                                                   ['name']),
-                                                          trailing: IconButton(
-                                                            icon: const Icon(
-                                                              CupertinoIcons
-                                                                  .xmark,
-                                                              size: 18,
-                                                              color: Colors.red,
-                                                            ),
-                                                            onPressed: () {
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      'news_categories')
-                                                                  .doc(result[
-                                                                          index]
-                                                                      .id)
-                                                                  .delete();
-                                                              Fluttertoast
-                                                                  .showToast(
-                                                                      msg:
-                                                                          'تم حذف التصنيف');
-                                                            },
-                                                          ),
+                                                          // trailing: IconButton(
+                                                          //   icon: const Icon(
+                                                          //     CupertinoIcons
+                                                          //         .xmark,
+                                                          //     size: 18,
+                                                          //     color: Colors.red,
+                                                          //   ),
+                                                          //   onPressed: () {
+                                                          //     FirebaseFirestore
+                                                          //         .instance
+                                                          //         .collection(
+                                                          //             'news_categories')
+                                                          //         .doc(result[
+                                                          //                 index]
+                                                          //             .id)
+                                                          //         .delete();
+                                                          //     Fluttertoast
+                                                          //         .showToast(
+                                                          //             msg:
+                                                          //                 'تم حذف التصنيف');
+                                                          //   },
+                                                          // ),
                                                         ),
                                                 ),
                                               ),
@@ -348,11 +336,11 @@ class AddNewsPage extends StatelessWidget {
                             if (!_formKey.currentState!.validate()) {
                               return;
                             }
-                            if (newsController.pickedImage.value.path.isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء رفع صورة للخبر');
-                              return;
-                            }
+                            // if (newsController.pickedImage.value.path.isEmpty) {
+                            //   Fluttertoast.showToast(
+                            //       msg: 'برجاء رفع صورة للخبر');
+                            //   return;
+                            // }
                             if (newsCategory.value == kChooseCategory) {
                               Fluttertoast.showToast(
                                   msg: 'برجاء إختيار التصنيف');
@@ -362,10 +350,13 @@ class AddNewsPage extends StatelessWidget {
                             News news = News(
                               id: '',
                               title: _titleController.text.trim(),
-                              subTitle: _subTitleController.text.trim(),
+                              // subTitle: _subTitleController.text.trim(),
                               description: _descriptionController.text.trim(),
                               category: newsCategory.value,
-                              imageURL: '',
+                              imageURL:
+                                  newsController.pickedImage.value.path.isEmpty
+                                      ? kDefaultImgURL
+                                      : '',
                               imagePath: '',
                               gallery: newsController.photoAlbum,
                               timestamp: Timestamp.now(),

@@ -13,7 +13,7 @@ import '../../chances/view/widgets/item_chance.dart';
 import '../../courses/model/course.dart';
 import '../../news/model/news.dart';
 import '../../news/view/widgets/filter_bar.dart';
-import '../../news/view/widgets/item_news_new.dart';
+import '../../news/view/widgets/item_news_hp.dart';
 import '../../notifications/notification_page.dart';
 import '../../posters/view/widgets/slider_banners.dart';
 import '../../widgets/circular_loading.dart';
@@ -98,8 +98,7 @@ class HomePage extends StatelessWidget {
               ),
               child: CircleAvatar(
                 radius: 22,
-                backgroundImage:
-                    Image.asset("assets/images/welcome_avatar.png").image,
+                backgroundImage: Image.asset("assets/images/avatar.png").image,
               ),
             ),
             SizedBox(width: 9.w),

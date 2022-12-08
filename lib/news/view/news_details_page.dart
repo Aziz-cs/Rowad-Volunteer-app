@@ -158,17 +158,6 @@ class NewsDetailsPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 5.h),
-                  Text(
-                    news.subTitle,
-                    maxLines: 4,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      height: 1,
-                      fontSize: 13.sp,
-                    ),
-                  ),
                 ],
               ),
             ),

@@ -254,6 +254,14 @@ class EditTeamPage extends StatelessWidget {
                                     .pickedImage.value.path.isNotEmpty);
                           },
                         )),
+                  Obx(() => teamController.isDeleteLoading.isTrue
+                      ? const Center(child: CircularLoading())
+                      : SimpleButton(
+                          label: 'حذف الفريق',
+                          onPress: () {
+                            teamController.deleteTeam(team);
+                          },
+                        )),
                   SizedBox(height: 30.h),
                 ],
               ),
@@ -328,27 +336,27 @@ class EditTeamPage extends StatelessWidget {
                           child: Column(
                             children: List.generate(
                               result.length,
-                              (index) => result[index]['name'] ==
-                                      kChooseCategory
-                                  ? const SizedBox()
-                                  : ListTile(
-                                      title: Text(result[index]['name']),
-                                      trailing: IconButton(
-                                        icon: const Icon(
-                                          CupertinoIcons.xmark,
-                                          size: 18,
-                                          color: Colors.red,
+                              (index) =>
+                                  result[index]['name'] == kChooseCategory
+                                      ? const SizedBox()
+                                      : ListTile(
+                                          title: Text(result[index]['name']),
+                                          // trailing: IconButton(
+                                          //   icon: const Icon(
+                                          //     CupertinoIcons.xmark,
+                                          //     size: 18,
+                                          //     color: Colors.red,
+                                          //   ),
+                                          //   onPressed: () {
+                                          //     FirebaseFirestore.instance
+                                          //         .collection('general_categories')
+                                          //         .doc(result[index].id)
+                                          //         .delete();
+                                          //     Fluttertoast.showToast(
+                                          //         msg: 'تم حذف التصنيف');
+                                          //   },
+                                          // ),
                                         ),
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('general_categories')
-                                              .doc(result[index].id)
-                                              .delete();
-                                          Fluttertoast.showToast(
-                                              msg: 'تم حذف التصنيف');
-                                        },
-                                      ),
-                                    ),
                             ),
                           ),
                         ),

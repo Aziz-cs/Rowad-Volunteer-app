@@ -26,9 +26,11 @@ class NewsController extends GetxController {
 
     Map<String, dynamic> newsData = {
       'title': news.title,
-      'subTitle': news.subTitle,
+      // 'subTitle': news.subTitle,
       'description': news.description,
       'category': news.category,
+      'imageURL': news.imageURL,
+      'imagePath': news.imagePath,
       'timestamp': isModifing ? news.timestamp : FieldValue.serverTimestamp(),
     };
 
@@ -69,16 +71,20 @@ class NewsController extends GetxController {
           .collection('news')
           .add(newsData)
           .then((doc) async {
-        UploadedImage uploadedImage = await ImageController.uploadImage(
-          imageFile: pickedImage.value,
-          category: 'news',
-          docID: doc.id,
-        );
-        await FirebaseFirestore.instance.collection('news').doc(doc.id).update({
-          'imageURL': uploadedImage.imageURL,
-          'imagePath': uploadedImage.imagePath,
-        });
-
+        if (pickedImage.value.path.isNotEmpty) {
+          UploadedImage uploadedImage = await ImageController.uploadImage(
+            imageFile: pickedImage.value,
+            category: 'news',
+            docID: doc.id,
+          );
+          await FirebaseFirestore.instance
+              .collection('news')
+              .doc(doc.id)
+              .update({
+            'imageURL': uploadedImage.imageURL,
+            'imagePath': uploadedImage.imagePath,
+          });
+        }
         List<String> newsGallery = [];
         print('is gallery not empty ${news.gallery.isNotEmpty}');
         print('gallery is ${news.gallery}');
@@ -125,19 +131,20 @@ class NewsController extends GetxController {
   Future<void> deleteNews(News news) async {
     isLoading.value = true;
     await FirebaseFirestore.instance.collection('news').doc(news.id).delete();
-
-    await FirebaseStorage.instance
-        .ref()
-        .child(news.imagePath)
-        .delete()
-        .catchError((e) {
-      print('error main image is not deleted $e');
-      Get.offAll(
-        () => NavigatorPage(tabIndex: 2),
-        duration: const Duration(microseconds: 1),
-      );
-      isLoading.value = false;
-    });
+    if (news.imagePath.isNotEmpty) {
+      await FirebaseStorage.instance
+          .ref()
+          .child(news.imagePath)
+          .delete()
+          .catchError((e) {
+        print('error main image is not deleted $e');
+        Get.offAll(
+          () => NavigatorPage(tabIndex: 2),
+          duration: const Duration(microseconds: 1),
+        );
+        isLoading.value = false;
+      });
+    }
 
     if (news.gallery.isNotEmpty) {
       FirebaseStorage.instance

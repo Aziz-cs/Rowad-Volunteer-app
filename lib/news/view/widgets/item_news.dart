@@ -41,7 +41,7 @@ class NewsItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(
-            news.subTitle,
+            news.description,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
