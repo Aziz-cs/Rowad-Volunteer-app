@@ -1,4 +1,5 @@
 import 'package:app/admin/view/admin_panel_page.dart';
+import 'package:app/profile/view/profile_page.dart';
 import 'package:app/teams/view/teams_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,16 +46,16 @@ class OthersPage extends StatelessWidget {
         children: [
           SizedBox(height: 10.h),
           ListTile(
-            leading: const Icon(Icons.admin_panel_settings),
-            title: const Text('لوحة التحكم'),
-            subtitle: const Text('إعدادات المدير العام'),
+            leading: const Icon(CupertinoIcons.person_fill),
+            title: const Text('حسابي'),
+            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
             trailing: const Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 15,
             ),
             onTap: () => PersistentNavBarNavigator.pushNewScreen(
               context,
-              screen: AdminPanelPage(),
+              screen: ProfilePage(),
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),
@@ -102,27 +103,9 @@ class OthersPage extends StatelessWidget {
             height: 4.h,
           ),
           ListTile(
-            tileColor: Colors.amber.shade100,
-            leading: const Icon(CupertinoIcons.person_fill),
-            title: const Text('حسابي'),
-            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
-            trailing: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 15,
-            ),
-            onTap: () => Fluttertoast.showToast(msg: 'تحت الإنشاء'),
-          ),
-          Divider(
-            color: Colors.grey,
-            height: 4.h,
-          ),
-          ListTile(
-            tileColor: kGreenColor.withOpacity(0.5),
-            leading: const Icon(Icons.update_sharp),
-            title: const Text(
-              'تطبيق رواد [تحت الإنشاء]',
-            ),
-            subtitle: const Text('نسخة $appVersion'),
+            leading: const Icon(Icons.admin_panel_settings),
+            title: const Text('لوحة التحكم'),
+            subtitle: const Text('إعدادات المدير العام'),
             trailing: const Icon(
               Icons.arrow_back_ios_new_rounded,
               size: 15,
@@ -133,6 +116,19 @@ class OthersPage extends StatelessWidget {
               withNavBar: true, // OPTIONAL VALUE. True by default.
               pageTransitionAnimation: PageTransitionAnimation.cupertino,
             ),
+          ),
+          Divider(
+            color: Colors.grey,
+            height: 4.h,
+          ),
+          ListTile(
+            tileColor: kGreenColor.withOpacity(0.5),
+            leading: const Icon(Icons.update_sharp),
+            title: const Text(
+              'تطبيق رواد',
+            ),
+            subtitle: const Text('نسخة $appVersion'),
+            onTap: () {},
           ),
           Divider(
             color: Colors.grey,

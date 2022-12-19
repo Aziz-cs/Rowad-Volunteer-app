@@ -1,3 +1,4 @@
+import 'package:app/auth/view/auth_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../widgets/navigator_page.dart';
@@ -134,28 +135,15 @@ class SplashPage extends StatelessWidget {
       Positioned(
         left: 20.w,
         bottom: 57.h,
-        child: GestureDetector(
+        child: InkWell(
           onTap: () {
-            print('pressed $currentPage');
-            if (currentPage < 2) {
-              _pageViewController.animateToPage(currentPage + 1,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.ease);
-            } else {
-              Get.offAll(() => NavigatorPage());
-            }
+            _checkRouteNextBoardingOrHomePage(currentPage);
           },
           child: Row(
             children: [
               TextButton(
                 onPressed: () {
-                  if (currentPage < 2) {
-                    _pageViewController.animateToPage(currentPage + 1,
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.ease);
-                  } else {
-                    Get.offAll(() => NavigatorPage());
-                  }
+                  _checkRouteNextBoardingOrHomePage(currentPage);
                 },
                 child: Text(
                   currentPage == 2 ? 'البدء' : 'التالي',
@@ -192,7 +180,10 @@ class SplashPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: TextButton(
-            onPressed: () => Get.offAll(() => NavigatorPage()),
+            onPressed: () {
+              Get.offAll(() => AuthPage());
+              // Get.offAll(() => NavigatorPage());
+            },
             child: Text(
               'تخطي',
               style: TextStyle(
@@ -223,5 +214,15 @@ class SplashPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _checkRouteNextBoardingOrHomePage(int currentPage) {
+    if (currentPage < 2) {
+      _pageViewController.animateToPage(currentPage + 1,
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
+    } else {
+      Get.offAll(() => AuthPage());
+      // Get.offAll(() => NavigatorPage());
+    }
   }
 }

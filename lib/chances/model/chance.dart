@@ -11,6 +11,7 @@ class Chance {
   String imagePath;
   String startDate;
   String endDate;
+  String area;
   String city;
   String organization;
   String sitsNo;
@@ -33,6 +34,7 @@ class Chance {
     required this.imagePath,
     required this.startDate,
     required this.endDate,
+    required this.area,
     required this.city,
     required this.organization,
     required this.sitsNo,
@@ -66,6 +68,7 @@ class Chance {
       isSupportDisabled: data['isSupportDisabled'] ?? false,
       isTeamWork: data['isTeamWork'] ?? false,
       isUrgent: data['isUrgent'] ?? false,
+      area: data['area'] ?? '',
       city: data['city'] ?? '',
       requiredDegree: data['requiredDegree'] ?? '',
       sitsNo: data['sitsNo'] ?? 0,

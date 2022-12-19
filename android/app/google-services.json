@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "191244605755",
-    "project_id": "rowad-54649",
-    "storage_bucket": "rowad-54649.appspot.com"
+    "project_number": "38398613640",
+    "project_id": "rowad-774e0",
+    "storage_bucket": "rowad-774e0.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:191244605755:android:e0e785e7d89b22aa1a7f1e",
+        "mobilesdk_app_id": "1:38398613640:android:4657ac6d7058bae9a1673d",
         "android_client_info": {
           "package_name": "com.rowad.app"
         }
       },
       "oauth_client": [
         {
-          "client_id": "191244605755-147k2k0336m0mts62hssohfrjfoumbpg.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.rowad.app",
-            "certificate_hash": "ba18b6eb0a6b1d9fc3dabe1681702acff055a9ec"
-          }
-        },
-        {
-          "client_id": "191244605755-hdqh8kchokmap1vbf1d0c7l4cog29kl4.apps.googleusercontent.com",
+          "client_id": "38398613640-n95otb6shoufo0hrmj9hmu086mul1u7m.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyA8AoXw2SijN2Ug3qnby0sl5ti5ky_VwWo"
+          "current_key": "AIzaSyA6T6lnh4bLNs0zLUoCFGEKK-Vbxe2XUVc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "191244605755-hdqh8kchokmap1vbf1d0c7l4cog29kl4.apps.googleusercontent.com",
+              "client_id": "38398613640-n95otb6shoufo0hrmj9hmu086mul1u7m.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

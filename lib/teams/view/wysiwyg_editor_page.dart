@@ -16,7 +16,7 @@
 
 //   qu.QuillController _controller = qu.QuillController.basic();
 
-//   final teamCategory = '- أختر -'.obs;
+//   final teamCategory = '- اختر -'.obs;
 
 //   // late final XFile? pickedImage;
 //   @override

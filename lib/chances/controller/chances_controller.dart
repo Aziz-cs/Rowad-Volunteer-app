@@ -7,8 +7,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:path/path.dart' as path;
 
 import '../../general/controller/image_controller.dart';
 import '../model/chance.dart';
@@ -18,7 +16,6 @@ enum Gender { males, females, both }
 const String kMales = 'رجال';
 const String kFemales = 'نساء';
 const String kGenderBoth = 'الجنسين';
-
 const String kDBChances = 'chances';
 
 class ChancesController extends GetxController {
@@ -44,6 +41,7 @@ class ChancesController extends GetxController {
       'shortDesc': chance.shortDesc,
       'startDate': chance.startDate,
       'endDate': chance.endDate,
+      'area': chance.area,
       'city': chance.city,
       'organization': chance.organization,
       'sitsNo': chance.sitsNo,

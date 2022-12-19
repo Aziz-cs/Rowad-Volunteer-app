@@ -7,9 +7,11 @@ const Color kOffWhite = Color(0xFFF3F3F3);
 final kTitleTextStyle = TextStyle(fontSize: 15.sp);
 const String kMsgDeleted = 'تم الحذف';
 
-const String kChooseCategory = '- أختر -';
+const String kChoose = '- اختر -';
+
 const String kErrEmpty = 'لا يمكن أن تكون هذه الخانة فارغة';
 const String kErrTooShort = 'قصير جدا';
+const String kErrPassTooShort = 'كلمة سر قصيرة';
 const String kErrInvalidURL = 'برجاء إدخال رابط صحيح';
 const String kErrInvalidEmail = 'برجاء إدخال إيميل صحيح';
 const String kErrSomethingWrong = 'هناك خطأ ما، برجاء إعادة المحاولة';

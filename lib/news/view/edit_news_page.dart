@@ -29,7 +29,7 @@ class EditNewsPage extends StatelessWidget {
   final _titleController = TextEditingController();
   final _subTitleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final newsCategory = '- أختر -'.obs;
+  final newsCategory = '- اختر -'.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -67,18 +67,18 @@ class EditNewsPage extends StatelessWidget {
                       }
                     },
                   ),
-                  Text(
-                    'نبذة مختصرة',
-                    style: kTitleTextStyle,
-                  ),
-                  MyTextField(
-                    controller: _subTitleController,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
-                  ),
+                  // Text(
+                  //   'نبذة مختصرة',
+                  //   style: kTitleTextStyle,
+                  // ),
+                  // MyTextField(
+                  //   controller: _subTitleController,
+                  //   validator: (input) {
+                  //     if (input!.isEmpty) {
+                  //       return kErrEmpty;
+                  //     }
+                  //   },
+                  // ),
                   Text(
                     'الخبر',
                     style: kTitleTextStyle,
@@ -115,9 +115,9 @@ class EditNewsPage extends StatelessWidget {
                                 value: newsCategory.value,
                                 items: categoriesList.toList(),
                                 removeHeightPadding: true,
-                                onChanged: (selectedCategory) {
+                                onChanged: (selectedValue) {
                                   newsCategory.value =
-                                      selectedCategory ?? newsCategory.value;
+                                      selectedValue ?? newsCategory.value;
                                 },
                               ));
                         }
@@ -168,7 +168,7 @@ class EditNewsPage extends StatelessWidget {
                               return;
                             }
 
-                            if (newsCategory.value == kChooseCategory) {
+                            if (newsCategory.value == kChoose) {
                               Fluttertoast.showToast(
                                   msg: 'برجاء إختيار التصنيف');
                               return;

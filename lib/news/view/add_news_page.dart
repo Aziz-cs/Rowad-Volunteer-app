@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/news/controller/news_controller.dart';
 import 'package:app/news/model/news.dart';
+import 'package:app/widgets/my_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,23 +28,14 @@ class AddNewsPage extends StatelessWidget {
   final _titleController = TextEditingController();
   // final _subTitleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  final newsCategory = '- أختر -'.obs;
+  final newsCategory = '- اختر -'.obs;
 
   // late final XFile? pickedImage;
   @override
   Widget build(BuildContext context) {
     clearProperties();
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: kGreenColor,
-          title: const Text('إضافة خبر'),
-          centerTitle: true,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(15),
-            ),
-          ),
-        ),
+        appBar: MyAppBar(title: 'اضافة خبر'),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
@@ -104,9 +96,9 @@ class AddNewsPage extends StatelessWidget {
                                       value: newsCategory.value,
                                       items: categoriesList.toList(),
                                       removeHeightPadding: true,
-                                      onChanged: (selectedCategory) {
-                                        newsCategory.value = selectedCategory ??
-                                            newsCategory.value;
+                                      onChanged: (selectedValue) {
+                                        newsCategory.value =
+                                            selectedValue ?? newsCategory.value;
                                       },
                                     ));
                               }
@@ -138,7 +130,7 @@ class AddNewsPage extends StatelessWidget {
                                                   result.length,
                                                   (index) => result[index]
                                                               ['name'] ==
-                                                          kChooseCategory
+                                                          kChoose
                                                       ? const SizedBox()
                                                       : ListTile(
                                                           title: Text(
@@ -341,7 +333,7 @@ class AddNewsPage extends StatelessWidget {
                             //       msg: 'برجاء رفع صورة للخبر');
                             //   return;
                             // }
-                            if (newsCategory.value == kChooseCategory) {
+                            if (newsCategory.value == kChoose) {
                               Fluttertoast.showToast(
                                   msg: 'برجاء إختيار التصنيف');
                               return;

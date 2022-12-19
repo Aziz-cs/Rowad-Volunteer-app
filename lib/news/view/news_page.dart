@@ -27,27 +27,23 @@ class NewsPage extends StatelessWidget {
             onPressed: () {
               _scaffoldKey.currentState!.openDrawer();
             }),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'المركز الإعلامي',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(
-                Icons.filter_list,
-                color: kGreenColor,
-              ),
-              onPressed: () {},
-            ),
-          ],
+        title: Text(
+          'المركز الإعلامي',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w500,
+          ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.filter_list,
+              color: kGreenColor,
+            ),
+            onPressed: () {},
+          ),
+        ],
         centerTitle: true,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(

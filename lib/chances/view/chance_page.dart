@@ -22,6 +22,8 @@ class ChancePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('chance start: ${chance.startDate}');
+    print('chance end: ${chance.endDate}');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -103,7 +105,7 @@ class ChancePage extends StatelessWidget {
               ),
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label: chance.city,
+                label: '${chance.area} | ${chance.city}',
                 iconData: CupertinoIcons.location_fill,
               ),
               SizedBox(height: 13.h),
@@ -112,10 +114,37 @@ class ChancePage extends StatelessWidget {
                 iconData: CupertinoIcons.person_fill,
               ),
               SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: '${chance.startDate} إلى ${chance.endDate}',
-                iconData: CupertinoIcons.calendar_today,
+              Row(
+                children: [
+                  const Icon(
+                    CupertinoIcons.calendar_today,
+                    color: kGreenColor,
+                    size: 22,
+                  ),
+                  SizedBox(width: 5.w),
+                  Text(
+                    chance.startDate,
+                    style: TextStyle(
+                      color: Colors.black87,
+                      height: 1,
+                      fontSize: 12.4.sp,
+                    ),
+                  ),
+                  if (chance.getDaysLeft() != 0)
+                    Text(
+                      ' إلى ${chance.endDate}',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        height: 1,
+                        fontSize: 12.4.sp,
+                      ),
+                    ),
+                ],
               ),
+              // _buildIconInfo(
+              //   label: chance.startDate + ' --> ' + chance.endDate,
+              //   iconData: CupertinoIcons.calendar_today,
+              // ),
             ],
           ),
           Column(
@@ -123,8 +152,9 @@ class ChancePage extends StatelessWidget {
             children: [
               SizedBox(height: 13.h),
               _buildIconInfo(
-                label:
-                    '${chance.getDaysLeft()} ${chance.getDaysWordinArabic()}',
+                label: chance.getDaysLeft() == 0
+                    ? 'اليوم'
+                    : '${chance.getDaysLeft()} ${chance.getDaysWordinArabic()}',
                 iconData: CupertinoIcons.time_solid,
               ),
               SizedBox(height: 13.h),
@@ -237,27 +267,30 @@ class ChancePage extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      chance.title,
-                      style: TextStyle(
-                        color: Colors.white,
-                        height: 1,
-                        fontSize: 18.sp,
+                SizedBox(
+                  width: 250.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        chance.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          height: 1,
+                          fontSize: 18.sp,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10.h),
-                    Text(
-                      chance.organization,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.9),
-                        height: 1,
-                        fontSize: 13.sp,
+                      SizedBox(height: 10.h),
+                      Text(
+                        chance.organization,
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          height: 1,
+                          fontSize: 13.sp,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

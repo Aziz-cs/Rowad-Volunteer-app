@@ -1,7 +1,14 @@
+import 'package:app/chances/controller/chances_controller.dart';
 import 'package:app/courses/view/courses_page.dart';
 import 'package:app/courses/view/widgets/item_course_hp.dart';
+import 'package:app/profile/model/volunteer.dart';
+import 'package:app/stats/stats_page.dart';
+import 'package:app/utils/constants.dart';
+import 'package:app/widgets/circle_logo.dart';
 import 'package:app/widgets/menu_drawer.dart';
+import 'package:app/widgets/online_img.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +26,7 @@ import '../../posters/view/widgets/slider_banners.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/navigator_page.dart';
 
-enum Category { news, chances, courses, programs }
+enum Category { news, chances, courses, stats }
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -29,6 +36,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(FirebaseAuth.instance.currentUser!.email != null);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -62,6 +70,8 @@ class HomePage extends StatelessWidget {
                       _buildLastChancesSection(context),
                       SizedBox(height: 12.h),
                       _buildLastCoursesSection(context),
+                      SizedBox(height: 12.h),
+                      _buildStatsSection(context),
                     ],
                   ),
                 ),
@@ -76,80 +86,135 @@ class HomePage extends StatelessWidget {
 
   Row _buildProfileRow(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            IconButton(
-                icon: const Icon(
-                  Icons.menu,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  _scaffoldKey.currentState!.openDrawer();
-                }),
-            Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1.2,
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 22,
-                backgroundImage: Image.asset("assets/images/avatar.png").image,
-              ),
+        IconButton(
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
             ),
-            SizedBox(width: 9.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'مرحبا',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13.sp,
+            onPressed: () {
+              _scaffoldKey.currentState!.openDrawer();
+            }),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FirebaseAuth.instance.currentUser!.email != null
+                  ? FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser!.uid)
+                          .get(),
+                      builder: ((context, snapshot) {
+                        print('home page ${snapshot.connectionState}');
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          var result = snapshot.data!.data();
+                          Map<String, dynamic> resultMap =
+                              result as Map<String, dynamic>;
+                          Volunteer volunteer =
+                              Volunteer.fromDB(resultMap, snapshot.data!.id);
+                          print(volunteer.name);
+                          return Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 1.2,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child: CachedOnlineIMG(
+                                    imageURL: volunteer.avatarURL,
+                                    imageWidth: 45,
+                                    imageHeight: 45,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 9.w),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'مرحبا',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.sp,
+                                    ),
+                                  ),
+                                  Text(
+                                    volunteer.name,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          );
+                        }
+                        return const CircularLoading();
+                      }),
+                    )
+                  : Row(
+                      children: [
+                        const RowadCircleLogo(radius: 25),
+                        SizedBox(width: 9.w),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'مرحبا',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13.sp,
+                              ),
+                            ),
+                            Text(
+                              'بالضــيف',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+              Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      PersistentNavBarNavigator.pushNewScreen(
+                        context,
+                        screen: const NotificationPage(),
+                        withNavBar: true, // OPTIONAL VALUE. True by default.
+                        pageTransitionAnimation:
+                            PageTransitionAnimation.cupertino,
+                      );
+                    },
+                    icon: const Icon(
+                      CupertinoIcons.bell,
+                      size: 26,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                Text(
-                  'بالضــيف',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
+                  Positioned(
+                    top: 8.h,
+                    right: 7.w,
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.red,
+                      radius: 3.5,
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
-        ),
-        Stack(
-          children: [
-            IconButton(
-              onPressed: () {
-                PersistentNavBarNavigator.pushNewScreen(
-                  context,
-                  screen: const NotificationPage(),
-                  withNavBar: true, // OPTIONAL VALUE. True by default.
-                  pageTransitionAnimation: PageTransitionAnimation.cupertino,
-                );
-              },
-              icon: const Icon(
-                CupertinoIcons.bell,
-                size: 26,
-                color: Colors.white,
+                ],
               ),
-            ),
-            Positioned(
-              top: 8.h,
-              right: 7.w,
-              child: const CircleAvatar(
-                backgroundColor: Colors.red,
-                radius: 3.5,
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -248,7 +313,13 @@ class HomePage extends StatelessWidget {
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
               break;
-            case Category.programs:
+            case Category.stats:
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: StatsPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
               break;
             default:
           }
@@ -342,6 +413,170 @@ class HomePage extends StatelessWidget {
                   }),
                 )),
           ),
+        ],
+      ),
+    );
+  }
+
+  Padding _buildStatsSection(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'أبرز الأحصائيات',
+                style: TextStyle(
+                  fontSize: 17.sp,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black54,
+                ),
+              ),
+              _buildSeeAllBtn(
+                context: context,
+                categoryToRoute: Category.stats,
+              )
+            ],
+          ),
+          StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('stats')
+                  .doc('stats')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  var result = snapshot.data!.data();
+                  var resultMap = result as Map<String, dynamic>;
+                  print(resultMap);
+                  return SizedBox(
+                    height: 130.h,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 10.h),
+                            decoration: BoxDecoration(
+                              color: kGreenColor,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // const RowadCircleLogo(radius: 20),
+                                const Icon(
+                                  Icons.group,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                Text(
+                                  resultMap['volunteerNo'].toString(),
+                                  style: TextStyle(
+                                    fontSize: 30.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  'عدد المتطوعين',
+                                  style: TextStyle(
+                                    fontSize: 15.sp,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        Expanded(
+                            child: Column(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    const Icon(
+                                      Icons.class_,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    Text(
+                                      'عدد الدورات',
+                                      style: TextStyle(
+                                        fontSize: 15.sp,
+                                        color: Colors.white,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    Text(
+                                      resultMap['coursesNo'].toString(),
+                                      style: TextStyle(
+                                        fontSize: 26.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10.h),
+                            Expanded(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 10.h),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF0391DF),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    const Icon(
+                                      Icons.bar_chart,
+                                      size: 24,
+                                      color: Colors.white,
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        'عدد الفرص\n التطوعية',
+                                        style: TextStyle(
+                                          fontSize: 15.sp,
+                                          color: Colors.white,
+                                          height: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      resultMap['chancesNo'].toString(),
+                                      style: TextStyle(
+                                        fontSize: 26.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ))
+                      ],
+                    ),
+                  );
+                }
+                return const CircularLoading();
+              }),
         ],
       ),
     );
