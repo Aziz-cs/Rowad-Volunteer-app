@@ -5,6 +5,7 @@ import 'package:app/chances/view/chances_page.dart';
 import 'package:app/courses/view/courses_page.dart';
 import 'package:app/main.dart';
 import 'package:app/news/view/news_page.dart';
+import 'package:app/start/splash_page.dart';
 import 'package:app/teams/view/teams_page.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/widgets/simple_btn.dart';
@@ -261,7 +262,11 @@ class MenuDrawer extends StatelessWidget {
                   menuListItem(
                     icon: Icons.logout,
                     itemName: 'تسجيل خروج',
-                    onPress: () {},
+                    onPress: () {
+                      print('signing out');
+                      FirebaseAuth.instance.signOut();
+                      Get.offAll(() => SplashPage());
+                    },
                   ),
                 ],
               ),

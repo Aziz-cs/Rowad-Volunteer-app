@@ -36,6 +36,7 @@ class SlideBanners extends StatelessWidget {
       onTap: () => print('Banner clicked'),
       child: Container(
         height: 160.h,
+        width: double.infinity,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: gradient,

@@ -61,7 +61,7 @@ class NewsController extends GetxController {
       }
 
       isLoading.value = false;
-      Fluttertoast.showToast(msg: 'تم تعديل الفرصة بنجاح');
+      Fluttertoast.showToast(msg: 'تم تعديل الخبر بنجاح');
       Get.offAll(
         () => NavigatorPage(tabIndex: 2),
         duration: const Duration(microseconds: 1),

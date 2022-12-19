@@ -41,7 +41,7 @@ class NewsFilterBar extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     children: List.generate(
                       newsCategoriesList.length,
-                      (index) => newsCategoriesList[index] == kChooseCategory
+                      (index) => newsCategoriesList[index] == kChoose
                           ? const SizedBox()
                           : GestureDetector(
                               onTap: () {
@@ -78,11 +78,7 @@ class NewsFilterBar extends StatelessWidget {
                     ),
                   );
                 }
-                return Column(
-                  children: const [
-                    Center(child: CircularLoading()),
-                  ],
-                );
+                return Center(child: CircularLoading());
               }),
             ),
           ),

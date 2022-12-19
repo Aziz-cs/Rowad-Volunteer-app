@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>191244605755-aeio4qh19vpf2rb0iv2v6jh326i6lecm.apps.googleusercontent.com</string>
+	<string>38398613640-0f9ft3le50paupg0mirkeghmdgguc4gs.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.191244605755-aeio4qh19vpf2rb0iv2v6jh326i6lecm</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>191244605755-147k2k0336m0mts62hssohfrjfoumbpg.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.38398613640-0f9ft3le50paupg0mirkeghmdgguc4gs</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAQv1Etj1NSQD9fkPkQCyGoTMP_r_R7NiY</string>
+	<string>AIzaSyCBhaAD6_20ji1u8VlUgtcBrBIFv6lKT2Y</string>
 	<key>GCM_SENDER_ID</key>
-	<string>191244605755</string>
+	<string>38398613640</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.rowad.app</string>
 	<key>PROJECT_ID</key>
-	<string>rowad-54649</string>
+	<string>rowad-774e0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>rowad-54649.appspot.com</string>
+	<string>rowad-774e0.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:191244605755:ios:800477a1237da3681a7f1e</string>
+	<string>1:38398613640:ios:54c82888e2351047a1673d</string>
 </dict>
 </plist>

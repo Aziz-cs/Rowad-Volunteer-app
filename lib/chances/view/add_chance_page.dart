@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:app/chances/controller/chances_controller.dart';
+import 'package:app/profile/view/complete_profile.dart';
+import 'package:app/profile/view/widgets/mandatory_profile_data.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -49,27 +51,13 @@ const categoryNames = [
   'أخرى',
 ];
 
-const requiredDegrees = [
-  'غير مطلوب',
-  'دبلوم',
-  'بكالريوس',
-  'ماجستير',
-  'دكتوراة',
-];
-
-const cityDegrees = [
-  kChooseCity,
-  'الرياض',
-  'جدة',
-  'مكة المكرمة',
-  'المدينة المنورة',
-  'الأحساء',
-  'الدمام',
-  'الطائف',
-  'بريدة',
-  'تبوك',
-  'القطيف',
-];
+// const requiredDegrees = [
+//   'غير مطلوب',
+//   'دبلوم',
+//   'بكالريوس',
+//   'ماجستير',
+//   'دكتوراة',
+// ];
 
 const kChooseCity = 'اختر المدينة';
 
@@ -87,12 +75,14 @@ class AddChance extends StatelessWidget {
   final _sitNumbersController = TextEditingController();
   final _chanceURLController = TextEditingController();
   final category = 'عام'.obs;
-  final requiredDegree = 'غير مطلوب'.obs;
-  final city = 'اختر المدينة'.obs;
+  final requiredDegree = 'أخرى'.obs;
+  final area = 'جازان'.obs;
+  final city = kChoose.obs;
   final startDate = ''.obs;
   final endDate = ''.obs;
   late DateTime startDateTime;
   // late final XFile? pickedImage;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,19 +180,36 @@ class AddChance extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'المكان',
+                              'المنطقة',
                               style: kTitleTextStyle,
                             ),
-                            Obx(
-                              () => DropDownMenu(
-                                fontSize: 17,
-                                value: city.value,
-                                items: cityDegrees,
-                                removeHeightPadding: true,
-                                onChanged: (selectedCity) {
-                                  city.value = selectedCity ?? city.value;
-                                },
-                              ),
+                            FutureBuilder<QuerySnapshot>(
+                              future: FirebaseFirestore.instance
+                                  .collection('areas')
+                                  .get(),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.done) {
+                                  var result = snapshot.data;
+                                  List<String> areaNames = [];
+                                  result!.docs.forEach((element) {
+                                    areaNames.add(element.id);
+                                  });
+                                  return Obx(
+                                    () => DropDownMenu(
+                                      fontSize: 17,
+                                      value: area.value,
+                                      items: areaNames,
+                                      removeHeightPadding: true,
+                                      onChanged: (selectedCity) {
+                                        city.value = kChoose;
+                                        area.value = selectedCity ?? area.value;
+                                      },
+                                    ),
+                                  );
+                                }
+                                return const CircularLoading();
+                              },
                             ),
                           ],
                         ),
@@ -213,25 +220,59 @@ class AddChance extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'المؤهل العلمي',
+                              'المدينة',
                               style: kTitleTextStyle,
                             ),
-                            Obx(
-                              () => DropDownMenu(
-                                fontSize: 17,
-                                value: requiredDegree.value,
-                                items: requiredDegrees,
-                                removeHeightPadding: true,
-                                onChanged: (selectedCategory) {
-                                  requiredDegree.value =
-                                      selectedCategory ?? requiredDegree.value;
-                                },
-                              ),
-                            ),
+                            Obx(() => FutureBuilder<DocumentSnapshot>(
+                                  future: FirebaseFirestore.instance
+                                      .collection('areas')
+                                      .doc(area.value)
+                                      .get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done) {
+                                      var result = snapshot.data;
+                                      List<String> citiesList =
+                                          List<String>.from((result!.data()
+                                              as Map)['cities']);
+
+                                      print('done:');
+                                      return Obx(
+                                        () => DropDownMenu(
+                                          fontSize: 17,
+                                          value: city.value,
+                                          items: citiesList,
+                                          removeHeightPadding: true,
+                                          onChanged: (selectedValue) {
+                                            city.value =
+                                                selectedValue ?? city.value;
+                                          },
+                                        ),
+                                      );
+                                    }
+                                    return const CircularLoading();
+                                  },
+                                )),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                  Text(
+                    'المؤهل العلمي',
+                    style: kTitleTextStyle,
+                  ),
+                  Obx(
+                    () => DropDownMenu(
+                      fontSize: 17,
+                      value: requiredDegree.value,
+                      items: degreeChoicesList,
+                      removeHeightPadding: true,
+                      onChanged: (selectedValue) {
+                        requiredDegree.value =
+                            selectedValue ?? requiredDegree.value;
+                      },
+                    ),
                   ),
                   Row(
                     children: [
@@ -368,9 +409,9 @@ class AddChance extends StatelessWidget {
                                   fontSize: 17,
                                   items: categoryNames,
                                   removeHeightPadding: true,
-                                  onChanged: (selectedCategory) {
+                                  onChanged: (selectedValue) {
                                     category.value =
-                                        selectedCategory ?? category.value;
+                                        selectedValue ?? category.value;
                                   },
                                 )),
                           ],
@@ -569,6 +610,7 @@ class AddChance extends StatelessWidget {
                               organization: _organizationController.text.trim(),
                               startDate: startDate.value,
                               endDate: endDate.value,
+                              area: area.value,
                               city: city.value,
                               sitsNo: _sitNumbersController.text.trim(),
                               category: category.value,

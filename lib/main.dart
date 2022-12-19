@@ -1,7 +1,8 @@
 import 'package:app/utils/constants.dart';
+import 'package:app/widgets/navigator_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'splash/splash_page.dart';
+import 'start/splash_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,13 +11,14 @@ import 'package:get/get.dart';
 
 import 'utils/sharedprefs.dart';
 
-const String appVersion = 'v1.1.2';
+const String appVersion = 'v1.2.0';
+
+FirebaseApp? initFirebaseSdk;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  initFirebaseSdk = await Firebase.initializeApp();
   await sharedPrefs.init();
-  await FirebaseAuth.instance.signInAnonymously();
-
+  print('email: ${FirebaseAuth.instance.currentUser?.email}');
   runApp(const MyApp());
 }
 
@@ -48,7 +50,28 @@ class MyApp extends StatelessWidget {
             // highlightColor: kGreenColor,
             splashColor: kGreenColor,
           ),
-          home: SplashPage(),
+          home: FirebaseAuth.instance.currentUser?.email != null
+              ? NavigatorPage()
+              : SplashPage(),
+
+          // home: StreamBuilder<User?>(
+          //   stream: FirebaseAuth.instance.authStateChanges(),
+          //   builder: (context, snapshot) {
+          //     print('data changed');
+          //     if (snapshot.connectionState == ConnectionState.active) {
+          //       if (snapshot.hasData) {
+          //         print('data has data');
+
+          //         if (snapshot.data!.isAnonymous) {
+          //           return SplashPage();
+          //         }
+          //         return NavigatorPage();
+          //       }
+          //     }
+          //     return SplashPage();
+          //   },
+          // ),
+          // home: SplashPage(),
         );
       },
     );
