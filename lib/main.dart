@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 
 import 'utils/sharedprefs.dart';
 
-const String appVersion = 'v1.2.0';
+const String appVersion = 'v1.3.0';
 
 FirebaseApp? initFirebaseSdk;
 void main() async {

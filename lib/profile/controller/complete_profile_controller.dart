@@ -1,3 +1,4 @@
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/model/volunteer.dart';
 import 'package:app/profile/view/widgets/optional_profile_data.dart';
 import 'package:app/utils/constants.dart';
@@ -88,6 +89,7 @@ class CompleteProfileController extends GetxController {
       educationDegree: educationDegree.value,
       specialization: specializeController.text,
       volunteerLevel: volunteerLevel.value,
+      userRole: kVolunteer,
       avatarURL: '',
       nationalID: nationalIDController.text,
       nationality: nationalityController.text,
@@ -97,6 +99,7 @@ class CompleteProfileController extends GetxController {
       languages: userLanguageMap,
       skillsList: usersSkillsList,
       interestsList: usersInterestsList,
+      timestamp: Timestamp.now(),
     );
 
     Map<String, dynamic> profileData = {
@@ -119,6 +122,7 @@ class CompleteProfileController extends GetxController {
       'languages': userLanguageMap,
       'skillsList': usersSkillsList,
       'interestsList': usersInterestsList,
+      'timestamp': FieldValue.serverTimestamp(),
     };
 
     await FirebaseFirestore.instance

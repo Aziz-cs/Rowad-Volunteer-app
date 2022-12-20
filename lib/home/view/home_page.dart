@@ -1,6 +1,7 @@
 import 'package:app/chances/controller/chances_controller.dart';
 import 'package:app/courses/view/courses_page.dart';
 import 'package:app/courses/view/widgets/item_course_hp.dart';
+import 'package:app/notifications/view/global_notification_page.dart';
 import 'package:app/profile/model/volunteer.dart';
 import 'package:app/stats/stats_page.dart';
 import 'package:app/utils/constants.dart';
@@ -21,7 +22,6 @@ import '../../courses/model/course.dart';
 import '../../news/model/news.dart';
 import '../../news/view/widgets/filter_bar.dart';
 import '../../news/view/widgets/item_news_hp.dart';
-import '../../notifications/notification_page.dart';
 import '../../posters/view/widgets/slider_banners.dart';
 import '../../widgets/circular_loading.dart';
 import '../../widgets/navigator_page.dart';
@@ -126,7 +126,9 @@ class HomePage extends StatelessWidget {
                                 ),
                                 child: ClipOval(
                                   child: CachedOnlineIMG(
-                                    imageURL: volunteer.avatarURL,
+                                    imageURL: volunteer.avatarURL.isEmpty
+                                        ? 'https://firebasestorage.googleapis.com/v0/b/rowad-774e0.appspot.com/o/avatar.png?alt=media&token=143096fd-3145-4a5f-a148-ae673d366b1e'
+                                        : volunteer.avatarURL,
                                     imageWidth: 45,
                                     imageHeight: 45,
                                   ),
@@ -161,7 +163,7 @@ class HomePage extends StatelessWidget {
                     )
                   : Row(
                       children: [
-                        const RowadCircleLogo(radius: 25),
+                        const RowadCircleLogo(radius: 23),
                         SizedBox(width: 9.w),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +193,7 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
                       PersistentNavBarNavigator.pushNewScreen(
                         context,
-                        screen: const NotificationPage(),
+                        screen: NotificationPage(),
                         withNavBar: true, // OPTIONAL VALUE. True by default.
                         pageTransitionAnimation:
                             PageTransitionAnimation.cupertino,

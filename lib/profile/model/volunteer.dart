@@ -1,3 +1,7 @@
+import 'package:app/profile/controller/profile_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
+
 class Volunteer {
   String id;
   String name;
@@ -10,6 +14,8 @@ class Volunteer {
   String educationDegree;
   String specialization;
   String volunteerLevel;
+  String userRole;
+  Timestamp timestamp;
   // === Optional
   String avatarURL;
   String nationalID;
@@ -33,6 +39,8 @@ class Volunteer {
     required this.educationDegree,
     required this.specialization,
     required this.volunteerLevel,
+    required this.timestamp,
+    required this.userRole,
     required this.avatarURL,
     required this.nationalID,
     required this.nationality,
@@ -57,6 +65,8 @@ class Volunteer {
       educationDegree: data['educationDegree'] ?? '',
       volunteerLevel: data['volunteerLevel'] ?? '',
       isMale: data['isMale'] ?? '',
+      userRole: data['userRole'] ?? kVolunteer,
+      timestamp: data['timestamp'] ?? Timestamp.now(),
       //Optional fields
       languages: data['languages'] ?? {},
       avatarURL: data['avatarURL'] ?? '',
@@ -69,5 +79,13 @@ class Volunteer {
       workType: data['workType'] ?? '',
       job: data['job'] ?? '',
     );
+  }
+
+  String getDate() {
+    return DateFormat('dd/MM/yyyy').format(timestamp.toDate());
+  }
+
+  String getTime() {
+    return DateFormat('HH:mm').format(timestamp.toDate());
   }
 }

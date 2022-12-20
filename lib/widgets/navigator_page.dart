@@ -29,6 +29,7 @@ class NavigatorPage extends StatelessWidget {
     if (Platform.isIOS) {
       FirebaseMessaging.instance.requestPermission();
     }
+    FirebaseMessaging.instance.subscribeToTopic('global');
     _controller = PersistentTabController(
       initialIndex: tabIndex,
     );

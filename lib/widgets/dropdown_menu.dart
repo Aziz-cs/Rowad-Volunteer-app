@@ -16,6 +16,7 @@ class DropDownMenu extends StatelessWidget {
     this.removeUnderLine = false,
     this.removeHeightPadding = false,
     this.dropdowncolor = Colors.white,
+    this.isBold = false,
   });
 
   final String value;
@@ -27,6 +28,7 @@ class DropDownMenu extends StatelessWidget {
   double fontSize;
   bool removeUnderLine;
   bool removeHeightPadding;
+  bool isBold;
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
@@ -50,6 +52,7 @@ class DropDownMenu extends StatelessWidget {
               color: textColor,
               fontSize: fontSize,
               height: removeHeightPadding ? 0.5 : 1.1.h,
+              fontWeight: isBold ? FontWeight.w500 : FontWeight.normal,
             ),
           ),
         );

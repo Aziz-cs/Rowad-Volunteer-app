@@ -1,22 +1,25 @@
 import 'dart:io';
 
-import 'package:app/profile/model/volunteer.dart';
-import 'package:app/profile/view/complete_profile.dart';
-import 'package:app/profile/view/widgets/optional_profile_data.dart';
 import 'package:app/utils/constants.dart';
-import 'package:app/utils/sharedprefs.dart';
-import 'package:app/widgets/navigator_page.dart';
 import 'package:app/widgets/simple_btn.dart';
 import 'package:app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+const String kVolunteer = 'volunteer';
+const String kEditor = 'editor';
+const String kTeamLeader = 'teamLeader';
+const String kAdmin = 'admin';
+
+const String kVolunteerAR = 'متطوع';
+const String kEditorAR = 'محرر';
+const String kTeamLeaderAR = 'قائد فريق';
+const String kAdminAR = 'المدير';
 
 class ProfileController extends GetxController {
   var isUploadingAvatar = false.obs;
@@ -109,4 +112,34 @@ void showEditOneParamaterDialog({
       ),
     ],
   );
+}
+
+String getUserRoleInAROf(String userRoleEN) {
+  switch (userRoleEN) {
+    case kVolunteer:
+      return kVolunteerAR;
+    case kEditor:
+      return kEditorAR;
+    case kTeamLeader:
+      return kTeamLeaderAR;
+    case kAdmin:
+      return kAdminAR;
+    default:
+      return kTeamLeaderAR;
+  }
+}
+
+String getUserRoleInENOf(String userRoleAR) {
+  switch (userRoleAR) {
+    case kVolunteerAR:
+      return kVolunteer;
+    case kEditorAR:
+      return kEditor;
+    case kTeamLeaderAR:
+      return kTeamLeader;
+    case kAdminAR:
+      return kAdmin;
+    default:
+      return kTeamLeader;
+  }
 }

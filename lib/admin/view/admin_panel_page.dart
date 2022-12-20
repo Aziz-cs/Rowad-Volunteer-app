@@ -1,6 +1,8 @@
+import 'package:app/admin/view/users_page.dart';
 import 'package:app/chances/view/add_chance_page.dart';
 import 'package:app/courses/view/add_course_page.dart';
 import 'package:app/news/view/add_news_page.dart';
+import 'package:app/notifications/view/send_notification_page.dart';
 import 'package:app/posters/view/add_poster_page.dart';
 import 'package:app/teams/view/add_team_page.dart';
 import 'package:app/widgets/circular_loading.dart';
@@ -36,9 +38,30 @@ class AdminPanelPage extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
+              leading: const Icon(
+                Icons.group,
+              ),
+              title: const Text('الأعضاء والصلاحيات'),
+              subtitle: const Text('تعيين وتعديل صلاحيات الأعضاء'),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: UsersPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
               leading: const Icon(Icons.newspaper),
               title: const Text('إضافة خبر'),
-              subtitle: const Text('إضافة خبر جديد للمركز الإعلامي'),
+              subtitle: const Text('اضافة خبر جديد للمركز الإعلامي'),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 15,
@@ -57,7 +80,7 @@ class AdminPanelPage extends StatelessWidget {
             ListTile(
               leading: const Icon(CupertinoIcons.news_solid),
               title: const Text('إضافة فرصة'),
-              subtitle: const Text('إضافة فرصة تطوعية جديدة'),
+              subtitle: const Text('اضافة فرصة تطوعية جديدة'),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 15,
@@ -76,7 +99,7 @@ class AdminPanelPage extends StatelessWidget {
             ListTile(
               leading: const Icon(CupertinoIcons.rectangle),
               title: const Text('إضافة إعلان'),
-              subtitle: const Text('إضافة إعلان فى أعلى الصفحة الرئيسية'),
+              subtitle: const Text('اضافة إعلان فى أعلى الصفحة الرئيسية'),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
                 size: 15,
@@ -94,7 +117,7 @@ class AdminPanelPage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(CupertinoIcons.collections),
-              title: const Text('إضافة دورة تدريبية'),
+              title: const Text('اضافة دورة تدريبية'),
               subtitle: const Text(''),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -115,7 +138,7 @@ class AdminPanelPage extends StatelessWidget {
               leading: const Icon(
                 Icons.group,
               ),
-              title: const Text('إضافة فريق تطوعي'),
+              title: const Text('اضافة فريق تطوعي'),
               subtitle: const Text(''),
               trailing: const Icon(
                 Icons.arrow_back_ios_new_rounded,
@@ -124,6 +147,27 @@ class AdminPanelPage extends StatelessWidget {
               onTap: () => PersistentNavBarNavigator.pushNewScreen(
                 context,
                 screen: AddTeamPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
+            ),
+            Divider(
+              color: Colors.grey,
+              height: 4.h,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.notifications,
+              ),
+              title: const Text('ارسال إشعار عام'),
+              subtitle: const Text(''),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: SendNotificationPage(),
                 withNavBar: true, // OPTIONAL VALUE. True by default.
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               ),
