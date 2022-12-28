@@ -321,7 +321,7 @@ class AddCoursePage extends StatelessWidget {
                           ),
                   ),
                   Obx(() => coursesController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
+                      ? Center(child: CircularLoading())
                       : SimpleButton(
                           label: 'إضافة الدورة التدريبية',
                           onPress: () {

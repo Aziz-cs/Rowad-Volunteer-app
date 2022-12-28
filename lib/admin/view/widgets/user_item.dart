@@ -87,7 +87,7 @@ class UserItem extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        volunteer.isMale ? 'ذكر' : 'انثى',
+                        volunteer.isMale ? 'ذكر' : 'أنثى',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.sp,
@@ -126,6 +126,7 @@ class UserItem extends StatelessWidget {
                       ),
                       Text(
                         volunteer.phoneNo,
+                        textDirection: TextDirection.ltr,
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.sp,
@@ -247,10 +248,16 @@ class UserItem extends StatelessWidget {
                             // dropdowncolor: Colors.orange.shade300,
                             isBold: true,
                             fontSize: 14.sp,
-                            textColor: Colors.white,
+                            textColor: Colors.amber,
                             value: getUserRoleInAROf(volunteer.userRole),
                             items: userRolesListAR,
                             onChanged: (changedValue) {
+                              if (changedValue == kTeamLeaderAR) {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        'يجب تعيين قائد الفريق عند انشاءه أو من تعديله');
+                                return;
+                              }
                               FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(volunteer.id)

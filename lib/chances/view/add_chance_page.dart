@@ -208,7 +208,7 @@ class AddChance extends StatelessWidget {
                                     ),
                                   );
                                 }
-                                return const CircularLoading();
+                                return CircularLoading();
                               },
                             ),
                           ],
@@ -250,7 +250,7 @@ class AddChance extends StatelessWidget {
                                         ),
                                       );
                                     }
-                                    return const CircularLoading();
+                                    return CircularLoading();
                                   },
                                 )),
                           ],
@@ -560,7 +560,7 @@ class AddChance extends StatelessWidget {
                   ),
                   SizedBox(height: 10.h),
                   Obx(() => chancesController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
+                      ? Center(child: CircularLoading())
                       : SimpleButton(
                           label: 'اضف الفرصة',
                           onPress: () {

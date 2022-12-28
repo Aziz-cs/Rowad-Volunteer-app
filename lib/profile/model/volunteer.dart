@@ -64,7 +64,7 @@ class Volunteer {
       city: data['city'] ?? '',
       educationDegree: data['educationDegree'] ?? '',
       volunteerLevel: data['volunteerLevel'] ?? '',
-      isMale: data['isMale'] ?? '',
+      isMale: data['isMale'] ?? true,
       userRole: data['userRole'] ?? kVolunteer,
       timestamp: data['timestamp'] ?? Timestamp.now(),
       //Optional fields
@@ -73,9 +73,9 @@ class Volunteer {
       nationalID: data['nationalID'] ?? '',
       nationality: data['nationality'] ?? '',
       skillsList: data['skillsList'] ?? [],
+      interestsList: data['interestsList'] ?? [],
       socialState: data['socialState'] ?? '',
       specialization: data['specialization'] ?? '',
-      interestsList: data['interestsList'] ?? [],
       workType: data['workType'] ?? '',
       job: data['job'] ?? '',
     );

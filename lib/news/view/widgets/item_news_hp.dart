@@ -61,7 +61,7 @@ class NewsItemHP extends StatelessWidget {
                     ),
                     SizedBox(height: 2.h),
                     Text(
-                      news.description,
+                      news.title,
                       maxLines: 2,
                       style: TextStyle(
                         fontSize: 14.sp,

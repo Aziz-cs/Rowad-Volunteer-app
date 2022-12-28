@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:app/notifications/controller/notification_controller.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/view/complete_profile.dart';
 import 'package:app/start/splash_page.dart';
 import 'package:app/utils/sharedprefs.dart';
@@ -29,6 +31,15 @@ class NavigatorPage extends StatelessWidget {
     if (Platform.isIOS) {
       FirebaseMessaging.instance.requestPermission();
     }
+    print('userRole: ${sharedPrefs.userRole}');
+    FirebaseMessaging.instance.subscribeToTopic(kGlobalNotifications);
+
+    if (FirebaseAuth.instance.currentUser?.email != null) {
+      subscribeToUserTopics();
+      setUserInitialData();
+    } else {
+      clearUserData();
+    }
     FirebaseMessaging.instance.subscribeToTopic('global');
     _controller = PersistentTabController(
       initialIndex: tabIndex,
@@ -43,7 +54,7 @@ class NavigatorPage extends StatelessWidget {
         : FutureBuilder<DocumentSnapshot>(
             future: FirebaseFirestore.instance
                 .collection('users')
-                .doc(FirebaseAuth.instance.currentUser!.uid)
+                .doc(FirebaseAuth.instance.currentUser?.uid)
                 .get(),
             builder: ((context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {

@@ -46,23 +46,23 @@ class CourseItemHP extends StatelessWidget {
                       child: CachedOnlineIMG(
                         imageURL: course.imageURL,
                       )),
-                  Container(
-                    height: 100.h,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        gradient: LinearGradient(
-                          begin: FractionalOffset.centerLeft,
-                          end: FractionalOffset.centerRight,
-                          colors: [
-                            Colors.grey.withOpacity(0.0),
-                            Colors.black.withOpacity(0.50),
-                          ],
-                          stops: const [
-                            0.0,
-                            0.5,
-                          ],
-                        )),
-                  ),
+                  // Container(
+                  //   height: 100.h,
+                  //   decoration: BoxDecoration(
+                  //       color: Colors.white,
+                  //       gradient: LinearGradient(
+                  //         begin: FractionalOffset.centerLeft,
+                  //         end: FractionalOffset.centerRight,
+                  //         colors: [
+                  //           Colors.grey.withOpacity(0.0),
+                  //           Colors.black.withOpacity(0.45),
+                  //         ],
+                  //         stops: const [
+                  //           0.0,
+                  //           0.5,
+                  //         ],
+                  //       )),
+                  // ),
                 ],
               ),
             ),

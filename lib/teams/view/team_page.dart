@@ -1,9 +1,16 @@
 import 'package:app/chances/controller/chances_controller.dart';
 import 'package:app/chances/view/edit_chance_page.dart';
+import 'package:app/notifications/controller/notification_controller.dart';
+import 'package:app/profile/controller/profile_controller.dart';
+import 'package:app/teams/controller/team_controller.dart';
 import 'package:app/teams/view/edit_team_page.dart';
 import 'package:app/utils/helper.dart';
+import 'package:app/utils/sharedprefs.dart';
+import 'package:app/widgets/circular_loading.dart';
 import 'package:app/widgets/online_img.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,10 +27,16 @@ class TeamPage extends StatelessWidget {
     required this.team,
   }) : super(key: key);
 
+  final teamController = Get.put(TeamController());
+
   Team team;
 
   @override
   Widget build(BuildContext context) {
+    print('team id: ${team.teamLeaderID}');
+    print('user id: ${FirebaseAuth.instance.currentUser!.uid}');
+    print(
+        'equal? ${team.teamLeaderID == FirebaseAuth.instance.currentUser!.uid}');
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -112,12 +125,12 @@ class TeamPage extends StatelessWidget {
                 ),
               if (team.econmicName.isNotEmpty)
                 _buildIconInfo(
-                  label: 'المسؤول المالي',
+                  label: 'المسؤول المالي:',
                   iconData: CupertinoIcons.money_dollar_circle_fill,
                 ),
               if (team.mediaName.isNotEmpty)
                 _buildIconInfo(
-                  label: 'المسؤول الإعلامي',
+                  label: 'المسؤول الإعلامي:',
                   iconData: CupertinoIcons.tv_circle_fill,
                 ),
             ],
@@ -226,15 +239,18 @@ class TeamPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               BackBtn(isBlack: true),
-              IconButton(
-                onPressed: () {
-                  Get.to(() => EditTeamPage(team: team));
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  color: Colors.black54,
-                ),
-              )
+              if (sharedPrefs.userRole == kAdmin ||
+                  team.teamLeaderID == FirebaseAuth.instance.currentUser!.uid)
+                IconButton(
+                  onPressed: () {
+                    Get.to(() => EditTeamPage(team: team));
+                  },
+                  icon: const Icon(
+                    CupertinoIcons.pencil_circle_fill,
+                    color: Colors.amber,
+                    size: 30,
+                  ),
+                )
             ],
           ),
           Row(
@@ -268,20 +284,111 @@ class TeamPage extends StatelessWidget {
                       label: team.category,
                       iconData: Icons.folder,
                     ),
-                    _buildIconInfo(
-                      label: '25 متطوع',
-                      iconData: Icons.group,
+                    FutureBuilder<QuerySnapshot>(
+                      future: FirebaseFirestore.instance
+                          .collection('teams')
+                          .doc(team.id)
+                          .collection('teamMembers')
+                          .get(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.done) {
+                          var noOfTeamMembers = snapshot.data!.docs.length;
+                          return _buildIconInfo(
+                            label: '$noOfTeamMembers متطوع',
+                            iconData: Icons.group,
+                          );
+                        }
+                        return Center(
+                          child: SizedBox(
+                            width: 10,
+                            height: 20,
+                            child: CircularLoading(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
-                SimpleButton(
-                  label: 'انضم للفريق',
-                  onPress: () {},
-                ),
+                team.teamLeaderID == FirebaseAuth.instance.currentUser!.uid
+                    ? _buildBoxIndentifier(
+                        color: Colors.purple.shade500,
+                        title: ' قائد الفريق ',
+                      )
+                    : FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance
+                            .collection('teams')
+                            .doc(team.id)
+                            .collection('teamMembers')
+                            .doc(FirebaseAuth.instance.currentUser!.uid)
+                            .get(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.done) {
+                            if (snapshot.data!.exists) {
+                              return _buildBoxIndentifier(
+                                color: Colors.blue,
+                                title: '   انت عضو  ',
+                              );
+                            }
+                          }
+                          return StreamBuilder<DocumentSnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('teams')
+                                .doc(team.id)
+                                .collection('pendingMembers')
+                                .doc(FirebaseAuth.instance.currentUser!.uid)
+                                .snapshots(),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.active) {
+                                if (snapshot.data!.exists) {
+                                  return _buildBoxIndentifier(
+                                    color: Colors.orange,
+                                    title: 'أُرسل الطلب',
+                                  );
+                                }
+                                return Obx(
+                                  () => teamController.isLoadingAskToJoin.isTrue
+                                      ? Center(child: CircularLoading())
+                                      : SimpleButton(
+                                          label: 'انضم للفريق',
+                                          onPress: () {
+                                            teamController.askToJoinTeam(team);
+                                          },
+                                        ),
+                                );
+                              }
+                              return CircularLoading();
+                            },
+                          );
+                        },
+                      ),
               ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Container _buildBoxIndentifier({
+    required String title,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      height: 40.h,
+      alignment: Alignment.center,
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      child: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          color: Colors.white,
+          fontSize: 14.sp,
+          height: 1,
+        ),
       ),
     );
   }

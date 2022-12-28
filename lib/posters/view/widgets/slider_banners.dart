@@ -1,8 +1,11 @@
 import 'package:app/posters/view/edit_poster_page.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/utils/helper.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:app/widgets/online_img.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -89,7 +92,7 @@ class SlideBanners extends StatelessWidget {
                                   end: FractionalOffset.centerRight,
                                   colors: [
                                     Colors.grey.withOpacity(0.0),
-                                    Colors.black.withOpacity(0.65),
+                                    Colors.black.withOpacity(0.45),
                                   ],
                                   stops: const [
                                     0.0,
@@ -110,17 +113,22 @@ class SlideBanners extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Positioned(
-                            right: 3,
-                            child: IconButton(
-                              icon: const Icon(Icons.edit,
-                                  size: 19, color: Colors.white),
-                              onPressed: () {
-                                Get.to(() =>
-                                    EditPosterPage(poster: posterItems[index]));
-                              },
+                          if (sharedPrefs.userRole == kAdmin ||
+                              sharedPrefs.userRole == kEditor)
+                            Positioned(
+                              right: 3,
+                              child: IconButton(
+                                icon: const Icon(
+                                  CupertinoIcons.pencil_circle_fill,
+                                  color: Colors.amber,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  Get.to(() => EditPosterPage(
+                                      poster: posterItems[index]));
+                                },
+                              ),
                             ),
-                          ),
                           Positioned(
                             top: 55.h,
                             left: 1.w,
@@ -210,7 +218,7 @@ class SlideBanners extends StatelessWidget {
                 );
               }
               return Column(
-                children: const [
+                children: [
                   Center(child: CircularLoading()),
                 ],
               );

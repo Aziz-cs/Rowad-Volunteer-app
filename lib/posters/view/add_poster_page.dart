@@ -96,7 +96,7 @@ class AddPosterPage extends StatelessWidget {
                   ),
                   SizedBox(height: 10.h),
                   Obx(() => posterController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
+                      ? Center(child: CircularLoading())
                       : SimpleButton(
                           label: 'إضافة الإعلان',
                           onPress: () {

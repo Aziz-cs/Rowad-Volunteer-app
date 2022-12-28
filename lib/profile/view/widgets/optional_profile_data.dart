@@ -2,6 +2,7 @@ import 'package:app/chances/view/edit_chance_page.dart';
 import 'package:app/profile/controller/complete_profile_controller.dart';
 import 'package:app/profile/view/complete_profile.dart';
 import 'package:app/utils/constants.dart';
+import 'package:app/widgets/circular_loading.dart';
 import 'package:app/widgets/dropdown_menu.dart';
 import 'package:app/widgets/simple_btn.dart';
 import 'package:app/widgets/textfield.dart';
@@ -87,14 +88,12 @@ class OptionalProfileData extends StatelessWidget {
     'الإغاثة',
     'خدمي',
     'رياضي',
-    'عام',
     'هندسة',
     'إداري',
     'تعليمي',
     'ديني',
     'الاسكاني',
     'أخرى',
-    'إعلامي',
     'إعلامي',
     'السياحة',
     'خدمة ضيوف الرحمن',
@@ -440,6 +439,30 @@ class OptionalProfileData extends StatelessWidget {
                             ),
                           )),
                 )),
+            Obx(() => CheckboxListTile(
+                  activeColor: kGreenColor,
+                  title: const Text('أوافق على شروط وإتفاقية الإستخدام'),
+                  value: completeProfileController.isAgreeTerms.value,
+                  onChanged: (value) {
+                    completeProfileController.isAgreeTerms.value = value!;
+                  },
+                )),
+            Obx(
+              () => completeProfileController.isLoadingSavingProfileData.isTrue
+                  ? Center(child: CircularLoading())
+                  : SimpleButton(
+                      label: 'حفظ البيانات والبدء',
+                      onPress: () async {
+                        if (completeProfileController.isAgreeTerms.isFalse) {
+                          Fluttertoast.showToast(
+                              msg:
+                                  'برجاء الموافقة على شروط وإتفاقية الإستخدام');
+                          return;
+                        }
+                        await completeProfileController.submitProfileData();
+                      },
+                    ),
+            ),
           ],
         ),
       ),

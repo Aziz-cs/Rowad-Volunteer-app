@@ -14,8 +14,12 @@ import 'package:get/utils.dart';
 import 'package:get/get.dart';
 
 class AuthPage extends StatelessWidget {
-  AuthPage({super.key});
+  AuthPage({
+    super.key,
+    this.isOpenedForRegister = false,
+  });
   var authController = Get.put(AuthController());
+  bool isOpenedForRegister;
 
   final isOpenedNewRegister = false.obs;
   var isLoadingSignInAsGuest = false.obs;
@@ -31,6 +35,9 @@ class AuthPage extends StatelessWidget {
   final _formKeyLogin = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    if (isOpenedForRegister) {
+      isOpenedNewRegister.value = true;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kGreenColor,
@@ -79,6 +86,7 @@ class AuthPage extends StatelessWidget {
                                     ],
                                   ),
                                   MyTextField(
+                                      inputType: TextInputType.emailAddress,
                                       isLTRdirection: true,
                                       controller: emailController,
                                       validator: (input) {
@@ -109,7 +117,7 @@ class AuthPage extends StatelessWidget {
                                   SizedBox(height: 10.h),
                                   Obx(() => authController
                                           .isLoadingLoggingIn.isTrue
-                                      ? const CircularLoading()
+                                      ? CircularLoading()
                                       : SimpleButton(
                                           label: 'تسجيل دخول',
                                           onPress: () async {
@@ -123,7 +131,7 @@ class AuthPage extends StatelessWidget {
                                           },
                                         )),
                                   Obx(() => isLoadingSignInAsGuest.isTrue
-                                      ? const CircularLoading()
+                                      ? CircularLoading()
                                       : SimpleButton(
                                           label: 'الدخول كضيف',
                                           onPress: () async {
@@ -240,7 +248,7 @@ class AuthPage extends StatelessWidget {
                                 SizedBox(height: 15.h),
                                 Obx(() => authController
                                         .isLoadingRegisterNewAccount.isTrue
-                                    ? const Center(
+                                    ? Center(
                                         child: CircularLoading(),
                                       )
                                     : SimpleButton(

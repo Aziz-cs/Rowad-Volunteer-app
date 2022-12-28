@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:app/news/controller/news_controller.dart';
 import 'package:app/news/model/news.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/teams/controller/team_controller.dart';
 import 'package:app/teams/model/team.dart';
+import 'package:app/teams/view/add_team_page.dart';
 import 'package:app/teams/view/wysiwyg_editor_page.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
@@ -44,6 +48,8 @@ class EditTeamPage extends StatelessWidget {
   final _teamMediaController = TextEditingController();
   final _teamEconomicController = TextEditingController();
   final teamCategory = '- اختر -'.obs;
+
+  String currentTeamLeaderEmail = '';
 
   // late final XFile? pickedImage;
   @override
@@ -104,11 +110,7 @@ class EditTeamPage extends StatelessWidget {
                     inputType: TextInputType.multiline,
                     controller: _teamGoalsController,
                     maxLines: 4,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
+                    validator: (input) {},
                   ),
                   Text(
                     'الخطط المستقبلية',
@@ -119,11 +121,7 @@ class EditTeamPage extends StatelessWidget {
                     inputType: TextInputType.multiline,
                     controller: _teamFuturePlansController,
                     maxLines: 4,
-                    validator: (input) {
-                      if (input!.isEmpty) {
-                        return kErrEmpty;
-                      }
-                    },
+                    validator: (input) {},
                   ),
                   Text(
                     'التصنيف',
@@ -156,7 +154,7 @@ class EditTeamPage extends StatelessWidget {
                                       },
                                     ));
                               }
-                              return const Center(child: CircularLoading());
+                              return Center(child: CircularLoading());
                             })),
                       ),
                       SimpleButton(
@@ -189,31 +187,92 @@ class EditTeamPage extends StatelessWidget {
                           ),
                   ),
                   SizedBox(height: 5.h),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'البريد الألكتروني لقائد الفريق',
-                    isLTRdirection: true,
-                    hintText: 'البريد المسجل به العضو',
-                    controller: _teamLeaderEmailController,
+                  Obx(() => teamController.isTeamLeaderEmailValid.isTrue
+                      ? const Center(child: Text('قائد الفريق'))
+                      : const SizedBox()),
+                  Obx(
+                    () => teamController.isTeamLeaderEmailValid.isTrue
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Icon(
+                                Icons.check_circle,
+                                color: kGreenColor,
+                                size: 24,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    teamController.teamLeaderName,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' | ',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: kGreenColor,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    teamController.teamLeaderEmail,
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: buildAddUserRoleToTeam(
+                                  inputType: TextInputType.emailAddress,
+                                  userRole: 'البريد الألكتروني لقائد الفريق',
+                                  isLTRdirection: true,
+                                  hintText: 'البريد المسجل به العضو',
+                                  controller: _teamLeaderEmailController,
+                                  isOptional: false,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 25.h, right: 5.w),
+                                child: Obx(
+                                    () => teamController.isCheckingEmail.isTrue
+                                        ? CircularLoading()
+                                        : SimpleButton(
+                                            label: 'تغيير',
+                                            onPress: () async {
+                                              await teamController
+                                                  .checkTeamLeaderEmailValid(
+                                                      _teamLeaderEmailController
+                                                          .text
+                                                          .trim());
+                                            },
+                                          )),
+                              ),
+                            ],
+                          ),
                   ),
-                  _buildAddUserRoleToTeam(
-                    userRole: 'قائد الفريق',
-                    controller: _teamLeaderNameController,
-                  ),
-                  _buildAddUserRoleToTeam(
+                  buildAddUserRoleToTeam(
                     userRole: 'نائب الفريق',
                     controller: _teamDeputyController,
                   ),
-                  _buildAddUserRoleToTeam(
+                  buildAddUserRoleToTeam(
                     userRole: 'العضو الإعلامي',
                     controller: _teamMediaController,
                   ),
-                  _buildAddUserRoleToTeam(
+                  buildAddUserRoleToTeam(
                     userRole: 'العضو المالي',
                     controller: _teamEconomicController,
                   ),
                   SizedBox(height: 5.h),
                   Obx(() => teamController.isLoading.isTrue
-                      ? const Center(child: CircularLoading())
+                      ? Center(child: CircularLoading())
                       : SimpleButton(
                           label: 'تعديل الفريق',
                           onPress: () {
@@ -234,10 +293,9 @@ class EditTeamPage extends StatelessWidget {
                               futurePlans:
                                   _teamFuturePlansController.text.trim(),
                               category: teamCategory.value,
-                              teamLeaderEmail:
-                                  _teamLeaderEmailController.text.trim(),
-                              teamLeaderName:
-                                  _teamLeaderNameController.text.trim(),
+                              teamLeaderEmail: teamController.teamLeaderEmail,
+                              teamLeaderName: teamController.teamLeaderName,
+                              teamLeaderID: teamController.teamLeaderID,
                               deputyName: _teamDeputyController.text.trim(),
                               mediaName: _teamMediaController.text.trim(),
                               econmicName: _teamEconomicController.text.trim(),
@@ -247,21 +305,36 @@ class EditTeamPage extends StatelessWidget {
                               timestamp: team.timestamp,
                             );
 
+                            bool isTeamLeaderEmailChanged =
+                                currentTeamLeaderEmail !=
+                                    teamController.teamLeaderEmail;
+
+                            if (isTeamLeaderEmailChanged) {
+                              print('Email has been changed, removing..');
+                              teamController.removeTeamLeader(
+                                email: currentTeamLeaderEmail,
+                                teamID: team.id,
+                              );
+                            }
                             teamController.addModifyTeam(
-                                team: modifiedTeam,
-                                isModifing: true,
-                                isPicChanged: teamController
-                                    .pickedImage.value.path.isNotEmpty);
+                              team: modifiedTeam,
+                              isModifing: true,
+                              isPicChanged: teamController
+                                  .pickedImage.value.path.isNotEmpty,
+                              isTeamLeaderChanged: isTeamLeaderEmailChanged,
+                            );
                           },
                         )),
-                  Obx(() => teamController.isDeleteLoading.isTrue
-                      ? const Center(child: CircularLoading())
-                      : SimpleButton(
-                          label: 'حذف الفريق',
-                          onPress: () {
-                            teamController.deleteTeam(team);
-                          },
-                        )),
+                  if (sharedPrefs.userRole == kAdmin)
+                    Obx(() => teamController.isDeleteLoading.isTrue
+                        ? Center(child: CircularLoading())
+                        : SimpleButton(
+                            backgroundColor: Colors.red.shade500,
+                            label: 'حذف الفريق',
+                            onPress: () {
+                              teamController.deleteTeam(team);
+                            },
+                          )),
                   SizedBox(height: 30.h),
                 ],
               ),
@@ -269,49 +342,6 @@ class EditTeamPage extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  Column _buildAddUserRoleToTeam({
-    required String userRole,
-    String hintText = 'الأسم',
-    bool isLTRdirection = false,
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          userRole,
-          style: kTitleTextStyle,
-        ),
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: MyTextField(
-                isLTRdirection: isLTRdirection,
-                controller: controller,
-                hintText: hintText,
-                validator: (input) {
-                  if (input!.isEmpty) {
-                    return kErrEmpty;
-                  }
-                  if (isLTRdirection) {
-                    if (!GetUtils.isEmail(input)) {
-                      return kErrInvalidEmail;
-                    }
-                  }
-                },
-              ),
-            ),
-            // SizedBox(width: 3.w),
-            // Expanded(
-            //   child: SimpleButton(label: 'تعيين', onPress: () {}),
-            // ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -361,7 +391,7 @@ class EditTeamPage extends StatelessWidget {
                         ),
                       );
                     }
-                    return const Center(child: CircularLoading());
+                    return Center(child: CircularLoading());
                   })),
               Row(
                 children: [
@@ -372,7 +402,7 @@ class EditTeamPage extends StatelessWidget {
                         validator: (input) {}),
                   ),
                   Obx(() => _isLoading.isTrue
-                      ? const CircularLoading()
+                      ? CircularLoading()
                       : IconButton(
                           icon: const Icon(
                             CupertinoIcons.add_circled_solid,
@@ -416,6 +446,14 @@ class EditTeamPage extends StatelessWidget {
     _teamDeputyController.text = team.deputyName;
     _teamMediaController.text = team.mediaName;
     _teamEconomicController.text = team.econmicName;
+    teamController.teamLeaderEmail = team.teamLeaderEmail;
+    teamController.teamLeaderName = team.teamLeaderName;
+    teamController.teamLeaderID = team.teamLeaderID;
+    currentTeamLeaderEmail = team.teamLeaderEmail;
+    teamController.pickedImage.value = File('');
     teamCategory.value = team.category;
+    if (team.teamLeaderID == FirebaseAuth.instance.currentUser!.uid) {
+      teamController.isTeamLeaderEmailValid.value = true;
+    }
   }
 }

@@ -21,7 +21,7 @@ const degreeChoicesList = [
   'دكتوراه',
 ];
 
-const volunteerTypeList = [
+const volunteerLevelList = [
   kChoose,
   'عادي',
   'مهاري',
@@ -31,7 +31,7 @@ const volunteerTypeList = [
 const genderTypeList = [
   kChoose,
   'ذكر',
-  'انثى',
+  'أنثى',
 ];
 
 class MandatoryProfileData extends StatelessWidget {
@@ -279,7 +279,7 @@ class MandatoryProfileData extends StatelessWidget {
               () => DropDownMenu(
                 fontSize: 17,
                 value: completeProfileController.volunteerLevel.value,
-                items: volunteerTypeList,
+                items: volunteerLevelList,
                 removeHeightPadding: true,
                 onChanged: (selectedValue) {
                   completeProfileController.volunteerLevel.value =

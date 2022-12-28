@@ -231,7 +231,7 @@ class EditChancePage extends StatelessWidget {
                                       ),
                                     );
                                   }
-                                  return const CircularLoading();
+                                  return CircularLoading();
                                 },
                               ),
                             ],
@@ -273,7 +273,7 @@ class EditChancePage extends StatelessWidget {
                                           ),
                                         );
                                       }
-                                      return const CircularLoading();
+                                      return CircularLoading();
                                     },
                                   )),
                             ],
@@ -595,7 +595,7 @@ class EditChancePage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Obx(
             () => chancesController.isLoading.isTrue
-                ? const CircularLoading()
+                ? CircularLoading()
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

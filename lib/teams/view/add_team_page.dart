@@ -1,14 +1,12 @@
 import 'dart:io';
 
-import 'package:app/news/controller/news_controller.dart';
-import 'package:app/news/model/news.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/teams/controller/team_controller.dart';
 import 'package:app/teams/model/team.dart';
-import 'package:app/teams/view/wysiwyg_editor_page.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -24,8 +22,6 @@ class AddTeamPage extends StatelessWidget {
   AddTeamPage({Key? key}) : super(key: key);
   final teamController = Get.put(TeamController());
 
-  quill.QuillController _controller = quill.QuillController.basic();
-
   final _addCategoryController = TextEditingController();
   final _isLoading = false.obs;
 
@@ -36,7 +32,6 @@ class AddTeamPage extends StatelessWidget {
   final _teamGoalsController = TextEditingController();
   final _teamBriefController = TextEditingController();
   final _teamLeaderEmailController = TextEditingController();
-  final _teamLeaderNameController = TextEditingController();
   final _teamDeputyController = TextEditingController();
   final _teamMediaController = TextEditingController();
   final _teamEconomicController = TextEditingController();
@@ -46,6 +41,7 @@ class AddTeamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     clearProperties();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kGreenColor,
@@ -151,13 +147,13 @@ class AddTeamPage extends StatelessWidget {
                                     },
                                   ));
                             }
-                            return const Center(child: CircularLoading());
+                            return Center(child: CircularLoading());
                           })),
                     ),
-                    SimpleButton(
-                      label: 'اضف تصنيفا',
-                      onPress: () => showAddCategoryDialog(),
-                    ),
+                    // SimpleButton(
+                    //   label: 'اضف تصنيفا',
+                    //   onPress: () => showAddCategoryDialog(),
+                    // ),
                   ],
                 ),
                 Text(
@@ -184,33 +180,89 @@ class AddTeamPage extends StatelessWidget {
                         ),
                 ),
                 SizedBox(height: 5.h),
-                _buildAddUserRoleToTeam(
-                  userRole: 'البريد الألكتروني لقائد الفريق',
-                  isLTRdirection: true,
-                  hintText: 'البريد المسجل به العضو',
-                  controller: _teamLeaderEmailController,
-                  isOptional: false,
+                Obx(
+                  () => teamController.isTeamLeaderEmailValid.isTrue
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Icon(
+                              Icons.check_circle,
+                              color: kGreenColor,
+                              size: 24,
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  teamController.teamLeaderName,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                                Text(
+                                  ' | ',
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    color: kGreenColor,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                Text(
+                                  teamController.teamLeaderEmail,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: buildAddUserRoleToTeam(
+                                inputType: TextInputType.emailAddress,
+                                userRole: 'البريد الألكتروني لقائد الفريق',
+                                isLTRdirection: true,
+                                hintText: 'البريد المسجل به العضو',
+                                controller: _teamLeaderEmailController,
+                                isOptional: false,
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 25.h, right: 5.w),
+                              child: Obx(
+                                  () => teamController.isCheckingEmail.isTrue
+                                      ? CircularLoading()
+                                      : SimpleButton(
+                                          label: 'تعيين',
+                                          onPress: () async {
+                                            await teamController
+                                                .checkTeamLeaderEmailValid(
+                                                    _teamLeaderEmailController
+                                                        .text
+                                                        .trim());
+                                          },
+                                        )),
+                            ),
+                          ],
+                        ),
                 ),
-                _buildAddUserRoleToTeam(
-                  userRole: 'قائد الفريق',
-                  controller: _teamLeaderNameController,
-                  isOptional: false,
-                ),
-                _buildAddUserRoleToTeam(
+                buildAddUserRoleToTeam(
                   userRole: 'نائب الفريق',
                   controller: _teamDeputyController,
                 ),
-                _buildAddUserRoleToTeam(
+                buildAddUserRoleToTeam(
                   userRole: 'العضو الإعلامي',
                   controller: _teamMediaController,
                 ),
-                _buildAddUserRoleToTeam(
+                buildAddUserRoleToTeam(
                   userRole: 'العضو المالي',
                   controller: _teamEconomicController,
                 ),
                 SizedBox(height: 5.h),
                 Obx(() => teamController.isLoading.isTrue
-                    ? const Center(child: CircularLoading())
+                    ? Center(child: CircularLoading())
                     : SimpleButton(
                         label: 'إضافة الفريق',
                         onPress: () {
@@ -222,6 +274,12 @@ class AddTeamPage extends StatelessWidget {
                           //       msg: 'برجاء رفع صورة للفريق');
                           //   return;
                           // }
+                          if (teamController.isTeamLeaderEmailValid.isFalse) {
+                            Fluttertoast.showToast(
+                                msg: 'برجاء تعيين قائد للفريق');
+                            return;
+                          }
+
                           if (teamCategory.value == kChoose) {
                             Fluttertoast.showToast(msg: 'برجاء إختيار التصنيف');
                             return;
@@ -234,9 +292,9 @@ class AddTeamPage extends StatelessWidget {
                             futurePlans: _teamFuturePlansController.text.trim(),
                             category: teamCategory.value,
                             teamLeaderEmail:
-                                _teamLeaderEmailController.text.trim(),
-                            teamLeaderName:
-                                _teamLeaderNameController.text.trim(),
+                                teamController.teamLeaderEmail.toLowerCase(),
+                            teamLeaderName: teamController.teamLeaderName,
+                            teamLeaderID: teamController.teamLeaderID,
                             deputyName: _teamDeputyController.text.trim(),
                             mediaName: _teamMediaController.text.trim(),
                             econmicName: _teamEconomicController.text.trim(),
@@ -261,143 +319,63 @@ class AddTeamPage extends StatelessWidget {
     );
   }
 
-  Column _buildAddUserRoleToTeam({
-    required String userRole,
-    String hintText = 'الأسم',
-    bool isLTRdirection = false,
-    bool isOptional = true,
-    required TextEditingController controller,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          userRole,
-          style: kTitleTextStyle,
-        ),
-        Row(
-          children: [
-            Expanded(
-              flex: 3,
-              child: MyTextField(
-                isLTRdirection: isLTRdirection,
-                controller: controller,
-                hintText: hintText,
-                validator: (input) {
-                  if (input!.isEmpty && !isOptional) {
-                    return kErrEmpty;
-                  }
-                  if (isLTRdirection) {
-                    if (!GetUtils.isEmail(input)) {
-                      return kErrInvalidEmail;
-                    }
-                  }
-                },
-              ),
-            ),
-            // SizedBox(width: 3.w),
-            // Expanded(
-            //   child: SimpleButton(label: 'تعيين', onPress: () {}),
-            // ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  void showAddCategoryDialog() {
-    Get.defaultDialog(
-      title: 'اضافة تصنيف',
-      content: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Expanded(
-          child: Column(
-            children: [
-              StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('general_categories')
-                      .orderBy('name')
-                      .snapshots(),
-                  builder: ((context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      var result = snapshot.data!.docs;
-                      return Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: List.generate(
-                              result.length,
-                              (index) => result[index]['name'] == kChoose
-                                  ? const SizedBox()
-                                  : ListTile(
-                                      title: Text(result[index]['name']),
-                                      // trailing: IconButton(
-                                      //   icon: const Icon(
-                                      //     CupertinoIcons.xmark,
-                                      //     size: 18,
-                                      //     color: Colors.red,
-                                      //   ),
-                                      //   onPressed: () {
-                                      //     FirebaseFirestore.instance
-                                      //         .collection('general_categories')
-                                      //         .doc(result[index].id)
-                                      //         .delete();
-                                      //     Fluttertoast.showToast(
-                                      //         msg: 'تم حذف التصنيف');
-                                      //   },
-                                      // ),
-                                    ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return const Center(child: CircularLoading());
-                  })),
-              Row(
-                children: [
-                  Expanded(
-                    child: MyTextField(
-                        hintText: 'التصنيف الجديد',
-                        controller: _addCategoryController,
-                        validator: (input) {}),
-                  ),
-                  Obx(() => _isLoading.isTrue
-                      ? const CircularLoading()
-                      : IconButton(
-                          icon: const Icon(
-                            CupertinoIcons.add_circled_solid,
-                            color: kGreenColor,
-                            size: 30,
-                          ),
-                          onPressed: () async {
-                            print('pressed');
-                            if (_addCategoryController.text.trim().isEmpty) {
-                              Fluttertoast.showToast(
-                                  msg: 'برجاء كتابة التصنيف');
-                              return;
-                            }
-                            _isLoading.value = true;
-                            await FirebaseFirestore.instance
-                                .collection('general_categories')
-                                .add({
-                              'name': _addCategoryController.text.trim(),
-                            });
-                            Fluttertoast.showToast(msg: 'تم إضافة التصنيف');
-                            _isLoading.value = false;
-                            _addCategoryController.clear();
-                          },
-                        ))
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   void clearProperties() {
-    // newsController.photoAlbum.clear();
-    // newsController.pickedImage.value = File('');
+    teamController.pickedImage.value = File('');
+    teamController.isTeamLeaderEmailValid.value = false;
+    teamController.teamLeaderEmail = '';
+    teamController.teamLeaderName = '';
+    _teamNameController.clear();
+    _teamFuturePlansController.clear();
+    _teamGoalsController.clear();
+    _teamLeaderEmailController.clear();
+    _teamDeputyController.clear();
+    _teamMediaController.clear();
+    _teamEconomicController.clear();
   }
+}
+
+Column buildAddUserRoleToTeam({
+  required String userRole,
+  String hintText = 'الأسم',
+  bool isLTRdirection = false,
+  bool isOptional = true,
+  TextInputType inputType = TextInputType.name,
+  required TextEditingController controller,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        userRole,
+        style: kTitleTextStyle,
+      ),
+      Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: MyTextField(
+              inputType: inputType,
+              isLTRdirection: isLTRdirection,
+              controller: controller,
+              hintText: hintText,
+              validator: (input) {
+                if (input!.isEmpty && !isOptional) {
+                  return kErrEmpty;
+                }
+                if (isLTRdirection) {
+                  if (!GetUtils.isEmail(input)) {
+                    return kErrInvalidEmail;
+                  }
+                }
+              },
+            ),
+          ),
+          // SizedBox(width: 3.w),
+          // Expanded(
+          //   child: SimpleButton(label: 'تعيين', onPress: () {}),
+          // ),
+        ],
+      ),
+    ],
+  );
 }

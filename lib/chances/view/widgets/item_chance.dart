@@ -1,16 +1,12 @@
 import 'package:app/utils/constants.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
-
-import '../../../widgets/online_img.dart';
-import '../../../widgets/simple_btn.dart';
-import '../../model/chance.dart';
-import '../chance_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+
+import '../../../widgets/online_img.dart';
+import '../../model/chance.dart';
+import '../chance_page.dart';
 
 class ChanceItem extends StatelessWidget {
   ChanceItem({
@@ -30,8 +26,8 @@ class ChanceItem extends StatelessWidget {
         pageTransitionAnimation: PageTransitionAnimation.cupertino,
       ),
       child: Container(
-        width: 160.w,
-        height: 265.h,
+        width: 180.w,
+        // height: 265.h,
         margin: EdgeInsets.symmetric(horizontal: 3.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -74,10 +70,11 @@ class ChanceItem extends StatelessWidget {
                     children: [
                       Text(
                         chance.organization,
-                        maxLines: 1,
+                        maxLines: 2,
                         style: TextStyle(
                           overflow: TextOverflow.ellipsis,
                           fontSize: 12.sp,
+                          height: 1,
                           color: kGreenColor,
                         ),
                       ),

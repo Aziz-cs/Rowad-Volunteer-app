@@ -1,5 +1,6 @@
 import 'package:app/notifications/model/notification.dart';
 import 'package:app/notifications/view/item_notification.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/widgets/back_btn.dart';
 import 'package:app/widgets/circular_loading.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -36,10 +37,14 @@ class NotificationPage extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('notifications')
-            .orderBy('timestamp', descending: true)
+            .where('targetTopics', arrayContainsAny: subscribedTopicsList)
+            // .orderBy('timestamp', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.active) {
+            if (snapshot.data == null) {
+              return const SizedBox();
+            }
             List<GlobalNotification> globalNotificationsList = [];
             var resultDocs = snapshot.data!.docs;
 
@@ -50,6 +55,8 @@ class NotificationPage extends StatelessWidget {
               );
               globalNotificationsList.add(notification);
             });
+            globalNotificationsList
+                .sort((a, b) => b.timestamp.compareTo(a.timestamp));
             return SingleChildScrollView(
               child: Column(
                 children: List.generate(
@@ -61,7 +68,7 @@ class NotificationPage extends StatelessWidget {
               ),
             );
           }
-          return const CircularLoading();
+          return CircularLoading();
         },
       ),
     );

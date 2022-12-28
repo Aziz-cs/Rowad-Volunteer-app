@@ -73,7 +73,7 @@ class CoursesPage extends StatelessWidget {
                     );
                   }
                   return Column(
-                    children: const [
+                    children: [
                       Center(child: CircularLoading()),
                     ],
                   );

@@ -4,11 +4,13 @@ import 'package:intl/intl.dart';
 class GlobalNotification {
   String title;
   String body;
+  List targetTopics;
   Timestamp timestamp;
 
   GlobalNotification({
     required this.title,
     required this.body,
+    required this.targetTopics,
     required this.timestamp,
   });
 
@@ -16,6 +18,7 @@ class GlobalNotification {
     return GlobalNotification(
       title: data['title'] ?? '',
       body: data['body'] ?? '',
+      targetTopics: data['targetTopics'] ?? [],
       timestamp: data['timestamp'] ?? Timestamp.now(),
     );
   }

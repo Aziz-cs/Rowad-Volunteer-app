@@ -121,7 +121,7 @@ class EditNewsPage extends StatelessWidget {
                                 },
                               ));
                         }
-                        return const Center(child: CircularLoading());
+                        return Center(child: CircularLoading());
                       })),
                   Text(
                     'الصورة البارزة',
@@ -157,7 +157,7 @@ class EditNewsPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Obx(
             () => newsController.isLoading.isTrue
-                ? const CircularLoading()
+                ? CircularLoading()
                 : Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [

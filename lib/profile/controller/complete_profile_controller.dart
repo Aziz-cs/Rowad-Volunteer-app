@@ -1,3 +1,4 @@
+import 'package:app/notifications/controller/notification_controller.dart';
 import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/model/volunteer.dart';
 import 'package:app/profile/view/widgets/optional_profile_data.dart';
@@ -79,11 +80,11 @@ class CompleteProfileController extends GetxController {
 
     Volunteer volunteerProfile = Volunteer(
       id: FirebaseAuth.instance.currentUser!.uid,
-      email: FirebaseAuth.instance.currentUser!.email ?? '',
+      email: FirebaseAuth.instance.currentUser?.email ?? '',
       name: nameController.text,
       phoneNo: phoneNoController.text,
       birthday: userBirthday.value,
-      isMale: genderType.value == 'انثى' ? false : true,
+      isMale: genderType.value == 'أنثى' ? false : true,
       area: areaController.text,
       city: cityController.text,
       educationDegree: educationDegree.value,
@@ -97,18 +98,18 @@ class CompleteProfileController extends GetxController {
       workType: workType.value,
       job: jobController.text,
       languages: userLanguageMap,
-      skillsList: usersSkillsList,
-      interestsList: usersInterestsList,
+      skillsList: List.from(usersSkillsList),
+      interestsList: List.from(usersInterestsList),
       timestamp: Timestamp.now(),
     );
 
     Map<String, dynamic> profileData = {
       'id': FirebaseAuth.instance.currentUser!.uid,
-      'email': FirebaseAuth.instance.currentUser!.email,
+      'email': FirebaseAuth.instance.currentUser?.email,
       'name': nameController.text.trim(),
       'phoneNo': phoneNoController.text.trim(),
       'birthday': userBirthday.value.trim(),
-      'isMale': genderType.value == 'انثى' ? false : true,
+      'isMale': genderType.value == 'أنثى' ? false : true,
       'area': areaController.text.trim(),
       'city': cityController.text.trim(),
       'educationDegree': educationDegree.value.trim(),
@@ -122,6 +123,7 @@ class CompleteProfileController extends GetxController {
       'languages': userLanguageMap,
       'skillsList': usersSkillsList,
       'interestsList': usersInterestsList,
+      'userRole': kVolunteer,
       'timestamp': FieldValue.serverTimestamp(),
     };
 
@@ -130,6 +132,15 @@ class CompleteProfileController extends GetxController {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set(profileData)
         .then((value) {
+      subscribeUserToTopic(
+          userID: FirebaseAuth.instance.currentUser!.uid,
+          topicName: FirebaseAuth.instance.currentUser!.uid);
+
+      subscribeUserToTopic(
+        userID: FirebaseAuth.instance.currentUser!.uid,
+        topicName: kGlobalNotifications,
+      );
+
       sharedPrefs.isCompletedProfile = true;
       isLoadingSavingProfileData.value = false;
       Fluttertoast.showToast(msg: 'تم حفظ البيانات بنجاح');

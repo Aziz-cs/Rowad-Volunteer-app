@@ -1,5 +1,7 @@
 import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/model/volunteer.dart';
+import 'package:app/profile/view/widgets/mandatory_profile_data.dart';
+import 'package:app/profile/view/widgets/optional_profile_data.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/widgets/circle_logo.dart';
 import 'package:app/widgets/circular_loading.dart';
@@ -74,7 +76,6 @@ class ProfilePage extends StatelessWidget {
                           snapshot.data!.data() as Map<String, dynamic>;
                       Volunteer volunteer =
                           Volunteer.fromDB(result, snapshot.data!.id);
-                      print(result);
                       return Column(
                         children: [
                           InkWell(
@@ -103,6 +104,7 @@ class ProfilePage extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Text(getUserRoleInAROf(volunteer.userRole)),
                           buildTextViewContainer(
                             label: 'الأسم',
                             text: volunteer.name,
@@ -160,13 +162,27 @@ class ProfilePage extends StatelessWidget {
                               Expanded(
                                 child: buildTextViewContainer(
                                   label: 'الجنس',
-                                  text: volunteer.isMale ? 'ذكر' : 'انثى',
+                                  text: volunteer.isMale ? 'ذكر' : 'أنثى',
+                                  onTap: (() => showDropDownMenuEditDialog(
+                                        isGenderDialog: true,
+                                        dialogTitle: 'الجنس',
+                                        documentFieldKey: 'isMale',
+                                        currentValue:
+                                            volunteer.isMale ? 'ذكر' : 'أنثى',
+                                        choicesList: ['ذكر', 'أنثى'],
+                                      )),
                                 ),
                               ),
                               Expanded(
                                 child: buildTextViewContainer(
                                   label: 'مستوى التطوع',
                                   text: volunteer.volunteerLevel,
+                                  onTap: (() => showDropDownMenuEditDialog(
+                                        dialogTitle: 'مستوى التطوع',
+                                        documentFieldKey: 'volunteerLevel',
+                                        currentValue: volunteer.volunteerLevel,
+                                        choicesList: volunteerLevelList,
+                                      )),
                                 ),
                               ),
                             ],
@@ -177,6 +193,12 @@ class ProfilePage extends StatelessWidget {
                                 child: buildTextViewContainer(
                                   label: 'المؤهل العلمي',
                                   text: volunteer.educationDegree,
+                                  onTap: (() => showDropDownMenuEditDialog(
+                                        dialogTitle: 'المؤهل العلمي',
+                                        documentFieldKey: 'educationDegree',
+                                        currentValue: volunteer.educationDegree,
+                                        choicesList: degreeChoicesList,
+                                      )),
                                 ),
                               ),
                               Expanded(
@@ -234,6 +256,12 @@ class ProfilePage extends StatelessWidget {
                                 child: buildTextViewContainer(
                                   label: 'قطاع العمل',
                                   text: volunteer.workType,
+                                  onTap: (() => showDropDownMenuEditDialog(
+                                        dialogTitle: 'قطاع العمل',
+                                        documentFieldKey: 'workType',
+                                        currentValue: volunteer.workType,
+                                        choicesList: workTypeList,
+                                      )),
                                 ),
                               ),
                               Expanded(
@@ -309,15 +337,26 @@ class ProfilePage extends StatelessWidget {
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
-                                              children: const [
-                                                Text('المهارات:'),
+                                              children: [
+                                                const Text('المهارات:'),
                                                 Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 8.0),
-                                                  child: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.grey,
-                                                    size: 17,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.grey,
+                                                      size: 17,
+                                                    ),
+                                                    onPressed: () =>
+                                                        showEditSkillsDialog(
+                                                      dialogTitle: 'المهارات',
+                                                      documentFieldKey:
+                                                          'skillsList',
+                                                      currentList:
+                                                          volunteer.skillsList,
+                                                    ),
                                                   ),
                                                 )
                                               ],
@@ -332,13 +371,14 @@ class ProfilePage extends StatelessWidget {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      volunteer
-                                                          .skillsList[index],
-                                                      style: TextStyle(
-                                                        fontSize: 13.sp,
-                                                        color: const Color(
-                                                            0xFF87a594),
+                                                    Flexible(
+                                                      child: Text(
+                                                        '- ${volunteer.skillsList[index]}',
+                                                        style: TextStyle(
+                                                          fontSize: 13.sp,
+                                                          color: const Color(
+                                                              0xFF87a594),
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -361,15 +401,26 @@ class ProfilePage extends StatelessWidget {
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
-                                              children: const [
-                                                Text('الاهتمامات:'),
+                                              children: [
+                                                const Text('الاهتمامات:'),
                                                 Padding(
-                                                  padding: EdgeInsets.only(
-                                                      left: 8.0),
-                                                  child: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.grey,
-                                                    size: 17,
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 8.0),
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.grey,
+                                                      size: 17,
+                                                    ),
+                                                    onPressed: () =>
+                                                        showEditInterestsDialog(
+                                                      dialogTitle: 'الاهتمامات',
+                                                      documentFieldKey:
+                                                          'interestsList',
+                                                      currentList: volunteer
+                                                          .interestsList,
+                                                    ),
                                                   ),
                                                 )
                                               ],
@@ -384,13 +435,14 @@ class ProfilePage extends StatelessWidget {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
-                                                      volunteer
-                                                          .interestsList[index],
-                                                      style: TextStyle(
-                                                        fontSize: 14.sp,
-                                                        color: const Color(
-                                                            0xFF87a594),
+                                                    Flexible(
+                                                      child: Text(
+                                                        '- ${volunteer.interestsList[index]}',
+                                                        style: TextStyle(
+                                                          fontSize: 14.sp,
+                                                          color: const Color(
+                                                              0xFF87a594),
+                                                        ),
                                                       ),
                                                     ),
                                                   ],
@@ -410,7 +462,7 @@ class ProfilePage extends StatelessWidget {
                       );
                     }
 
-                    return const CircularLoading();
+                    return CircularLoading();
                   },
                 ),
                 const SizedBox(height: 40),

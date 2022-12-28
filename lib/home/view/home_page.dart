@@ -36,7 +36,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser!.email != null);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -99,94 +98,9 @@ class HomePage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              FirebaseAuth.instance.currentUser!.email != null
-                  ? FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser!.uid)
-                          .get(),
-                      builder: ((context, snapshot) {
-                        print('home page ${snapshot.connectionState}');
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          var result = snapshot.data!.data();
-                          Map<String, dynamic> resultMap =
-                              result as Map<String, dynamic>;
-                          Volunteer volunteer =
-                              Volunteer.fromDB(resultMap, snapshot.data!.id);
-                          print(volunteer.name);
-                          return Row(
-                            children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 1.2,
-                                  ),
-                                ),
-                                child: ClipOval(
-                                  child: CachedOnlineIMG(
-                                    imageURL: volunteer.avatarURL.isEmpty
-                                        ? 'https://firebasestorage.googleapis.com/v0/b/rowad-774e0.appspot.com/o/avatar.png?alt=media&token=143096fd-3145-4a5f-a148-ae673d366b1e'
-                                        : volunteer.avatarURL,
-                                    imageWidth: 45,
-                                    imageHeight: 45,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 9.w),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'مرحبا',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13.sp,
-                                    ),
-                                  ),
-                                  Text(
-                                    volunteer.name,
-                                    style: TextStyle(
-                                      fontSize: 16.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          );
-                        }
-                        return const CircularLoading();
-                      }),
-                    )
-                  : Row(
-                      children: [
-                        const RowadCircleLogo(radius: 23),
-                        SizedBox(width: 9.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'مرحبا',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13.sp,
-                              ),
-                            ),
-                            Text(
-                              'بالضــيف',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+              FirebaseAuth.instance.currentUser?.email != null
+                  ? const UserAvatarAndName()
+                  : const GuestAvatarAndName(),
               Stack(
                 children: [
                   IconButton(
@@ -245,7 +159,7 @@ class HomePage extends StatelessWidget {
             ],
           ),
           SizedBox(
-            height: 265.h,
+            height: 275.h,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('chances')
@@ -256,7 +170,6 @@ class HomePage extends StatelessWidget {
                 List<ChanceItem> chanceItems = [];
 
                 if (snapshot.connectionState == ConnectionState.active) {
-                  print(snapshot.connectionState.toString());
                   var chanceData = snapshot.data!.docs;
 
                   chanceData.forEach(
@@ -274,7 +187,7 @@ class HomePage extends StatelessWidget {
                   );
                 }
                 return Column(
-                  children: const [
+                  children: [
                     Center(child: CircularLoading()),
                   ],
                 );
@@ -385,7 +298,6 @@ class HomePage extends StatelessWidget {
                     List<NewsItemHP> newsItems = [];
 
                     if (snapshot.connectionState == ConnectionState.active) {
-                      print(snapshot.connectionState.toString());
                       var newsResult = snapshot.data!.docs;
 
                       newsResult.forEach(
@@ -408,7 +320,7 @@ class HomePage extends StatelessWidget {
                       );
                     }
                     return Column(
-                      children: const [
+                      children: [
                         Center(child: CircularLoading()),
                       ],
                     );
@@ -451,7 +363,6 @@ class HomePage extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.active) {
                   var result = snapshot.data!.data();
                   var resultMap = result as Map<String, dynamic>;
-                  print(resultMap);
                   return SizedBox(
                     height: 130.h,
                     child: Row(
@@ -577,7 +488,7 @@ class HomePage extends StatelessWidget {
                     ),
                   );
                 }
-                return const CircularLoading();
+                return CircularLoading();
               }),
         ],
       ),
@@ -618,7 +529,6 @@ class HomePage extends StatelessWidget {
                 List<CourseItemHP> courseItems = [];
 
                 if (snapshot.connectionState == ConnectionState.active) {
-                  print(snapshot.connectionState.toString());
                   var coursesResult = snapshot.data!.docs;
 
                   coursesResult.forEach(
@@ -636,7 +546,7 @@ class HomePage extends StatelessWidget {
                   );
                 }
                 return Column(
-                  children: const [
+                  children: [
                     Center(child: CircularLoading()),
                   ],
                 );
@@ -645,6 +555,110 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GuestAvatarAndName extends StatelessWidget {
+  const GuestAvatarAndName({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const RowadCircleLogo(radius: 24.5),
+        SizedBox(width: 9.w),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'مرحبا',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 13.sp,
+              ),
+            ),
+            Text(
+              'بالضــيف',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class UserAvatarAndName extends StatelessWidget {
+  const UserAvatarAndName({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get(),
+      builder: ((context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          var result = snapshot.data!.data();
+          Map<String, dynamic> resultMap = result as Map<String, dynamic>;
+          Volunteer volunteer = Volunteer.fromDB(resultMap, snapshot.data!.id);
+          print(volunteer.name);
+          return Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 1.2,
+                  ),
+                ),
+                child: ClipOval(
+                  child: CachedOnlineIMG(
+                    imageURL: volunteer.avatarURL.isEmpty
+                        ? 'https://firebasestorage.googleapis.com/v0/b/rowad-774e0.appspot.com/o/avatar.png?alt=media&token=143096fd-3145-4a5f-a148-ae673d366b1e'
+                        : volunteer.avatarURL,
+                    imageWidth: 45,
+                    imageHeight: 45,
+                  ),
+                ),
+              ),
+              SizedBox(width: 9.w),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'مرحبا',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+                  Text(
+                    volunteer.name,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          );
+        }
+        return CircularLoading();
+      }),
     );
   }
 }

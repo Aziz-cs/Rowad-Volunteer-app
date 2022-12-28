@@ -11,6 +11,7 @@ class Team {
   String imagePath;
   String teamLeaderEmail;
   String teamLeaderName;
+  String teamLeaderID;
   String deputyName;
   String mediaName;
   String econmicName;
@@ -25,6 +26,7 @@ class Team {
     required this.category,
     required this.imageURL,
     required this.imagePath,
+    required this.teamLeaderID,
     required this.teamLeaderEmail,
     required this.teamLeaderName,
     required this.deputyName,
@@ -43,6 +45,7 @@ class Team {
       imageURL: data['imageURL'] ?? '',
       imagePath: data['imagePath'] ?? '',
       category: data['category'] ?? '',
+      teamLeaderID: data['teamLeaderID'] ?? '',
       teamLeaderEmail: data['teamLeaderEmail'] ?? '',
       teamLeaderName: data['teamLeaderName'] ?? '',
       deputyName: data['deputyName'] ?? '',

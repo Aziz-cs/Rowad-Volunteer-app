@@ -1,6 +1,8 @@
 import 'package:app/courses/model/course.dart';
 import 'package:app/courses/view/edit_course_page.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/utils/helper.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,48 +80,51 @@ class CoursePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: course.name,
-                iconData: Icons.class_,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: course.startDate,
-                iconData: CupertinoIcons.calendar,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: '${course.duration} أيام',
-                iconData: Icons.timer_outlined,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: course.name,
+                  iconData: Icons.class_,
+                ),
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: course.startDate,
+                  iconData: CupertinoIcons.calendar,
+                ),
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: '${course.duration} أيام',
+                  iconData: Icons.timer_outlined,
+                ),
+              ],
+            ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: course.instructorName,
-                iconData: Icons.person,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: '${course.startHour} ${course.isAMorPM}',
-                iconData: CupertinoIcons.time_solid,
-              ),
-              SizedBox(height: 13.h),
-              _buildIconInfo(
-                label: course.owner,
-                iconData: CupertinoIcons.check_mark_circled_solid,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: course.instructorName,
+                  iconData: Icons.person,
+                ),
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: '${course.startHour} ${course.isAMorPM}',
+                  iconData: CupertinoIcons.time_solid,
+                ),
+                SizedBox(height: 13.h),
+                _buildIconInfo(
+                  label: course.owner,
+                  iconData: CupertinoIcons.check_mark_circled_solid,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -138,12 +143,14 @@ class CoursePage extends StatelessWidget {
           size: 22,
         ),
         SizedBox(width: 5.w),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.black87,
-            height: 1,
-            fontSize: 12.4.sp,
+        Flexible(
+          child: Text(
+            label,
+            style: TextStyle(
+              color: Colors.black87,
+              height: 1,
+              fontSize: 12.4.sp,
+            ),
           ),
         ),
       ],
@@ -176,7 +183,7 @@ class CoursePage extends StatelessWidget {
                 end: FractionalOffset.centerRight,
                 colors: [
                   Colors.grey.withOpacity(0.0),
-                  Colors.black.withOpacity(0.75),
+                  Colors.black.withOpacity(0.65)
                 ],
                 stops: const [
                   0.0,
@@ -188,17 +195,19 @@ class CoursePage extends StatelessWidget {
           right: 5.w,
           child: BackBtn(),
         ),
-        Positioned(
-            left: 4.w,
-            child: IconButton(
-              onPressed: () {
-                Get.to(() => EditCoursePage(course: course));
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-            )),
+        if (sharedPrefs.userRole == kAdmin || sharedPrefs.userRole == kEditor)
+          Positioned(
+              left: 4.w,
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => EditCoursePage(course: course));
+                },
+                icon: const Icon(
+                  CupertinoIcons.pencil_circle_fill,
+                  color: Colors.amber,
+                  size: 30,
+                ),
+              )),
         Positioned(
           bottom: 16.h,
           right: 10.w,

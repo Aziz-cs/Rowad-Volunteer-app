@@ -35,10 +35,14 @@ class NewsItem extends StatelessWidget {
               child: CachedOnlineIMG(imageURL: news.imageURL),
             ),
           ),
-          title: Text(
-            news.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          title: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  news.title,
+                ),
+              ),
+            ],
           ),
           subtitle: Text(
             news.description,
@@ -65,7 +69,7 @@ class NewsItem extends StatelessWidget {
             ],
           ),
         ),
-        Divider(
+        const Divider(
           height: 1,
           color: Colors.grey,
         ),

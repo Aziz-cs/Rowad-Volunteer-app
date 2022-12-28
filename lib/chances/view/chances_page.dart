@@ -82,15 +82,15 @@ class ChancesPage extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       shrinkWrap: true,
                       crossAxisCount: 2,
-                      childAspectRatio: 0.71,
-                      mainAxisSpacing: 8,
+                      childAspectRatio: 0.6,
+                      mainAxisSpacing: 4,
                       crossAxisSpacing: 8,
                       children: chanceItems.reversed.toList(),
                     ),
                   );
                 }
                 return Column(
-                  children: const [
+                  children: [
                     Center(child: CircularLoading()),
                   ],
                 );

@@ -22,6 +22,19 @@ class ImageController {
     }
   }
 
+  static Future<List<XFile>?> pickMutliImage({int imageQuality = 17}) async {
+    List<XFile>? imageFile = [];
+    try {
+      imageFile = await picker.pickMultiImage(
+        imageQuality: imageQuality,
+      );
+      return imageFile;
+    } catch (e) {
+      print('error in image picking $e');
+      return imageFile;
+    }
+  }
+
   static Future<UploadedImage> uploadImage({
     required File imageFile,
     required String category,

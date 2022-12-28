@@ -85,39 +85,6 @@ class CompleteProfile extends StatelessWidget {
                     ],
                   ),
                 ),
-                Obx(
-                  () => currentPage.value == 0
-                      ? const SizedBox()
-                      : CheckboxListTile(
-                          activeColor: kGreenColor,
-                          title:
-                              const Text('أوافق على شروط وإتفاقية الإستخدام'),
-                          value: completeProfileController.isAgreeTerms.value,
-                          onChanged: (value) {
-                            completeProfileController.isAgreeTerms.value =
-                                value!;
-                          },
-                        ),
-                ),
-                Obx(() => Visibility(
-                      visible: currentPage.value == 1,
-                      child: Obx(() => completeProfileController
-                              .isLoadingSavingProfileData.isTrue
-                          ? const CircularLoading()
-                          : SimpleButton(
-                              label: 'حفظ البيانات والبدء',
-                              onPress: () {
-                                if (completeProfileController
-                                    .isAgreeTerms.isFalse) {
-                                  Fluttertoast.showToast(
-                                      msg:
-                                          'برجاء الموافقة على شروط وإتفاقية الإستخدام');
-                                  return;
-                                }
-                                completeProfileController.submitProfileData();
-                              },
-                            )),
-                    )),
                 Obx(() => currentPage.value == 0
                     ? SimpleButton(
                         label: 'التالي',

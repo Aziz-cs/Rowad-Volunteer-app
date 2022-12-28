@@ -1,7 +1,10 @@
 import 'package:app/news/view/edit_news_page.dart';
+import 'package:app/profile/controller/profile_controller.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:app/widgets/online_img.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -66,6 +69,7 @@ class NewsDetailsPage extends StatelessWidget {
                                   child: CachedOnlineIMG(imageURL: imageURL)))
                               .toList(),
                         ),
+                      SizedBox(height: 30.h),
                     ],
                   ),
                 ),
@@ -103,7 +107,7 @@ class NewsDetailsPage extends StatelessWidget {
                 end: FractionalOffset.centerRight,
                 colors: [
                   Colors.grey.withOpacity(0.0),
-                  Colors.black.withOpacity(0.65),
+                  Colors.black.withOpacity(0.65)
                 ],
                 stops: const [
                   0.0,
@@ -111,21 +115,23 @@ class NewsDetailsPage extends StatelessWidget {
                 ],
               )),
         ),
-        Positioned(
-            top: 4.h,
-            left: 4.w,
-            child: IconButton(
-              onPressed: () {
-                Get.to(() => EditNewsPage(news: news));
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-            )),
+        if (sharedPrefs.userRole == kAdmin || sharedPrefs.userRole == kEditor)
+          Positioned(
+              top: 4.h,
+              left: 4.w,
+              child: IconButton(
+                onPressed: () {
+                  Get.to(() => EditNewsPage(news: news));
+                },
+                icon: const Icon(
+                  CupertinoIcons.pencil_circle_fill,
+                  color: Colors.amber,
+                  size: 30,
+                ),
+              )),
         Positioned(
           bottom: 2.h,
-          left: 2.w,
+          right: 2.w,
           child: Text(
             getFormatedDate(news.timestamp),
             style: TextStyle(
@@ -156,6 +162,7 @@ class NewsDetailsPage extends StatelessWidget {
                       height: 1,
                       fontSize: 18.sp,
                       color: Colors.white,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],

@@ -20,7 +20,7 @@ class UsersPage extends StatelessWidget {
       drawer: const MenuDrawer(),
       appBar: AppBar(
         backgroundColor: kGreenColor,
-        title: const Text('الاعضاء والصلاحيات'),
+        title: const Text('الأعضاء والصلاحيات'),
         centerTitle: true,
         // shape: const RoundedRectangleBorder(
         //   borderRadius: BorderRadius.vertical(
@@ -39,7 +39,7 @@ class UsersPage extends StatelessWidget {
               hintTextDirection: TextDirection.ltr,
               hintText: 'Seach by Email Address',
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10.0),
+                // borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
                   color: Colors.grey.shade400,
                 ),
@@ -51,7 +51,11 @@ class UsersPage extends StatelessWidget {
               contentPadding: const EdgeInsets.all(10),
             ),
             onChanged: (value) {
-              searchText.value = value;
+              if (GetUtils.isEmail(value)) {
+                searchText.value = value.toLowerCase();
+              } else {
+                searchText.value = '';
+              }
             },
           ),
           Expanded(
@@ -80,7 +84,7 @@ class UsersPage extends StatelessWidget {
                             .toList(),
                       );
                     }
-                    return const CircularLoading();
+                    return CircularLoading();
                   },
                 )),
           ),

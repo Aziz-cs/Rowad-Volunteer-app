@@ -1,3 +1,4 @@
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/view/complete_profile.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/widgets/navigator_page.dart';
@@ -47,9 +48,11 @@ class AuthController extends GetxController {
         email: email,
         password: password,
       )
-          .then((userCredential) {
-        isLoadingLoggingIn.value = false;
-        Get.offAll(() => NavigatorPage());
+          .then((userCredential) async {
+        setUserInitialData().then((value) {
+          isLoadingLoggingIn.value = false;
+          Get.offAll(() => NavigatorPage());
+        });
       });
     } on FirebaseAuthException catch (e) {
       isLoadingLoggingIn.value = false;

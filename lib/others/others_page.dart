@@ -1,10 +1,15 @@
 import 'package:app/admin/view/admin_panel_page.dart';
+import 'package:app/auth/view/auth_page.dart';
+import 'package:app/profile/controller/profile_controller.dart';
 import 'package:app/profile/view/profile_page.dart';
 import 'package:app/teams/view/teams_page.dart';
+import 'package:app/utils/sharedprefs.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../courses/view/courses_page.dart';
@@ -45,21 +50,33 @@ class OthersPage extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: 10.h),
-          ListTile(
-            leading: const Icon(CupertinoIcons.person_fill),
-            title: const Text('حسابي'),
-            subtitle: const Text('معلومات عن حسابك وصلاحيته'),
-            trailing: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 15,
-            ),
-            onTap: () => PersistentNavBarNavigator.pushNewScreen(
-              context,
-              screen: ProfilePage(),
-              withNavBar: true, // OPTIONAL VALUE. True by default.
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            ),
-          ),
+          FirebaseAuth.instance.currentUser!.email == null
+              ? ListTile(
+                  leading: const Icon(CupertinoIcons.person_fill),
+                  title: const Text('انشاء حساب'),
+                  subtitle: const Text('سجل الآن لكي تُفتح لك جميع المزايا'),
+                  trailing: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 15,
+                  ),
+                  onTap: () =>
+                      Get.offAll(() => AuthPage(isOpenedForRegister: true)),
+                )
+              : ListTile(
+                  leading: const Icon(CupertinoIcons.person_fill),
+                  title: const Text('حسابي'),
+                  subtitle: const Text('معلومات عن حسابك وصلاحيته'),
+                  trailing: const Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    size: 15,
+                  ),
+                  onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                    context,
+                    screen: ProfilePage(),
+                    withNavBar: true, // OPTIONAL VALUE. True by default.
+                    pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                  ),
+                ),
           Divider(
             color: Colors.grey,
             height: 4.h,
@@ -102,21 +119,23 @@ class OthersPage extends StatelessWidget {
             color: Colors.grey,
             height: 4.h,
           ),
-          ListTile(
-            leading: const Icon(Icons.admin_panel_settings),
-            title: const Text('لوحة التحكم'),
-            subtitle: const Text('إعدادات المدير العام'),
-            trailing: const Icon(
-              Icons.arrow_back_ios_new_rounded,
-              size: 15,
+          if (sharedPrefs.userRole != kVolunteer)
+            ListTile(
+              leading: const Icon(Icons.admin_panel_settings),
+              title: const Text('لوحة التحكم'),
+              subtitle: Text(
+                  'لوحة التحكم الخاصة بـ${getUserRoleInAROf(sharedPrefs.userRole)}'),
+              trailing: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                size: 15,
+              ),
+              onTap: () => PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: AdminPanelPage(),
+                withNavBar: true, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              ),
             ),
-            onTap: () => PersistentNavBarNavigator.pushNewScreen(
-              context,
-              screen: AdminPanelPage(),
-              withNavBar: true, // OPTIONAL VALUE. True by default.
-              pageTransitionAnimation: PageTransitionAnimation.cupertino,
-            ),
-          ),
           Divider(
             color: Colors.grey,
             height: 4.h,

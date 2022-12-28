@@ -1,13 +1,18 @@
 import 'dart:io';
 
 import 'package:app/admin/view/admin_panel_page.dart';
+import 'package:app/auth/view/auth_page.dart';
 import 'package:app/chances/view/chances_page.dart';
 import 'package:app/courses/view/courses_page.dart';
+import 'package:app/home/view/home_page.dart';
 import 'package:app/main.dart';
 import 'package:app/news/view/news_page.dart';
+import 'package:app/profile/controller/profile_controller.dart';
+import 'package:app/profile/view/profile_page.dart';
 import 'package:app/start/splash_page.dart';
 import 'package:app/teams/view/teams_page.dart';
 import 'package:app/utils/constants.dart';
+import 'package:app/utils/sharedprefs.dart';
 import 'package:app/widgets/simple_btn.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -32,51 +37,16 @@ class MenuDrawer extends StatelessWidget {
             Container(
               color: kGreenColor,
               padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white,
-                        width: 1.2,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 22,
-                      backgroundImage:
-                          Image.asset("assets/images/avatar.png").image,
-                    ),
-                  ),
-                  SizedBox(width: 9.w),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'مرحبا',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13.sp,
-                        ),
-                      ),
-                      Text(
-                        'بالضــيف',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+              child: FirebaseAuth.instance.currentUser?.email != null
+                  ? const UserAvatarAndName()
+                  : const GuestAvatarAndName(),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   SizedBox(height: 20.h),
+
                   menuListItem(
                     itemName: 'الرئيسية',
                     icon: CupertinoIcons.home,
@@ -87,6 +57,27 @@ class MenuDrawer extends StatelessWidget {
                       );
                     },
                   ),
+                  FirebaseAuth.instance.currentUser!.email == null
+                      ? menuListItem(
+                          itemName: 'انشاء حساب',
+                          icon: Icons.person,
+                          onPress: () {
+                            Get.offAll(
+                                () => AuthPage(isOpenedForRegister: true));
+                          },
+                        )
+                      : menuListItem(
+                          itemName: 'حسابي',
+                          icon: Icons.person,
+                          onPress: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: ProfilePage(),
+                              pageTransitionAnimation:
+                                  PageTransitionAnimation.cupertino,
+                            );
+                          },
+                        ),
                   menuListItem(
                     itemName: 'الفرص التطوعية',
                     icon: CupertinoIcons.news_solid,
@@ -247,23 +238,25 @@ class MenuDrawer extends StatelessWidget {
                             ));
                       }),
                   // const Divider(color: Colors.grey),
-                  menuListItem(
-                    itemName: 'لوحة التحكم',
-                    icon: Icons.admin_panel_settings_outlined,
-                    onPress: () {
-                      PersistentNavBarNavigator.pushNewScreen(
-                        context,
-                        screen: AdminPanelPage(),
-                        pageTransitionAnimation:
-                            PageTransitionAnimation.cupertino,
-                      );
-                    },
-                  ),
+                  if (sharedPrefs.userRole != kVolunteer)
+                    menuListItem(
+                      itemName: 'لوحة التحكم',
+                      icon: Icons.admin_panel_settings_outlined,
+                      onPress: () {
+                        PersistentNavBarNavigator.pushNewScreen(
+                          context,
+                          screen: AdminPanelPage(),
+                          pageTransitionAnimation:
+                              PageTransitionAnimation.cupertino,
+                        );
+                      },
+                    ),
+
                   menuListItem(
                     icon: Icons.logout,
                     itemName: 'تسجيل خروج',
                     onPress: () {
-                      print('signing out');
+                      clearUserData();
                       FirebaseAuth.instance.signOut();
                       Get.offAll(() => SplashPage());
                     },

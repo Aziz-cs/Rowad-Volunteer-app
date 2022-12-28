@@ -103,7 +103,7 @@ class EditPosterPage extends StatelessWidget {
                     ),
                     SizedBox(height: 40.h),
                     Obx(() => posterController.isLoading.isTrue
-                        ? const Center(child: CircularLoading())
+                        ? Center(child: CircularLoading())
                         : Column(
                             children: [
                               SimpleButton(
